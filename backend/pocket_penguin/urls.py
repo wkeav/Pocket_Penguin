@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import HttpResponse
 
-def health_check(request):
-    return JsonResponse({"status": "healthy", "service": "pocket-penguin-backend"})
+def hello_world(request):
+    return HttpResponse("Hello World")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', health_check, name='health')
+    path('', hello_world, name='hello')
 ]
