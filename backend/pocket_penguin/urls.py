@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+def health_check(request):
+    return JsonResponse({"status": "healthy", "service": "pocket-penguin-backend"})
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', health_check, name='health')
 ]
