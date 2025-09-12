@@ -1,10 +1,10 @@
-# Pocket Penguin 🐧
+# Pocket Penguin 
 
 Pocket Penguin is a wellness / habit-gamification mobile app built by Team K for CS-3203 Fall 2025. It aims to help users build daily habits, track progress, and engage with habit formation through playful, penguin-themed interactive features. It is a full stack mobile application, development using Django for backend and Flutter for frontend. 
 
 ## Features
 
-### Core Features ✅
+### Core Features
 
 ####  **Habit Tracking**
 - **To-Do Lists** - Individual habit management with customizable tasks
@@ -39,18 +39,18 @@ Pocket Penguin is a wellness / habit-gamification mobile app built by Team K for
 
 ### Future Features 
 
-#### 🤖 **AI-Powered Insights**
+#### **AI-Powered Insights**
 - **Preset Analysis** - AI-driven habit recommendations based on user patterns
 - **Smart Scheduling** - Optimal timing suggestions for habit completion
 - **Personalized Tips** - Contextual advice for habit formation
 
-#### 📱 **Advanced Functionality**
+#### **Advanced Functionality**
 - **Food Scanner** - Nutrition tracking with camera-based food recognition
 - **Standby Penguin Mode** - Interactive background companion when app is inactive
 - **Social Features** - Connect with friends and share progress
 - **Wearable Integration** - Sync with fitness trackers and smartwatches
 
-#### 🎯 **Enhanced Gamification**
+#### **Enhanced Gamification**
 - **Penguin Evolution** - Advanced growth stages based on long-term progress
 - **Mini-Games** - Interactive activities to earn rewards and maintain engagement
 - **Seasonal Events** - Limited-time challenges and themed content
@@ -417,5 +417,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Make a README](https://www.makeareadme.com/) for README best practices
 
 ---
-
-**Happy coding with Pocket Penguin! 🐧**
