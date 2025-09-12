@@ -203,7 +203,7 @@ The Flutter app connects to the Django backend to provide a comprehensive wellne
 3. **Journal Reflection** - Document thoughts and insights about your journey
 4. **View Analytics** - Monitor patterns and celebrate achievements
 
-#### 🎮 **Gamification Experience**
+#### **Gamification Experience**
 - Earn points and unlock rewards for consistent habit completion
 - Watch your penguin's happiness and health reflect your wellness journey
 - Unlock new environments and customization options as you progress
