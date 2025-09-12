@@ -405,10 +405,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Astra** - [wkeav](https://github.com/wkeav)
 - **Thien** - [SenPr](https://github.com/SenPr)
-- **Kaitlyn** - [ktnngn] (https://github.com/ktnngn)
-- **Sneha** - [CtrlChieftainMsSneha] (https://github.com/CtrlChieftainMsSneha)
-- **Brandon** - [bbloob] (https://github.com/bbloob)
-- **Jack** - [jacknguyen1918] (https://github.com/jacknguyen1918)
+- **Kaitlyn** - [ktnngn](https://github.com/ktnngn)
+- **Sneha** - [CtrlChieftainMsSneha](https://github.com/CtrlChieftainMsSneha)
+- **Brandon** - [bbloob](https://github.com/bbloob)
+- **Jack** - [jacknguyen1918](https://github.com/jacknguyen1918)
 
 ## Acknowledgments
 
