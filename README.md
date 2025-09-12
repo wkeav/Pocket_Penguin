@@ -191,12 +191,12 @@ Once the Django server is running, you can:
 
 The Flutter app connects to the Django backend to provide a comprehensive wellness experience:
 
-#### 🐧 **Penguin Companion System**
+#### **Penguin Companion System**
 - Your penguin avatar grows and evolves based on habit completion
 - Customize appearance, accessories, and living environment
 - Interactive responses to your daily progress
 
-#### 📋 **Habit Management Workflow**
+#### **Habit Management Workflow**
 1. **Create Habits** - Set up daily, weekly, or custom recurring tasks
 2. **Track Progress** - Mark habits as complete and build streaks
 3. **Journal Reflection** - Document thoughts and insights about your journey
@@ -417,3 +417,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Make a README](https://www.makeareadme.com/) for README best practices
 
 ---
+Created by Team K 
