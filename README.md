@@ -363,41 +363,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - **Documentation**: Check `/backend/docs/` for additional setup guides
 - **Community**: [Add community links if available]
 
-## Roadmap
-
-### Phase 1: Core Development (Current Sprint)
-- [ ] **User Authentication System** - Registration, login, email verification
-- [ ] **Basic Habit Tracking** - CRUD operations for habits and to-do lists
-- [ ] **Penguin Avatar System** - Basic customization and progress reflection
-- [ ] **Streak Tracking** - Daily habit completion monitoring
-- [ ] **Database Models** - User profiles, habits, progress tracking
-
-### Phase 2: Enhanced Features
-- [ ] **Journal Entries** - Reflection and progress documentation
-- [ ] **Calendar Integration** - Visual habit planning and tracking
-- [ ] **Theme System** - Light/Dark mode implementation
-- [ ] **Progress Analytics** - Charts and insights dashboard
-- [ ] **Achievement System** - Rewards and milestone tracking
-
-### Phase 3: Gamification & Polish
-- [ ] **Advanced Avatar Features** - Multiple customization options
-- [ ] **Environment System** - Unlockable backgrounds and penguin homes
-- [ ] **Mini-Games** - Interactive elements for engagement
-- [ ] **Social Features** - Friend connections and progress sharing
-
-### Phase 4: Advanced Features (Stretch Goals)
-- [ ] **AI Preset Analysis** - Smart habit recommendations
-- [ ] **Food Scanner Integration** - Camera-based nutrition tracking
-- [ ] **Standby Penguin Mode** - Background companion functionality
-- [ ] **Wearable Integration** - Fitness tracker synchronization
-
-### Technical Roadmap
-- [ ] **API Documentation** - Swagger/OpenAPI implementation
-- [ ] **Automated Testing** - Unit and integration test coverage
-- [ ] **CI/CD Pipeline** - Automated deployment and testing
-- [ ] **Performance Optimization** - Database and app performance tuning
-- [ ] **Production Deployment** - Scalable hosting solution
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
