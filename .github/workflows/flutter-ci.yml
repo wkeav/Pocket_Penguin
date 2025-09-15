@@ -1,0 +1,68 @@
+name: Flutter CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  analyze_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/pocket_penguin_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.x'
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Format check
+        run: flutter format --set-exit-if-changed lib
+      - name: Analyze
+        run: flutter analyze
+      - name: Tests (optional)
+        run: flutter test || true
+
+  build_android:
+    needs: analyze_test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/pocket_penguin_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.x'
+          cache: true
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release-unsigned
+          path: frontend/pocket_penguin_app/build/app/outputs/flutter-apk/app-release.apk
+
+  build_web:
+    needs: analyze_test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/pocket_penguin_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.x'
+          cache: true
+      - run: flutter pub get
+      - run: flutter build web --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: frontend/pocket_penguin_app/build/web
