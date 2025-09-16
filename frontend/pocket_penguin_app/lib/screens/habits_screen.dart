@@ -26,7 +26,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
         final habit = habits[habitIndex];
         final wasCompleted = habit.isCompleted;
         final isNowCompleted = newValue >= habit.targetValue;
-        
+
         habits[habitIndex] = habit.copyWith(
           currentValue: newValue,
           isCompleted: isNowCompleted,
@@ -76,9 +76,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildStatCard('Remaining', '${totalCount - completedCount}', Colors.blue),
+                    _buildStatCard('Remaining',
+                        '${totalCount - completedCount}', Colors.blue),
                     const SizedBox(width: 16),
-                    _buildStatCard('Completed', '$completedCount', Colors.green),
+                    _buildStatCard(
+                        'Completed', '$completedCount', Colors.green),
                   ],
                 ),
               ],
@@ -88,17 +90,18 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
           // Habits List
           ...habits.map((habit) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _buildHabitCard(habit),
-          )),
-          
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildHabitCard(habit),
+              )),
+
           const SizedBox(height: 16),
 
           // Add New Habit Button
           ArcticCard(
             child: Column(
               children: [
-                const Icon(Icons.add_circle_outline, size: 40, color: Colors.blue),
+                const Icon(Icons.add_circle_outline,
+                    size: 40, color: Colors.blue),
                 const SizedBox(height: 8),
                 const Text(
                   'Add New Habit',
@@ -205,12 +208,14 @@ class _HabitsScreenState extends State<HabitsScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: habit.isCompleted ? Colors.green[100] : Colors.blue[100],
+                  color:
+                      habit.isCompleted ? Colors.green[100] : Colors.blue[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   habit.icon,
-                  color: habit.isCompleted ? Colors.green[600] : Colors.blue[600],
+                  color:
+                      habit.isCompleted ? Colors.green[600] : Colors.blue[600],
                   size: 20,
                 ),
               ),
@@ -224,8 +229,12 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: habit.isCompleted ? Colors.grey[600] : Colors.grey[900],
-                        decoration: habit.isCompleted ? TextDecoration.lineThrough : null,
+                        color: habit.isCompleted
+                            ? Colors.grey[600]
+                            : Colors.grey[900],
+                        decoration: habit.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
                       ),
                     ),
                     Text(
@@ -247,7 +256,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Progress Section
           Row(
             children: [
@@ -289,14 +298,16 @@ class _HabitsScreenState extends State<HabitsScreen> {
               if (!habit.isCompleted) ...[
                 IconButton(
                   onPressed: habit.currentValue > 0
-                      ? () => _updateHabitProgress(habit.id, habit.currentValue - 1)
+                      ? () =>
+                          _updateHabitProgress(habit.id, habit.currentValue - 1)
                       : null,
                   icon: const Icon(Icons.remove_circle_outline),
                   color: Colors.grey[600],
                 ),
                 IconButton(
                   onPressed: habit.currentValue < habit.targetValue
-                      ? () => _updateHabitProgress(habit.id, habit.currentValue + 1)
+                      ? () =>
+                          _updateHabitProgress(habit.id, habit.currentValue + 1)
                       : null,
                   icon: const Icon(Icons.add_circle_outline),
                   color: Colors.blue[600],
@@ -305,7 +316,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Tags and streak
           Row(
             children: [
@@ -330,7 +341,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Week progress
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

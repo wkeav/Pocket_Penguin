@@ -10,7 +10,7 @@ class AppTheme {
   static const Color frostGray = Color(0xFFF3F4F6);
   static const Color darkGray = Color(0xFF374151);
   static const Color amber = Color(0xFFF59E0B);
-  
+
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,

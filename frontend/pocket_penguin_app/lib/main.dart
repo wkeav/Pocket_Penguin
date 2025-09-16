@@ -58,11 +58,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget _renderContent() {
     switch (_activeTab) {
       case 0:
-        return HomeScreen(fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
+        return HomeScreen(
+            fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
       case 1:
-        return HabitsScreen(fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
+        return HabitsScreen(
+            fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
       case 2:
-        return TodoScreen(fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
+        return TodoScreen(
+            fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
       case 3:
         return const JournalScreen();
       case 4:
@@ -74,7 +77,8 @@ class _MainScreenState extends State<MainScreen> {
       case 7:
         return const AchievementsScreen();
       default:
-        return HomeScreen(fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
+        return HomeScreen(
+            fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
     }
   }
 
@@ -153,7 +157,8 @@ class _MainScreenState extends State<MainScreen> {
                         ],
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
                           border: Border.all(color: const Color(0xFFF59E0B)),
@@ -162,7 +167,8 @@ class _MainScreenState extends State<MainScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.catching_pokemon, size: 16, color: Color(0xFFF59E0B)),
+                            const Icon(Icons.catching_pokemon,
+                                size: 16, color: Color(0xFFF59E0B)),
                             const SizedBox(width: 4),
                             Text(
                               '$_fishCoins coins',
@@ -205,7 +211,9 @@ class _MainScreenState extends State<MainScreen> {
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: isActive ? Colors.blue[100] : Colors.transparent,
+                                color: isActive
+                                    ? Colors.blue[100]
+                                    : Colors.transparent,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Column(
@@ -214,14 +222,18 @@ class _MainScreenState extends State<MainScreen> {
                                   Icon(
                                     tab.icon,
                                     size: 20,
-                                    color: isActive ? Colors.blue[600] : Colors.grey[500],
+                                    color: isActive
+                                        ? Colors.blue[600]
+                                        : Colors.grey[500],
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     tab.label,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: isActive ? Colors.blue[600] : Colors.grey[500],
+                                      color: isActive
+                                          ? Colors.blue[600]
+                                          : Colors.grey[500],
                                     ),
                                   ),
                                 ],
@@ -244,7 +256,9 @@ class _MainScreenState extends State<MainScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: isActive ? Colors.blue[100] : Colors.transparent,
+                                  color: isActive
+                                      ? Colors.blue[100]
+                                      : Colors.transparent,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
@@ -253,14 +267,18 @@ class _MainScreenState extends State<MainScreen> {
                                     Icon(
                                       tab.icon,
                                       size: 20,
-                                      color: isActive ? Colors.blue[600] : Colors.grey[500],
+                                      color: isActive
+                                          ? Colors.blue[600]
+                                          : Colors.grey[500],
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       tab.label,
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: isActive ? Colors.blue[600] : Colors.grey[500],
+                                        color: isActive
+                                            ? Colors.blue[600]
+                                            : Colors.grey[500],
                                       ),
                                     ),
                                   ],

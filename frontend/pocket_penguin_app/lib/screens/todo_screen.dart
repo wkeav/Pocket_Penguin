@@ -26,15 +26,17 @@ class _TodoScreenState extends State<TodoScreen> {
       if (todoIndex != -1) {
         final todo = todos[todoIndex];
         final updatedTodo = todo.copyWith(completed: !todo.completed);
-        
+
         if (!todo.completed && updatedTodo.completed) {
           // Completing a todo - give reward
           widget.onFishCoinsChanged(widget.fishCoins + todo.reward);
         } else if (todo.completed && !updatedTodo.completed) {
           // Uncompleting a todo - remove reward
-          widget.onFishCoinsChanged((widget.fishCoins - todo.reward).clamp(0, double.infinity).toInt());
+          widget.onFishCoinsChanged((widget.fishCoins - todo.reward)
+              .clamp(0, double.infinity)
+              .toInt());
         }
-        
+
         todos[todoIndex] = updatedTodo;
       }
     });
@@ -93,9 +95,11 @@ class _TodoScreenState extends State<TodoScreen> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildStatCard('Remaining', '${totalCount - completedCount}', Colors.blue),
+                    _buildStatCard('Remaining',
+                        '${totalCount - completedCount}', Colors.blue),
                     const SizedBox(width: 16),
-                    _buildStatCard('Completed', '$completedCount', Colors.green),
+                    _buildStatCard(
+                        'Completed', '$completedCount', Colors.green),
                   ],
                 ),
               ],
@@ -113,7 +117,8 @@ class _TodoScreenState extends State<TodoScreen> {
                     decoration: const InputDecoration(
                       hintText: 'Add a new task...',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     onSubmitted: (_) => _addTodo(),
                   ),
@@ -134,9 +139,9 @@ class _TodoScreenState extends State<TodoScreen> {
 
           // Todos List
           ...todos.map((todo) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _buildTodoCard(todo),
-          )),
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildTodoCard(todo),
+              )),
 
           if (todos.isEmpty)
             ArcticCard(
@@ -224,7 +229,7 @@ class _TodoScreenState extends State<TodoScreen> {
 
   Widget _buildTodoCard(Todo todo) {
     final colorInfo = todo.priority.colorInfo;
-    
+
     return ArcticCard(
       backgroundColor: todo.completed ? Colors.grey[50] : Colors.white,
       child: Row(
@@ -247,8 +252,12 @@ class _TodoScreenState extends State<TodoScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: todo.completed ? Colors.grey[500] : Colors.grey[900],
-                          decoration: todo.completed ? TextDecoration.lineThrough : null,
+                          color: todo.completed
+                              ? Colors.grey[500]
+                              : Colors.grey[900],
+                          decoration: todo.completed
+                              ? TextDecoration.lineThrough
+                              : null,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

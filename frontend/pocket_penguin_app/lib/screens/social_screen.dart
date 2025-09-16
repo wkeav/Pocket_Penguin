@@ -10,7 +10,8 @@ class SocialScreen extends StatelessWidget {
     final friends = SampleSocialData.friends;
     final brandon = SampleSocialData.brandon;
     final allLeaderboardEntries = [...friends, brandon];
-    final leaderboard = allLeaderboardEntries..sort((a, b) => b.fishCoins.compareTo(a.fishCoins));
+    final leaderboard = allLeaderboardEntries
+      ..sort((a, b) => b.fishCoins.compareTo(a.fishCoins));
     final recentActivities = SampleSocialData.recentActivities;
     final challenges = SampleSocialData.challenges;
 
@@ -111,16 +112,17 @@ class SocialScreen extends StatelessWidget {
                       icon: const Icon(Icons.add, size: 16),
                       label: const Text('Add Friend'),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 ...friends.map((friend) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildFriendItem(friend),
-                )),
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildFriendItem(friend),
+                    )),
               ],
             ),
           ),
@@ -141,9 +143,9 @@ class SocialScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ...recentActivities.map((activity) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildActivityItem(activity),
-                )),
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildActivityItem(activity),
+                    )),
               ],
             ),
           ),
@@ -208,9 +210,9 @@ class SocialScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ...challenges.map((challenge) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildChallengeItem(challenge),
-                )),
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildChallengeItem(challenge),
+                    )),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
@@ -355,7 +357,8 @@ class SocialScreen extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.catching_pokemon, size: 12, color: Colors.blue),
+                  const Icon(Icons.catching_pokemon,
+                      size: 12, color: Colors.blue),
                   const SizedBox(width: 2),
                   Text(
                     '${friend.fishCoins}',

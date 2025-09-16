@@ -51,7 +51,8 @@ class ProgressScreen extends StatelessWidget {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.calendar_view_week, color: Colors.blue, size: 20),
+                    Icon(Icons.calendar_view_week,
+                        color: Colors.blue, size: 20),
                     SizedBox(width: 8),
                     Text(
                       'This Week\'s Progress',
@@ -150,13 +151,20 @@ class ProgressScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                _buildAchievementProgress('First Steps', 'Complete your first habit', 1.0, Icons.star),
+                _buildAchievementProgress('First Steps',
+                    'Complete your first habit', 1.0, Icons.star),
                 const SizedBox(height: 8),
-                _buildAchievementProgress('Water Master', 'Drink 8 glasses daily for 3 days', 0.6, Icons.water_drop),
+                _buildAchievementProgress('Water Master',
+                    'Drink 8 glasses daily for 3 days', 0.6, Icons.water_drop),
                 const SizedBox(height: 8),
-                _buildAchievementProgress('Meditation Streak', 'Meditate for 7 days in a row', 0.4, Icons.self_improvement),
+                _buildAchievementProgress(
+                    'Meditation Streak',
+                    'Meditate for 7 days in a row',
+                    0.4,
+                    Icons.self_improvement),
                 const SizedBox(height: 8),
-                _buildAchievementProgress('Social Butterfly', 'Visit 5 friends\' homes', 0.2, Icons.people),
+                _buildAchievementProgress('Social Butterfly',
+                    'Visit 5 friends\' homes', 0.2, Icons.people),
               ],
             ),
           ),
@@ -217,7 +225,8 @@ class ProgressScreen extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: 0.7,
                         backgroundColor: Colors.grey[200],
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.blue),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -318,7 +327,8 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeekStat(String label, String value, double progress, Color color) {
+  Widget _buildWeekStat(
+      String label, String value, double progress, Color color) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -364,37 +374,39 @@ class ProgressScreen extends StatelessWidget {
     ];
 
     return Column(
-      children: habits.map((habit) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 60,
-              child: Text(
-                habit.name,
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: LinearProgressIndicator(
-                value: habit.progress,
-                backgroundColor: Colors.grey[200],
-                valueColor: AlwaysStoppedAnimation<Color>(habit.color),
-              ),
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              width: 30,
-              child: Text(
-                '${(habit.progress * 100).toInt()}%',
-                style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.right,
-              ),
-            ),
-          ],
-        ),
-      )).toList(),
+      children: habits
+          .map((habit) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      child: Text(
+                        habit.name,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: LinearProgressIndicator(
+                        value: habit.progress,
+                        backgroundColor: Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(habit.color),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 30,
+                      child: Text(
+                        '${(habit.progress * 100).toInt()}%',
+                        style: const TextStyle(fontSize: 12),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
+                ),
+              ))
+          .toList(),
     );
   }
 
@@ -403,7 +415,8 @@ class ProgressScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            _buildSummaryItem('Total Habits', '89', Icons.check_circle, Colors.green),
+            _buildSummaryItem(
+                'Total Habits', '89', Icons.check_circle, Colors.green),
             const SizedBox(width: 12),
             _buildSummaryItem('Total Todos', '23', Icons.task, Colors.blue),
           ],
@@ -411,16 +424,19 @@ class ProgressScreen extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
           children: [
-            _buildSummaryItem('Journal Entries', '12', Icons.book, Colors.purple),
+            _buildSummaryItem(
+                'Journal Entries', '12', Icons.book, Colors.purple),
             const SizedBox(width: 12),
-            _buildSummaryItem('Fish Coins', '340', Icons.catching_pokemon, Colors.amber),
+            _buildSummaryItem(
+                'Fish Coins', '340', Icons.catching_pokemon, Colors.amber),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildSummaryItem(String label, String value, IconData icon, Color color) {
+  Widget _buildSummaryItem(
+      String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -455,9 +471,10 @@ class ProgressScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievementProgress(String title, String description, double progress, IconData icon) {
+  Widget _buildAchievementProgress(
+      String title, String description, double progress, IconData icon) {
     final isCompleted = progress >= 1.0;
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

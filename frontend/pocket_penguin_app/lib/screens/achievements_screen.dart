@@ -34,7 +34,9 @@ class AchievementsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final achievements = _getAchievements();
     final unlockedCount = achievements.where((a) => a.isUnlocked).length;
-    final totalRewards = achievements.where((a) => a.isUnlocked).fold(0, (sum, a) => sum + a.reward);
+    final totalRewards = achievements
+        .where((a) => a.isUnlocked)
+        .fold(0, (sum, a) => sum + a.reward);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -64,7 +66,8 @@ class AchievementsScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildStatCard('$unlockedCount/${achievements.length}', 'Unlocked', Colors.amber),
+                    _buildStatCard('$unlockedCount/${achievements.length}',
+                        'Unlocked', Colors.amber),
                     const SizedBox(width: 16),
                     _buildStatCard('$totalRewards', 'Fish Coins', Colors.blue),
                   ],
@@ -359,7 +362,9 @@ class AchievementsScreen extends StatelessWidget {
         color: achievement.isUnlocked ? Colors.white : Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: achievement.isUnlocked ? achievement.color.withOpacity(0.3) : Colors.grey[200]!,
+          color: achievement.isUnlocked
+              ? achievement.color.withOpacity(0.3)
+              : Colors.grey[200]!,
         ),
         boxShadow: achievement.isUnlocked
             ? [
@@ -385,7 +390,8 @@ class AchievementsScreen extends StatelessWidget {
                 ),
                 child: Icon(
                   achievement.icon,
-                  color: achievement.isUnlocked ? achievement.color : Colors.grey,
+                  color:
+                      achievement.isUnlocked ? achievement.color : Colors.grey,
                   size: 24,
                 ),
               ),
@@ -402,7 +408,9 @@ class AchievementsScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: achievement.isUnlocked ? Colors.black : Colors.grey[600],
+                              color: achievement.isUnlocked
+                                  ? Colors.black
+                                  : Colors.grey[600],
                             ),
                           ),
                         ),
@@ -419,7 +427,9 @@ class AchievementsScreen extends StatelessWidget {
                       achievement.description,
                       style: TextStyle(
                         fontSize: 12,
-                        color: achievement.isUnlocked ? Colors.grey[600] : Colors.grey[500],
+                        color: achievement.isUnlocked
+                            ? Colors.grey[600]
+                            : Colors.grey[500],
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -482,7 +492,8 @@ class AchievementsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecialChallenge(String title, String description, String timeLimit, int reward, IconData icon) {
+  Widget _buildSpecialChallenge(String title, String description,
+      String timeLimit, int reward, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

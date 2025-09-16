@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum TodoPriority { low, medium, high }
 
 class Todo {
@@ -43,50 +45,50 @@ class Todo {
 // Sample todos for initial data
 class SampleTodos {
   static List<Todo> get todos => [
-    Todo(
-      id: 1,
-      title: 'Grocery shopping',
-      completed: false,
-      priority: TodoPriority.medium,
-      dueDate: 'Today',
-      reward: 5,
-      category: 'Personal',
-    ),
-    Todo(
-      id: 2,
-      title: 'Call dentist for appointment',
-      completed: false,
-      priority: TodoPriority.high,
-      dueDate: 'Tomorrow',
-      reward: 8,
-      category: 'Health',
-    ),
-    Todo(
-      id: 3,
-      title: 'Finish project presentation',
-      completed: true,
-      priority: TodoPriority.high,
-      reward: 15,
-      category: 'Work',
-    ),
-    Todo(
-      id: 4,
-      title: 'Water the plants',
-      completed: false,
-      priority: TodoPriority.low,
-      reward: 3,
-      category: 'Home',
-    ),
-    Todo(
-      id: 5,
-      title: 'Plan weekend trip',
-      completed: false,
-      priority: TodoPriority.medium,
-      dueDate: 'This week',
-      reward: 10,
-      category: 'Personal',
-    ),
-  ];
+        Todo(
+          id: 1,
+          title: 'Grocery shopping',
+          completed: false,
+          priority: TodoPriority.medium,
+          dueDate: 'Today',
+          reward: 5,
+          category: 'Personal',
+        ),
+        Todo(
+          id: 2,
+          title: 'Call dentist for appointment',
+          completed: false,
+          priority: TodoPriority.high,
+          dueDate: 'Tomorrow',
+          reward: 8,
+          category: 'Health',
+        ),
+        Todo(
+          id: 3,
+          title: 'Finish project presentation',
+          completed: true,
+          priority: TodoPriority.high,
+          reward: 15,
+          category: 'Work',
+        ),
+        Todo(
+          id: 4,
+          title: 'Water the plants',
+          completed: false,
+          priority: TodoPriority.low,
+          reward: 3,
+          category: 'Home',
+        ),
+        Todo(
+          id: 5,
+          title: 'Plan weekend trip',
+          completed: false,
+          priority: TodoPriority.medium,
+          dueDate: 'This week',
+          reward: 10,
+          category: 'Personal',
+        ),
+      ];
 }
 
 extension TodoPriorityExtension on TodoPriority {

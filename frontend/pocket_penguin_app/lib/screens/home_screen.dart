@@ -67,9 +67,11 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildStatCard('Level', '5', Icons.trending_up, Colors.blue),
+                    _buildStatCard(
+                        'Level', '5', Icons.trending_up, Colors.blue),
                     const SizedBox(width: 12),
-                    _buildStatCard('Streak', '7 days', Icons.local_fire_department, Colors.orange),
+                    _buildStatCard('Streak', '7 days',
+                        Icons.local_fire_department, Colors.orange),
                   ],
                 ),
               ],
@@ -115,7 +117,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.catching_pokemon, color: Color(0xFFF59E0B), size: 20),
+                      const Icon(Icons.catching_pokemon,
+                          color: Color(0xFFF59E0B), size: 20),
                       const SizedBox(width: 8),
                       Text(
                         'Earned 23 fish coins today!',
@@ -149,7 +152,8 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    _buildActionButton('Add Habit', Icons.add_circle, Colors.green),
+                    _buildActionButton(
+                        'Add Habit', Icons.add_circle, Colors.green),
                     const SizedBox(width: 8),
                     _buildActionButton('Add Todo', Icons.add_task, Colors.blue),
                   ],
@@ -157,9 +161,11 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    _buildActionButton('Journal Entry', Icons.book, Colors.purple),
+                    _buildActionButton(
+                        'Journal Entry', Icons.book, Colors.purple),
                     const SizedBox(width: 8),
-                    _buildActionButton('View Progress', Icons.bar_chart, Colors.orange),
+                    _buildActionButton(
+                        'View Progress', Icons.bar_chart, Colors.orange),
                   ],
                 ),
               ],
@@ -255,7 +261,8 @@ class HomeScreen extends StatelessWidget {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.emoji_events, color: Color(0xFFF59E0B), size: 20),
+                    Icon(Icons.emoji_events,
+                        color: Color(0xFFF59E0B), size: 20),
                     SizedBox(width: 8),
                     Text(
                       'Recent Achievements',
@@ -296,7 +303,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -330,7 +338,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressCard(String label, String progress, double value, Color color) {
+  Widget _buildProgressCard(
+      String label, String progress, double value, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -399,7 +408,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAchievementItem(String title, String description, IconData icon, bool completed) {
+  Widget _buildAchievementItem(
+      String title, String description, IconData icon, bool completed) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

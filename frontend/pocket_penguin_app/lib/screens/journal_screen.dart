@@ -32,7 +32,8 @@ class _JournalScreenState extends State<JournalScreen> {
       id: '1',
       date: DateTime.now().subtract(const Duration(days: 1)),
       title: 'Great progress today!',
-      content: 'Completed all my habits and felt really productive. Waddles seems happy too!',
+      content:
+          'Completed all my habits and felt really productive. Waddles seems happy too!',
       mood: 'Happy',
       tags: ['productive', 'habits'],
     ),
@@ -40,7 +41,8 @@ class _JournalScreenState extends State<JournalScreen> {
       id: '2',
       date: DateTime.now().subtract(const Duration(days: 3)),
       title: 'Meditation session',
-      content: 'Had a wonderful 15-minute meditation. Feeling more centered and calm.',
+      content:
+          'Had a wonderful 15-minute meditation. Feeling more centered and calm.',
       mood: 'Peaceful',
       tags: ['meditation', 'wellness'],
     ),
@@ -48,7 +50,8 @@ class _JournalScreenState extends State<JournalScreen> {
       id: '3',
       date: DateTime.now().subtract(const Duration(days: 5)),
       title: 'Started my journey',
-      content: 'First day using Pocket Penguin! Excited to build better habits with Waddles.',
+      content:
+          'First day using Pocket Penguin! Excited to build better habits with Waddles.',
       mood: 'Excited',
       tags: ['start', 'motivation'],
     ),
@@ -58,7 +61,14 @@ class _JournalScreenState extends State<JournalScreen> {
   final TextEditingController _contentController = TextEditingController();
   String _selectedMood = 'Neutral';
 
-  final List<String> _moods = ['Happy', 'Peaceful', 'Excited', 'Neutral', 'Tired', 'Anxious'];
+  final List<String> _moods = [
+    'Happy',
+    'Peaceful',
+    'Excited',
+    'Neutral',
+    'Tired',
+    'Anxious'
+  ];
   final Map<String, IconData> _moodIcons = {
     'Happy': Icons.sentiment_very_satisfied,
     'Peaceful': Icons.self_improvement,
@@ -69,16 +79,19 @@ class _JournalScreenState extends State<JournalScreen> {
   };
 
   void _addEntry() {
-    if (_titleController.text.trim().isNotEmpty && _contentController.text.trim().isNotEmpty) {
+    if (_titleController.text.trim().isNotEmpty &&
+        _contentController.text.trim().isNotEmpty) {
       setState(() {
-        _entries.insert(0, JournalEntry(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          date: DateTime.now(),
-          title: _titleController.text.trim(),
-          content: _contentController.text.trim(),
-          mood: _selectedMood,
-          tags: [],
-        ));
+        _entries.insert(
+            0,
+            JournalEntry(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              date: DateTime.now(),
+              title: _titleController.text.trim(),
+              content: _contentController.text.trim(),
+              mood: _selectedMood,
+              tags: [],
+            ));
         _titleController.clear();
         _contentController.clear();
         _selectedMood = 'Neutral';
@@ -116,9 +129,11 @@ class _JournalScreenState extends State<JournalScreen> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildStatCard('${_entries.length}', 'Entries', Colors.purple),
+                    _buildStatCard(
+                        '${_entries.length}', 'Entries', Colors.purple),
                     const SizedBox(width: 16),
-                    _buildStatCard('${_getCurrentStreak()}', 'Day Streak', Colors.orange),
+                    _buildStatCard(
+                        '${_getCurrentStreak()}', 'Day Streak', Colors.orange),
                   ],
                 ),
               ],
@@ -133,7 +148,8 @@ class _JournalScreenState extends State<JournalScreen> {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.add_circle_outline, color: Colors.blue, size: 20),
+                    Icon(Icons.add_circle_outline,
+                        color: Colors.blue, size: 20),
                     SizedBox(width: 8),
                     Text(
                       'New Entry',
@@ -151,7 +167,8 @@ class _JournalScreenState extends State<JournalScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Entry Title',
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -183,7 +200,8 @@ class _JournalScreenState extends State<JournalScreen> {
                             _selectedMood = newValue!;
                           });
                         },
-                        items: _moods.map<DropdownMenuItem<String>>((String mood) {
+                        items:
+                            _moods.map<DropdownMenuItem<String>>((String mood) {
                           return DropdownMenuItem<String>(
                             value: mood,
                             child: Row(
@@ -240,9 +258,9 @@ class _JournalScreenState extends State<JournalScreen> {
             )
           else
             ..._entries.map((entry) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _buildJournalEntryCard(entry),
-            )),
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildJournalEntryCard(entry),
+                )),
 
           const SizedBox(height: 16),
 
@@ -266,36 +284,37 @@ class _JournalScreenState extends State<JournalScreen> {
                   'How did you take care of yourself today?',
                   'What challenge did you overcome?',
                 ].map((prompt) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: InkWell(
-                    onTap: () {
-                      _titleController.text = prompt;
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.purple[50],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.purple[200]!),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.lightbulb, size: 16, color: Colors.purple[600]),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              prompt,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.purple[700],
-                              ),
-                            ),
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: InkWell(
+                        onTap: () {
+                          _titleController.text = prompt;
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.purple[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.purple[200]!),
                           ),
-                        ],
+                          child: Row(
+                            children: [
+                              Icon(Icons.lightbulb,
+                                  size: 16, color: Colors.purple[600]),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  prompt,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.purple[700],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                )),
+                    )),
               ],
             ),
           ),
@@ -384,12 +403,12 @@ class _JournalScreenState extends State<JournalScreen> {
               ),
               const SizedBox(width: 8),
               ...entry.tags.map((tag) => Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: PenguinBadge(
-                  text: tag,
-                  backgroundColor: Colors.grey[100],
-                ),
-              )),
+                    padding: const EdgeInsets.only(right: 4),
+                    child: PenguinBadge(
+                      text: tag,
+                      backgroundColor: Colors.grey[100],
+                    ),
+                  )),
             ],
           ),
         ],
@@ -400,7 +419,7 @@ class _JournalScreenState extends State<JournalScreen> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return 'Today';
     } else if (difference == 1) {
@@ -412,18 +431,18 @@ class _JournalScreenState extends State<JournalScreen> {
 
   int _getCurrentStreak() {
     if (_entries.isEmpty) return 0;
-    
+
     // Simple streak calculation - consecutive days with entries
     int streak = 0;
     DateTime checkDate = DateTime.now();
-    
-    for (int i = 0; i < 7; i++) { // Check last 7 days
-      final hasEntry = _entries.any((entry) => 
-        entry.date.year == checkDate.year &&
-        entry.date.month == checkDate.month &&
-        entry.date.day == checkDate.day
-      );
-      
+
+    for (int i = 0; i < 7; i++) {
+      // Check last 7 days
+      final hasEntry = _entries.any((entry) =>
+          entry.date.year == checkDate.year &&
+          entry.date.month == checkDate.month &&
+          entry.date.day == checkDate.day);
+
       if (hasEntry) {
         streak++;
         checkDate = checkDate.subtract(const Duration(days: 1));
@@ -431,7 +450,7 @@ class _JournalScreenState extends State<JournalScreen> {
         break;
       }
     }
-    
+
     return streak;
   }
 }
