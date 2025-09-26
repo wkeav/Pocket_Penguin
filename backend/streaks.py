@@ -11,7 +11,10 @@ def update_streak():
         user_data["streak"] = 1
     else:
         days = (today - last).days
-        if days == 1:
+        if days < 0:
+            # last_active is in the future; do not update streak
+            return user_data["streak"]
+        elif days == 1:
             user_data["streak"] += 1
         elif days > 1:
             user_data["streak"] = 1
