@@ -164,7 +164,7 @@ The backend will be available at `http://127.0.0.1:8000/`
    flutter config --enable-linux-desktop
    ```
 
-4. **Run the app**
+4. **Run the app** (currently it's only macOS and chrome right now. Apolgozie for the inconvience) 
    ```bash
    # For mobile (requires emulator/device)
    flutter run
