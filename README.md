@@ -169,7 +169,7 @@ The backend will be available at `http://127.0.0.1:8000/`
    # For mobile (requires emulator/device)
    flutter run
    
-   # For desktop testing
+   # For desktop testing (currently it's only macOS and chrome right now. Apolgozie for the inconvience) 
    flutter run -d macos      # macOS
    flutter run -d windows    # Windows
    flutter run -d linux      # Linux
