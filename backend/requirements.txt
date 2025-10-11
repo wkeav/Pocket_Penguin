@@ -6,3 +6,9 @@ python-decouple==3.8
 pytz==2025.2
 sqlparse==0.5.3
 
+# Security & Authentication
+djangorestframework-simplejwt==5.3.0
+django-ratelimit==4.1.0
+django-cors-headers==4.3.1
+cryptography==41.0.7
+bcrypt==4.1.2

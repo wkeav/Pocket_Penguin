@@ -8,6 +8,7 @@ import 'screens/progress_screen.dart';
 import 'screens/social_screen.dart';
 import 'screens/achievements_screen.dart';
 import 'theme/app_theme.dart';
+import 'utils/responsive_helper.dart';
 
 void main() {
   runApp(const PocketPenguinApp());
@@ -84,44 +85,63 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get responsive design parameters
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isWeb = ResponsiveHelper.isWeb(context);
+    final isIOS = ResponsiveHelper.isIOS(context);
+    final deviceType = ResponsiveHelper.getDeviceType(context);
+
+    // Responsive container sizing
+    final containerWidth = isWeb ? 375.0 : screenWidth;
+    final containerHeight = isWeb ? 800.0 : screenHeight;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Center(
         child: Container(
-          width: 375, // iPhone width
-          height: 800,
+          width: containerWidth,
+          height: containerHeight,
+          constraints: BoxConstraints(
+            maxWidth: 500, // Maximum width for larger screens
+            maxHeight: screenHeight,
+          ),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [Color(0xFFE0F2FE), Color(0xFFDBEAFE)],
             ),
-            borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.grey[800]!, width: 8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            borderRadius: isWeb ? BorderRadius.circular(40) : BorderRadius.zero,
+            border:
+                isWeb ? Border.all(color: Colors.grey[800]!, width: 8) : null,
+            boxShadow: isWeb
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ]
+                : null,
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: isWeb ? BorderRadius.circular(32) : BorderRadius.zero,
             child: Column(
               children: [
-                // Phone Notch
-                Container(
-                  width: 128,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
+                // Phone Notch (only for web)
+                if (isWeb)
+                  Container(
+                    width: 128,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[800],
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
                     ),
                   ),
-                ),
                 // Header
                 Container(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -134,28 +154,34 @@ class _MainScreenState extends State<MainScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(16),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Icon(Icons.pets, color: Colors.blue),
                             ),
-                            child: const Icon(Icons.pets, color: Colors.blue),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'Pocket Penguin',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E3A8A),
+                            const SizedBox(width: 12),
+                            const Flexible(
+                              child: Text(
+                                'Pocket Penguin',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1E3A8A),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
