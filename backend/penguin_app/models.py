@@ -8,7 +8,7 @@ import uuid
     
     """
 class User(AbstractUser):
-    id = models.UUIDField(primary_key=True,default=uuid.uuid7, editable=False)
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=True)
     
@@ -26,7 +26,7 @@ class User(AbstractUser):
     last_login_ip = models.GenericIPAddressField(null=True, blank=True)
     
     # Profile views 
-    profile = models.URLField(blank=True,null=True)
+    profile_picture = models.URLField(blank=True,null=True)
     bio = models.TextField(max_length=700,blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     
@@ -51,7 +51,7 @@ class User(AbstractUser):
 class UserGameProfile(models.Model):
     """
     User's game data profile 
-    """"
+    """
     # Each user has one profile, and if user is deleted then delete their profile too
     user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile') 
     
