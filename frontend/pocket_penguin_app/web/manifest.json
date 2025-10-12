@@ -1,13 +1,16 @@
 {
-    "name": "pocket_penguin_app",
-    "short_name": "pocket_penguin_app",
+    "name": "Pocket Penguin",
+    "short_name": "Pocket Penguin",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#E0F2FE",
+    "theme_color": "#1E3A8A",
+    "description": "Your personal productivity companion with Waddles the Penguin",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "scope": "/",
+    "lang": "en",
+    "categories": ["productivity", "lifestyle"],
     "icons": [
         {
             "src": "icons/Icon-192.png",

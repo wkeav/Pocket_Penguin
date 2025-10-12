@@ -33,3 +33,8 @@ MANIFEST
 .vscode/settings.json
 .vscode/launch.json
 .vscode/extensions.json
+
+# Environment variables 
+.env
+*.env
+.env.local
