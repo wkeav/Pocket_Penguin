@@ -80,7 +80,7 @@ Pocket Penguin/
 
 ### For Local Development
 - **Python 3.9+** - Backend development
-- **Flutter SDK 3.2.6+** - Mobile app development
+- **Flutter SDK 3.16.9+** - Mobile app development
 - **Git** - Version control
 - **Docker** (optional) - Containerized deployment
 
