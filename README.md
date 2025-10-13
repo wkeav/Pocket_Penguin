@@ -65,7 +65,6 @@ flutter run -d chrome  # For web testing
 |----------|-------------|
 | [Setup Guide](docs/SETUP.md) | Detailed installation and configuration |
 | [Architecture](docs/ARCHITECTURE.md) | System design and technology decisions |
-| [Contributing](docs/CONTRIBUTING.md) | Development workflow and code standards |
 | [API Reference](docs/API.md) | Backend API endpoints and usage |
 | [Deployment](docs/DEPLOYMENT.md) | Production deployment instructions |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Common issues and solutions |
