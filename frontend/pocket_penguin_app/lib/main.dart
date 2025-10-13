@@ -89,8 +89,8 @@ class _MainScreenState extends State<MainScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final isWeb = ResponsiveHelper.isWeb(context);
-    final isIOS = ResponsiveHelper.isIOS(context);
-    final deviceType = ResponsiveHelper.getDeviceType(context);
+    // final isIOS = ResponsiveHelper.isIOS(context);
+    // final deviceType = ResponsiveHelper.getDeviceType(context);
 
     // Responsive container sizing
     final containerWidth = isWeb ? 375.0 : screenWidth;
