@@ -32,7 +32,7 @@ Built with Django REST Framework (backend) and Flutter (mobile app) by Team K fo
 
 ### Prerequisites
 
-- **Python 3.11+** | **Flutter 3.16.9+** | **Git**
+- **Python 3.11+** | **Flutter 3.16.9** | **Git**
 
 #### Backend (Django)
 ```bash
