@@ -16,7 +16,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.x'
+          flutter-version: '3.16.9'
           cache: true
       - name: Install dependencies
         run: flutter pub get
@@ -76,7 +76,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.x'
+          flutter-version: '3.19.6'
           cache: true
       - run: flutter pub get
       - name: Build Web (Release)
@@ -107,7 +107,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.x'
+          flutter-version: '3.19.6'
           cache: true
       - run: flutter pub get
       - name: Test iOS Compatibility (Web Simulation)
