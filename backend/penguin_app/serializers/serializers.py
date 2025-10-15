@@ -46,4 +46,3 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """Check username format"""
         # Only allow alphanumeric, numbers, 
         value = value.lower()
-        
