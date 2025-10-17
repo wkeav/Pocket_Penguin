@@ -76,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
       case 6:
         return const SocialScreen();
       case 7:
-        return const AchievementsScreen();
+        return const AchievementsScreen();x
       default:
         return HomeScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
