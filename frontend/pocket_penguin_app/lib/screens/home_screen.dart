@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Welcome back?',
+                            'Howdy!',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
