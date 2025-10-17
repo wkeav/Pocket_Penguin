@@ -503,31 +503,6 @@ flutter run
 
 ---
 
-## Next Steps for Developers
-
-After setup, if you want to contribute:
-
-1. **Backend Development:**
-   - Complete UserRegistrationSerializer
-   - Create authentication ViewSets
-   - Implement JWT authentication
-   - Create Habit/Todo/Journal models
-
-2. **Frontend Development:**
-   - Create API service layer
-   - Implement state management
-   - Build login/register screens
-   - Connect screens to backend
-
-3. **Testing:**
-   - Write backend unit tests
-   - Write frontend widget tests
-   - Integration testing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
-
----
-
 ## Development Tools Setup
 
 ### VSCode Extensions
