@@ -1,0 +1,48 @@
+name: Deploy Flutter Web to GitHub Pages (gh-pages)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend/pocket_penguin_app
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.16.9'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: |
+          flutter build web --release --base-href "/Pocket_Penguin/"
+          echo "Flutter web build completed successfully"
+
+      - name: Setup GitHub Pages SPA routing
+        run: |
+          cd build/web
+          # Copy our custom 404.html for SPA routing
+          cp ../../web/404.html ./404.html
+          echo "Custom 404.html copied for GitHub Pages SPA routing"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          publish_branch: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
