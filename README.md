@@ -57,6 +57,14 @@ flutter run -d chrome  # For web testing
 
 **Detailed setup guide:** [docs/SETUP.md](docs/SETUP.md)
 
+### 🌐 Live Demo
+
+**Web App:** [View Live Demo](https://wkeav.github.io/Pocket_Penguin/) 🚀
+
+The app is automatically deployed to GitHub Pages whenever changes are pushed to the main branch.
+
+**Deployment Guide:** [DEPLOYMENT.md](DEPLOYMENT.md)
+
 ---
 
 ## Documentation
@@ -66,7 +74,7 @@ flutter run -d chrome  # For web testing
 | [Setup Guide](docs/SETUP.md) | Detailed installation and configuration |
 | [Architecture](docs/ARCHITECTURE.md) | System design and technology decisions |
 | [API Reference](docs/API.md) | Backend API endpoints and usage |
-| [Deployment](docs/DEPLOYMENT.md) | Production deployment instructions |
+| [Deployment](DEPLOYMENT.md) | GitHub Pages deployment instructions |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 
 ---

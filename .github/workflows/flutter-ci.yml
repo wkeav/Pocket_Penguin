@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI & Deploy
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
       - name: Format check
         run: dart format --set-exit-if-changed lib
       - name: Analyze
-        run:  flutter analyze --no-fatal-infos
+        run: flutter analyze --no-fatal-infos
       - name: Test Web Compatibility
         run: 
           echo "Testing web compatibility..."
@@ -32,7 +32,6 @@ jobs:
       - name: Test iOS Compatibility
         run: |
           echo "Testing iOS compatibility..."
-          # Check iOS configuration files exist
           if [ ! -f "ios/Runner/Info.plist" ]; then
             echo "iOS Info.plist missing"
             exit 1
@@ -44,26 +43,6 @@ jobs:
           echo "iOS configuration files present"
       - name: Run Tests
         run: flutter test || echo "Some tests failed - this is expected for layout overflow issues in test environment"
-
-  # build_android:
-  #   needs: analyze_test
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: frontend/pocket_penguin_app
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: stable
-  #         flutter-version: '3.x'
-  #         cache: true
-  #     - run: flutter pub get
-  #     - run: flutter build apk --release
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: app-release-unsigned
-  #         path: frontend/pocket_penguin_app/build/app/outputs/flutter-apk/app-release.apk
 
   build_web:
     needs: analyze_test
@@ -80,10 +59,9 @@ jobs:
           cache: true
       - run: flutter pub get
       - name: Build Web (Release)
-        run: flutter build web --release
+        run: flutter build web --release --base-href "/Pocket_Penguin/"
       - name: Test Web Build
         run: |
-          # Test that web build completed successfully
           if [ -d "build/web" ]; then
             echo "Web build successful"
             ls -la build/web/
@@ -96,6 +74,37 @@ jobs:
           name: web-build
           path: frontend/pocket_penguin_app/build/web
 
+  # NEW: GitHub Pages Deployment
+  deploy:
+    needs: build_web
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: dist
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Keep your existing test_ios_compatibility job...
   test_ios_compatibility:
     needs: analyze_test
     runs-on: ubuntu-latest
@@ -113,10 +122,8 @@ jobs:
       - name: Test iOS Compatibility (Web Simulation)
         run: |
           echo "Testing iOS compatibility using web platform..."
-          # Test iOS-specific configurations
           if [ -f "ios/Runner/Info.plist" ]; then
             echo "iOS Info.plist found"
-            # Check for iOS-specific keys
             if grep -q "UISupportedInterfaceOrientations" ios/Runner/Info.plist; then
               echo "iOS orientation support configured"
             fi
@@ -128,11 +135,9 @@ jobs:
             exit 1
           fi
           
-          # Test responsive design with iOS device dimensions
           echo "Testing responsive design for iOS devices..."
           flutter build web --release --dart-define=IOS_SIMULATION=true
           
-          # Verify build artifacts
           if [ -d "build/web" ]; then
             echo "iOS-compatible web build successful"
           else
@@ -142,7 +147,6 @@ jobs:
       - name: Test iOS Touch Targets
         run: |
           echo "Testing iOS touch target compliance..."
-          # This would ideally run widget tests, but for now we verify the code structure
           if grep -r "getMinTouchTargetSize\|44" lib/; then
             echo "iOS touch target compliance code found"
           else
