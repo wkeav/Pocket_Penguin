@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.utils import timezone
+<<<<<<< HEAD
 from .user_models import User  # Link journal entries to users
 
 """
@@ -41,6 +42,9 @@ class JournalEntry(models.Model):
     
     # Automatic timestamps
 from .user_models import User  
+=======
+from .user_models import User  # assuming you want to link journal entries to users
+>>>>>>> ccb2204 (Add JournalEntry model to models folder)
 
 class JournalEntry(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -50,6 +54,10 @@ class JournalEntry(models.Model):
     mood = models.CharField(max_length=50)
     tags = models.JSONField(default=list, blank=True)  # store tags as a list
     date = models.DateTimeField(default=timezone.now)
+<<<<<<< HEAD
+=======
+
+>>>>>>> ccb2204 (Add JournalEntry model to models folder)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
