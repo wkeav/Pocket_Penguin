@@ -4,8 +4,13 @@ from .journal_entry_model import JournalEntry
 
 __all__ = [
     'User',
+<<<<<<< HEAD
     'UserGameProfile',
     'Progress',
     'JournalEntry',
+=======
+    'UserGameProfile'
+    'JournalEntry'
+>>>>>>> 888dce5 (Add JournalEntry import to models/__init__.py)
 ]
 
