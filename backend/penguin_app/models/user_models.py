@@ -4,9 +4,32 @@ from django.utils import timezone
 import uuid
 
 """ 
-    Model database entity that uses Python's built in AbstractUser with extras security 
+    User models for Pocket Penguin application.
     
-    """
+    This module defines the core user authentication and game profile models
+    that handle user registration, security, and game progression tracking.
+
+    Models:
+    User: Extended Django AbstractUser with additional security features
+            and profile information for user authentication and management.
+    
+    UserGameProfile: Game-specific data and statistics linked to each user
+                    via OneToOne relationship.
+                    
+    Security Features:
+    - Email verification with secure tokens
+    - Password reset with expiration
+    - Failed login attempt tracking
+    - Account locking mechanism
+    - IP address logging for security audits
+    
+    Database Design:
+    - User table: Core authentication and profile data
+    - UserGameProfile table: Game statistics and progression
+    - OneToOne relationship ensures data integrity
+
+Author: Astra
+"""
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
@@ -49,9 +72,6 @@ class User(AbstractUser):
 
 # User game profile table 
 class UserGameProfile(models.Model):
-    """
-    User's game data profile 
-    """
     # Each user has one profile, and if user is deleted then delete their profile too
     user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile') 
     

@@ -1,4 +1,6 @@
-from .serializers import *
+from .user_serializers import *
 
 # Make serializers available at package level
-__all__ = []
+__all__ = [
+    'UserRegistrationSerializer'
+]

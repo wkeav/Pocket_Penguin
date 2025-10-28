@@ -16,8 +16,7 @@ gunicorn==21.2.0
 # psycopg2-binary==2.9.9
 
 # Authentication & Security
-# Uncomment if implementing JWT authentication:
-# djangorestframework-simplejwt==5.3.0
+djangorestframework-simplejwt==5.3.0
 
 # API Documentation (optional but recommended)
 # Uncomment to enable Swagger/OpenAPI docs:

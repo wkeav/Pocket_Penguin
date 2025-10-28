@@ -136,8 +136,8 @@ User's game statistics and settings.
 
 ## Planned API Structure
 
-> **Note:** These endpoints are NOT implemented yet. This is the planned structure.
-
+> **Note:** These endpoints are NOT implemented yet. Currently working on it by Astra 
+  TODO: WORKING ON API VIEWS FOR AUTHENTICATION 
 ### Base URL
 
 **Development:** `http://127.0.0.1:8000/api/`  
@@ -211,7 +211,7 @@ GET    /api/progress/charts/        # Get chart data
 
 ## Development Roadmap
 
-### Phase 1: Authentication (Current Priority)
+### Phase 1: Authentication 
 
 - [ ] Implement user registration endpoint
 - [ ] Implement login endpoint with JWT
