@@ -4,4 +4,5 @@ from .progress_models import Progress
 __all__ = [
     'User',
     'UserGameProfile'
+    'Progress'
 ]

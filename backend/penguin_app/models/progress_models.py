@@ -1,6 +1,7 @@
 from django.db import models
 from .user_models import UserGameProfile
 
+# Weekly progress table
 class Progress(models.Model):
     profile = models.ForeignKey(UserGameProfile, on_delete=models.CASCADE, related_name='progress')
     week_start = models.DateField()  # For tracking weekly stats
