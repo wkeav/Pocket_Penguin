@@ -137,7 +137,7 @@ User's game statistics and settings.
 ## Planned API Structure
 
 > **Note:** These endpoints are NOT implemented yet. Currently working on it by Astra 
-  TODO: WORKING ON API VIEWS FOR AUTHENTICATION 
+  TODO: WORKING ON API VIEWS FOR USER AUTHENTICATION 
 ### Base URL
 
 **Development:** `http://127.0.0.1:8000/api/`  

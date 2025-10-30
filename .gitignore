@@ -39,3 +39,6 @@ MANIFEST
 .env
 *.env
 .env.local
+
+# ETC 
+DEVELOPER_HANDOFF.md 
