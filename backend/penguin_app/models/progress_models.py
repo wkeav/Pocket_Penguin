@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ValidationError
 from .user_models import UserGameProfile
 
 # Weekly progress table
@@ -19,3 +20,15 @@ class Progress(models.Model):
 
     def __str__(self):
         return f"{self.profile.user.email} Progress ({self.week_start})"
+    
+    def clean(self):
+        """Validate that completion_rate is between 0 and 1."""
+        if not (0.0 <= self.completion_rate <= 1.0):
+            raise ValidationError(
+                {"completion_rate": "Completion rate must be between 0 and 1."}
+            )
+
+    def save(self, *args, **kwargs):
+        """Ensure validation runs before saving."""
+        self.full_clean()
+        super().save(*args, **kwargs)

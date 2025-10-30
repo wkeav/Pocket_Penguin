@@ -39,3 +39,12 @@ MANIFEST
 .env
 *.env
 .env.local
+
+# cache files
+__pycache__/
+*.pyc
+
+# Local config files
+.vscode/
+.fvm/
+.fvmrc
