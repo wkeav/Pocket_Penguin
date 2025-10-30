@@ -66,7 +66,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         password = data.get('password')
         password_confirmed = data.get('password_confirm')
         
-        if password != password_confirm:
+        if password != password_confirmed:
             raise serializers.ValidationError('Passwords do not match, try again!')
         
         return data 
