@@ -1,5 +1,5 @@
 """
-Unit tests for user authentication feature in Pocket Penguin.
+Unit tests for user authentication feature in Pocket Penguin!
 
 Author: Astra
 """
