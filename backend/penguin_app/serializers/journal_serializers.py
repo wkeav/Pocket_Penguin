@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models.journal_models import JournalEntry
+from ..models.journal_entry_model import JournalEntry
 
 """
 Django REST Framework serializer for the Pocket Penguin Journal feature.

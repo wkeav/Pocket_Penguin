@@ -1,3 +1,3 @@
 from .user_views import *
 
-__all__ = []
+__all__ = ["user_views"]

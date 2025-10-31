@@ -1,8 +1,15 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from ..models.journal_models import JournalEntry
+from ..models.journal_entry_model import JournalEntry
 from ..serializers.journal_serializers import JournalEntrySerializer
 from django.utils import timezone
+
+"""
+unit tests for journal feature of pocket penguin app
+only one exists for testing journal entry creation right now, but more to come
+
+Author: Kaitlyn
+"""
 
 User = get_user_model()
 
