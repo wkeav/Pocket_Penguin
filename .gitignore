@@ -42,3 +42,10 @@ MANIFEST
 
 # ETC 
 DEVELOPER_HANDOFF.md 
+
+# cache files (duplicate already covered above, but keeping for clarity)
+*.pyc
+
+# Local config files
+.fvm/
+.fvmrc

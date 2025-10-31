@@ -73,4 +73,22 @@ class Migration(migrations.Migration):
                 'db_table': 'user_game_profiles',
             },
         ),
+        migrations.CreateModel(
+            name='Progress',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('week_start', models.DateField()),
+                ('habits_completed', models.IntegerField(default=0)),
+                ('todos_completed', models.IntegerField(default=0)),
+                ('completion_rate', models.FloatField(default=0.0)),
+                ('fish_coins_earned', models.IntegerField(default=0)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='progress', to='penguin_app.usergameprofile')),
+            ],
+            options={
+                'db_table': 'user_progress',
+                'ordering': ['-week_start'],
+            },
+        ),
     ]
