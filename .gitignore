@@ -11,7 +11,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+backend/**/lib/
+*.so
 lib64/
 parts/
 sdist/
@@ -33,3 +34,18 @@ MANIFEST
 .vscode/settings.json
 .vscode/launch.json
 .vscode/extensions.json
+
+# Environment variables 
+.env
+*.env
+.env.local
+
+# ETC 
+DEVELOPER_HANDOFF.md 
+
+# cache files (duplicate already covered above, but keeping for clarity)
+*.pyc
+
+# Local config files
+.fvm/
+.fvmrc

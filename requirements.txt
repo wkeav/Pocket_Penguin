@@ -1,0 +1,13 @@
+# Pocket Penguin - Root Requirements
+# This file points to backend Python dependencies
+# For Flutter/frontend dependencies, see frontend/pocket_penguin_app/pubspec.yaml
+
+# Backend Python Dependencies
+-r backend/requirements.txt
+
+# Note: To install backend dependencies, run:
+# pip install -r requirements.txt
+#
+# For development, you may also want to install:
+# pip install -r backend/requirements-dev.txt (if created)
+
