@@ -50,10 +50,12 @@ class _GameBoxState extends State<GameBox> {
               Positioned.fill(
                   child: Image(
                       image: widget.sky.image,
+                      key: const Key('sky'),
                       fit: BoxFit.cover)), // Sky (behind everything)
               Positioned.fill(
                   child: Image(
                       image: widget.background.image,
+                      key: const Key('background'),
                       fit: BoxFit.cover)), // Background
               widget.child, // Decorations
               Image.asset('images/logo.png',
