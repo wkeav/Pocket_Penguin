@@ -169,6 +169,81 @@ class ProgressScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+
+          // Waddles Growth
+          ArcticCard(
+            gradientColors: const [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
+            child: Column(
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.pets, color: Colors.blue, size: 20),
+                    SizedBox(width: 8),
+                    Text(
+                      'Waddles\' Growth',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1D4ED8),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.blue[200]!),
+                  ),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.pets, size: 40, color: Colors.blue),
+                        SizedBox(height: 8),
+                        Text(
+                          'Level 5 Waddles',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    const Text('Level 5'),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: LinearProgressIndicator(
+                        value: 0.7,
+                        backgroundColor: Colors.grey[200],
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text('Level 6'),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '127/200 XP to next level',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -341,29 +416,19 @@ class ProgressScreen extends StatelessWidget {
         Row(
           children: [
             _buildSummaryItem(
-                'Total Habits',
-                '89',
-                'assets/PocketPenguinIcons/pockp_calendar_icon.png',
-                Colors.green),
+                'Total Habits', '89', Icons.check_circle, Colors.green),
             const SizedBox(width: 12),
-            _buildSummaryItem('Total Todos', '23',
-                'assets/PocketPenguinIcons/pockp_habits_icon.png', Colors.teal),
+            _buildSummaryItem('Total Todos', '23', Icons.task, Colors.blue),
           ],
         ),
         const SizedBox(height: 12),
         Row(
           children: [
             _buildSummaryItem(
-                'Journal Entries',
-                '12',
-                'assets/PocketPenguinIcons/pockp_journal_icon.png',
-                Colors.purple),
+                'Journal Entries', '12', Icons.book, Colors.purple),
             const SizedBox(width: 12),
             _buildSummaryItem(
-                'Fish Coins',
-                '340',
-                'assets/PocketPenguinIcons/pockp_fishcoin.png',
-                const Color.fromARGB(255, 225, 180, 19)),
+                'Fish Coins', '340', Icons.catching_pokemon, Colors.amber),
           ],
         ),
       ],
@@ -371,7 +436,7 @@ class ProgressScreen extends StatelessWidget {
   }
 
   Widget _buildSummaryItem(
-      String label, String value, dynamic icon, Color color) {
+      String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -382,9 +447,7 @@ class ProgressScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            icon is IconData
-                ? Icon(icon, color: color, size: 24)
-                : Image.asset(icon, width: 28, height: 24),
+            Icon(icon, color: color, size: 24),
             const SizedBox(height: 8),
             Text(
               value,

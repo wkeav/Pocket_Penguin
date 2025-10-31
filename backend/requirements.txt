@@ -1,32 +1,8 @@
-# Core Django Framework
+asgiref==3.9.1
 Django==4.2.7
-djangorestframework==3.14.0
-
-# CORS handling for frontend-backend communication
 django-cors-headers==4.3.1
-
-# Environment variable management (security best practice)
+djangorestframework==3.14.0
 python-decouple==3.8
+pytz==2025.2
+sqlparse==0.5.3
 
-# Production WSGI server
-gunicorn==21.2.0
-
-# Database adapter (optional - SQLite is built-in, but include for PostgreSQL support)
-# Uncomment if using PostgreSQL in production:
-# psycopg2-binary==2.9.9
-
-# Authentication & Security
-djangorestframework-simplejwt==5.3.0
-
-# API Documentation (optional but recommended)
-# Uncomment to enable Swagger/OpenAPI docs:
-# drf-yasg==1.21.7
-
-# Testing (development only)
-# pytest==7.4.3
-# pytest-django==4.7.0
-# coverage==7.3.2
-
-# Code quality (development only)
-# flake8==6.1.0
-# black==23.11.0
