@@ -63,6 +63,10 @@ flutter:
 
   assets:
     - assets/PocketPenguinIcons/
+    - images/
+    - images/backgrounds/
+    - images/skies/
+    - images/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
