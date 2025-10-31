@@ -10,6 +10,7 @@ from .journal_entry_model import JournalEntry
 __all__ = [
     'User',
 <<<<<<< HEAD
+<<<<<<< HEAD
     'UserGameProfile',
     'Progress',
     'JournalEntry',
@@ -17,5 +18,9 @@ __all__ = [
     'UserGameProfile'
     'JournalEntry'
 >>>>>>> 888dce5 (Add JournalEntry import to models/__init__.py)
+=======
+    'UserGameProfile',
+    'JournalEntry',
+>>>>>>> 6804c67 (added unit test for journal entry creation)
 ]
 
