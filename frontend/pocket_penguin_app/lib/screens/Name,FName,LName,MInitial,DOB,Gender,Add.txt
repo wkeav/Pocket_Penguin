@@ -1,0 +1,6 @@
+Name,FName,LName,MInitial,DOB,Gender,Address,Street,City,State,PostalCode,IsSubscribed
+John Doe,John,Doe,A,1985-04-12,Male,123 Main St,Main St,Springfield,IL,62704,1
+Jane Smith,Jane,Smith,B,1990-09-23,Female,456 Oak Ave,Oak Ave,Shelbyville,IL,62565,0
+Alice Johnson,Alice,Johnson,C,2000-01-15,Female,789 Pine Rd,Pine Rd,Capital City,IL,62701,1
+Bob Brown,Bob,Brown,D,1978-12-05,Male,321 Maple Ln,Maple Ln,Ogdenville,IL,62234,0
+Eve Davis,Eve,Davis,E,1995-07-30,Female,654 Cedar St,Cedar St,North Haverbrook,IL,62002,1
