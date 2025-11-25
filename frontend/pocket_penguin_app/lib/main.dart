@@ -10,6 +10,9 @@ import 'screens/achievements_screen.dart';
 import 'theme/app_theme.dart';
 import 'screens/gamebox.dart';
 import 'screens/wardrobe_screen.dart';
+import 'screens/auth_screen.dart';
+import 'screens/profile_screen.dart';
+import 'services/auth_service.dart';
 
 void main() {
   runApp(const PocketPenguinApp());
@@ -23,7 +26,7 @@ class PocketPenguinApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pocket Penguin',
       theme: AppTheme.lightTheme,
-      home: const MainScreen(),
+      home: const MainScreen(),  // Always show main screen with mock data
       debugShowCheckedModeBanner: false,
     );
   }
@@ -144,27 +147,52 @@ class _MainScreenState extends State<MainScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(16),
+                      GestureDetector(
+                        onTap: () async {
+                          // Create auth service instance & if user is logged in
+                          final authService = AuthService();
+                          final isLoggedIn = await authService.isLoggedIn();
+                          if (mounted) {
+                            if (isLoggedIn) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProfileScreen(),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AuthScreen(),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Row(
+                          children: [
+                             // Penguin logo and text
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Image.asset("images/logo.png", width: 32, height: 32),
                             ),
-                            child: Image.asset("images/logo.png", width: 32, height: 32),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'Pocket Penguin',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E3A8A),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Pocket Penguin',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E3A8A),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
