@@ -23,11 +23,9 @@ Current API reference for Pocket Penguin backend.
 - Database models defined
 - Admin panel accessible
 - Basic "Hello World" endpoint
+- User registration/login API
 
 ### What's NOT Working
-
-- No authentication endpoints
-- No user registration/login API
 - No habit endpoints
 - No todo endpoints
 - No journal endpoints
@@ -136,8 +134,12 @@ User's game statistics and settings.
 
 ## Planned API Structure
 
-> **Note:** These endpoints are NOT implemented yet. Currently working on it by Astra 
-  TODO: WORKING ON API VIEWS FOR USER AUTHENTICATION 
+> **Note:** These endpoints follow REST best practices:
+> - Resources are nouns (users, tokens, habits)
+> - HTTP methods are verbs (GET, POST, PUT, DELETE)
+> - Authentication uses `/api/auth/token/` (industry standard)
+> - User management uses `/api/users/` (RESTful)
+
 ### Base URL
 
 **Development:** `http://127.0.0.1:8000/api/`  
@@ -146,23 +148,29 @@ User's game statistics and settings.
 ### Authentication (Planned)
 
 ```
-POST   /api/auth/register/          # Register new user
-POST   /api/auth/login/             # Login and get token
-POST   /api/auth/logout/            # Logout
-POST   /api/auth/refresh/           # Refresh access token
+POST   /api/users/                  # Register new user (create user resource)
+GET    /api/users/me/               # Get current user profile
+PUT    /api/users/me/               # Update current user profile
+PATCH  /api/users/me/               # Partial update of current user
+DELETE /api/users/me/               # Delete current user account
+GET    /api/users/me/game-profile/  # Get current user's game profile
+```
+
+### Authentication Tokens
+
+```
+POST   /api/auth/token/             # Login - obtain JWT tokens
+POST   /api/auth/token/refresh/     # Refresh access token
+POST   /api/auth/token/revoke/      # Logout - revoke token
+DELETE /api/auth/token/             # Alternative logout endpoint
+```
+
+### Authentication Actions 
+
+```
 POST   /api/auth/verify-email/      # Verify email address
 POST   /api/auth/reset-password/    # Request password reset
-POST   /api/auth/reset-password-confirm/  # Confirm password reset
-```
-
-### User (Planned)
-
-```
-GET    /api/users/me/               # Get current user profile
-PUT    /api/users/me/               # Update profile
-PATCH  /api/users/me/               # Partial update
-DELETE /api/users/me/               # Delete account
-GET    /api/users/me/game-profile/  # Get game profile
+POST   /api/auth/reset-password/confirm/  # Confirm password reset
 ```
 
 ### Habits (Planned)
@@ -282,20 +290,23 @@ curl http://127.0.0.1:8000/
 
 ### Current Serializers
 
-**UserRegistrationSerializer** (Partial):
-- Located in: `backend/penguin_app/serializers.py`
-- Status: Incomplete
-- Has: Password validation, email validation
-- Missing: Complete username validation, create() method
+**UserRegistrationSerializer** (Complete):
+- Located in: `backend/penguin_app/serializers/user_serializers.py`
+- Status: Complete
+- Features: Password validation, email validation, username validation, password confirmation, automatic UserGameProfile creation
 
-### No ViewSets Yet
+### API Views (In Progress)
 
-- No API views defined in `views.py`
-- Need to create ViewSets for:
-  - User registration/login
-  - Habits
-  - Todos
-  - Journal
+- Views defined in: `backend/penguin_app/views/user_views.py`
+- Status: 🚧 In Development
+- Need to create views for:
+  -  User registration (UserRegistrationView)
+  - User login (TokenObtainView)
+  - Token refresh (TokenRefreshView)
+  - Current user profile (CurrentUserView)
+  - Habits CRUD
+  - Todos CRUD
+  - Journal CRUD
 
 ### No URLs Configured
 
@@ -310,8 +321,8 @@ curl http://127.0.0.1:8000/
 ### User Registration Flow (Planned)
 
 ```bash
-# 1. Register user
-curl -X POST http://127.0.0.1:8000/api/auth/register/ \
+# 1. Register user (POST to /api/users/ - creates user resource)
+curl -X POST http://127.0.0.1:8000/api/users/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -320,47 +331,71 @@ curl -X POST http://127.0.0.1:8000/api/auth/register/ \
     "password_confirm": "SecurePass123!"
   }'
 
-# Response:
+# Response (201 Created):
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "email": "user@example.com",
   "username": "penguin_user",
-  "is_verified": false,
-  "created_at": "2025-01-15T10:00:00Z"
+  "message": "User created successfully"
 }
 
-# 2. Login
-curl -X POST http://127.0.0.1:8000/api/auth/login/ \
+# 2. Login (POST to /api/auth/token/ - creates token resource)
+curl -X POST http://127.0.0.1:8000/api/auth/token/ \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
     "password": "SecurePass123!"
   }'
 
-# Response:
+# Response (201 Created):
 {
   "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc...",
   "user": {
     "id": "550e8400-e29b-41d4-a716-446655440000",
     "email": "user@example.com",
-    "username": "penguin_user"
+    "username": "penguin_user",
+    "is_verified": false
   }
 }
+
+# 3. Get current user (GET /api/users/me/ - retrieve user resource)
+curl -X GET http://127.0.0.1:8000/api/users/me/ \
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
+
+# Response (200 OK):
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "email": "user@example.com",
+  "username": "penguin_user",
+  "is_verified": false,
+  "created_at": "2025-01-15T10:00:00Z",
+  "profile_picture": null,
+  "bio": null
+}
+
+# 4. Refresh token (POST /api/auth/token/refresh/)
+curl -X POST http://127.0.0.1:8000/api/auth/token/refresh/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+  }'
+
+# Response (200 OK):
+{
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...new_token..."
+}
+
+# 5. Logout (POST /api/auth/token/revoke/ - revoke token)
+curl -X POST http://127.0.0.1:8000/api/auth/token/revoke/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..." \
+  -d '{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+  }'
+
+# Response (204 No Content)
 ```
-
----
-
-## Contributing
-
-Want to help implement the API? See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
-
-**Priority tasks:**
-1. Complete UserRegistrationSerializer
-2. Create login/registration ViewSets
-3. Implement JWT authentication
-4. Create Habit model and endpoints
-
 ---
 
 **Questions?** Open an issue: https://github.com/wkeav/Pocket_Penguin/issues
