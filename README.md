@@ -119,7 +119,7 @@ Pocket_Penguin/
 ```bash
 # Backend tests
 cd backend
-python manage.py test
+python3 manage.py test
 
 # Frontend tests
 cd frontend/pocket_penguin_app
