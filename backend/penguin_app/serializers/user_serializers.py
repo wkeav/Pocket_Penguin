@@ -190,7 +190,7 @@ class UserGameProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserGameProfile
-        field = [
+        fields = [
             'fish_coins',
             'level',
             'streak_days',

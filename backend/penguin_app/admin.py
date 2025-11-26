@@ -10,11 +10,11 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ['is_verified', 'is_staff', 'is_active', 'created_at']
     search_fields = ['email', 'username']
     ordering = ['-created_at']
-    readonly_fields = ['created_at', 'updated_at']  # Make auto-generated fields read-only
+    readonly_fields = ['id', 'created_at', 'updated_at']  # Add 'id' here
     
     fieldsets = (
-        (None, {'fields': ('email', 'username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'bio', 'profile_picture', 'date_of_birth')}),
+        (None, {'fields': ('id', 'email', 'username', 'password')}),  # Add 'id' here
+        ('Personal info', {'fields': ('bio', 'profile_picture', 'date_of_birth')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Verification', {'fields': ('is_verified', 'verification_token')}),
         ('Security', {'fields': ('failed_login_attempts', 'locked_until', 'last_login_ip')}),
