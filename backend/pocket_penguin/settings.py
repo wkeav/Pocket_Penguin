@@ -129,9 +129,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings for frontend communication 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",  # Flutter
-    "http://127.0.0.1:8080",
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:\d+$",  # localhost with any port
+    r"^http://127\.0\.0\.1:\d+$",  # 127.0.0.1 with any port
 ]
 CORS_ALLOW_CREDENTIALS = True
 

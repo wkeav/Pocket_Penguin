@@ -40,11 +40,12 @@ MANIFEST
 *.env
 .env.local
 
-# cache files
-__pycache__/
+# ETC 
+DEVELOPER_HANDOFF.md 
+
+# cache files (duplicate already covered above, but keeping for clarity)
 *.pyc
 
 # Local config files
-.vscode/
 .fvm/
 .fvmrc
