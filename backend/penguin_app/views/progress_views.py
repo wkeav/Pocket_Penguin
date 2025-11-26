@@ -61,3 +61,28 @@ class MonthlyProgressView(APIView):
         }
 
         return Response(data)
+
+class AllTimeProgressView(APIView):
+    """
+    Return an all-time summary of progress for the authenticated user.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        profile = request.user.profile  # UserGameProfile
+
+        qs = Progress.objects.filter(profile=profile)
+
+        totals = qs.aggregate(
+            total_habits=Sum('habits_completed'),
+            total_todos=Sum('todos_completed'),
+            total_fish_coins=Sum('fish_coins_earned'),
+        )
+
+        data = {
+            "total_habits": totals["total_habits"] or 0,
+            "total_todos": totals["total_todos"] or 0,
+            "total_fish_coins": totals["total_fish_coins"] or 0,
+        }
+
+        return Response(data)
