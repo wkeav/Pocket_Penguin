@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_strings.dart';
 import '../constants/colors.dart';
-import '../main.dart';
 // import '../screens/stats_page.dart';  // Temporarily commented out for testing
 import '../models/notification_model.dart' as app_notification;
 

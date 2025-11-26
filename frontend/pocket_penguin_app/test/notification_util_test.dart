@@ -88,8 +88,10 @@ void main() {
       final fake = FakeAwesomeNotifications();
       final util = NotificationUtil(awesomeNotifications: fake);
 
-      await util.createBasicNotification(id: 1, channelKey: 'c', title: 'A', body: 'a');
-      await util.createBasicNotification(id: 2, channelKey: 'c', title: 'B', body: 'b');
+      await util.createBasicNotification(
+          id: 1, channelKey: 'c', title: 'A', body: 'a');
+      await util.createBasicNotification(
+          id: 2, channelKey: 'c', title: 'B', body: 'b');
 
       var list = await util.getNotifications();
       expect(list.length, 2);
@@ -100,11 +102,13 @@ void main() {
       expect(list.first.id, 2);
     });
 
-    test('removeAllNotification clears storage and cancels notifications', () async {
+    test('removeAllNotification clears storage and cancels notifications',
+        () async {
       final fake = FakeAwesomeNotifications();
       final util = NotificationUtil(awesomeNotifications: fake);
 
-      await util.createBasicNotification(id: 7, channelKey: 'c', title: 'X', body: 'x');
+      await util.createBasicNotification(
+          id: 7, channelKey: 'c', title: 'X', body: 'x');
       var list = await util.getNotifications();
       expect(list.length, 1);
 
