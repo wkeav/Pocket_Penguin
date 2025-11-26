@@ -32,7 +32,7 @@ Future<void> customAlertDialog({
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
-                        backgroundColor:AppTheme.primaryBlue,
+                        backgroundColor: AppTheme.primaryBlue,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -83,7 +83,7 @@ Future<void> customAlertDialog({
                 actions: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:AppTheme.primaryBlue,
+                      backgroundColor: AppTheme.primaryBlue,
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -100,7 +100,7 @@ Future<void> customAlertDialog({
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:AppTheme.primaryBlue,
+                      backgroundColor: AppTheme.primaryBlue,
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

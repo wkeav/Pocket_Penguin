@@ -60,9 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } else {
       setState(() {
-        _errorMessage = result['error']?['message'] ?? 
-                       result['error']?['detail'] ?? 
-                       'Login failed. Please try again.';
+        _errorMessage = result['error']?['message'] ??
+            result['error']?['detail'] ??
+            'Login failed. Please try again.';
       });
     }
   }
@@ -225,4 +225,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

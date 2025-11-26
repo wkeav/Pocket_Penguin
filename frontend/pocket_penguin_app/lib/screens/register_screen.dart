@@ -91,7 +91,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           } else if (error.containsKey('non_field_errors')) {
             _errorMessage = error['non_field_errors'][0] ?? 'Validation error';
           } else {
-            _errorMessage = error['message'] ?? 'Registration failed. Please try again.';
+            _errorMessage =
+                error['message'] ?? 'Registration failed. Please try again.';
           }
         } else {
           _errorMessage = 'Registration failed. Please try again.';
@@ -307,4 +308,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

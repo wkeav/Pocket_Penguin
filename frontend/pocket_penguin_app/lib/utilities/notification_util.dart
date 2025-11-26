@@ -28,11 +28,13 @@ class NotificationUtil {
   }
 
   // Store a notification
-  Future<void> _storeNotification(app_notification.NotificationModel notification) async {
+  Future<void> _storeNotification(
+      app_notification.NotificationModel notification) async {
     final prefs = await SharedPreferences.getInstance();
-    List<app_notification.NotificationModel> notifications = await getNotifications();
+    List<app_notification.NotificationModel> notifications =
+        await getNotifications();
     notifications.add(notification);
-    
+
     await prefs.setString(
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
@@ -42,7 +44,8 @@ class NotificationUtil {
   // Remove a notification
   Future<void> removeNotification(int id) async {
     final prefs = await SharedPreferences.getInstance();
-    List<app_notification.NotificationModel> notifications = await getNotifications();
+    List<app_notification.NotificationModel> notifications =
+        await getNotifications();
     notifications.removeWhere((n) => n.id == id);
     await prefs.setString(
       _notificationsKey,
@@ -193,13 +196,13 @@ class NotificationUtil {
 
     // Optionally show feedback
     awesomeNotifications.cancelAllSchedules().then((value) => {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cancelled all scheduled notifications'),
-          backgroundColor: AppColor.primaryColor,
-        ),
-      )
-    });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cancelled all scheduled notifications'),
+              backgroundColor: AppColor.primaryColor,
+            ),
+          )
+        });
   }
 
   /// Requests permission from the user to send notifications. This is crucial for Android 13+ and iOS.
@@ -267,5 +270,5 @@ class NotificationUtil {
         (route) => route.isFirst);
   }
 */
-
-      } }
+  }
+}
