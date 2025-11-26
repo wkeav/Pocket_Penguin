@@ -10,7 +10,7 @@ Author: Astra
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentUserGameProfile, LogOutView
-from penguin_app.views.progress_views import WeeklyProgressView
+from penguin_app.views.progress_views import WeeklyProgressView, MonthlyProgressView
 
 
 app_name = 'penguin_app'
@@ -28,5 +28,7 @@ urlpatterns = [
     
     # Progress and stats
     path("api/progress/weekly/", WeeklyProgressView.as_view(), name="weekly-progress"),
+    path("api/progress/monthly/", MonthlyProgressView.as_view(), name="monthly-progress"),
+
 ]
 
