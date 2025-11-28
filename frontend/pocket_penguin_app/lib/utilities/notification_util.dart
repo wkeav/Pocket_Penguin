@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_strings.dart';
 import '../constants/colors.dart';
-import '../main.dart';
-import '../screens/stats_page.dart';
 import '../models/notification_model.dart' as app_notification;
 
 class NotificationUtil {
   final AwesomeNotifications awesomeNotifications;
   static const String _notificationsKey = 'notifications_list';
+  static VoidCallback? onNotificationListChanged;
 
   NotificationUtil({required this.awesomeNotifications});
 
@@ -37,6 +36,9 @@ class NotificationUtil {
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
     );
+    
+    // Trigger UI update callback if set
+    onNotificationListChanged?.call();
   }
 
   // Remove a notification
@@ -48,6 +50,9 @@ class NotificationUtil {
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
     );
+    
+    // Trigger UI update callback if set
+    onNotificationListChanged?.call();
   }
 
   /// Remove all notifications from storage and cancel them in the system.
@@ -233,8 +238,42 @@ class NotificationUtil {
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    // Your code to handle a notification being displayed can go here.
-    // For example, you might log the event or update a UI element.
+    // Store the displayed notification to ensure it appears in the list
+    // This is especially important for basic notifications that are shown immediately
+    final prefs = await SharedPreferences.getInstance();
+    final String? notificationsJson = prefs.getString(_notificationsKey);
+    
+    List<app_notification.NotificationModel> notifications = [];
+    if (notificationsJson != null) {
+      List<dynamic> notificationsList = jsonDecode(notificationsJson);
+      notifications = notificationsList
+          .map((item) => app_notification.NotificationModel.fromMap(item))
+          .toList();
+    }
+    
+    // Check if this notification is already stored
+    bool alreadyStored = notifications.any((n) => n.id == receivedNotification.id);
+    
+    // If not already stored (shouldn't happen for properly created notifications, but ensures visibility)
+    if (!alreadyStored) {
+      notifications.add(
+        app_notification.NotificationModel(
+          id: receivedNotification.id ?? 0,
+          title: receivedNotification.title ?? 'Notification',
+          body: receivedNotification.body ?? '',
+          channelKey: receivedNotification.channelKey ?? AppStrings.BASIC_CHANNEL_KEY,
+          isScheduled: false,
+        ),
+      );
+      
+      await prefs.setString(
+        _notificationsKey,
+        jsonEncode(notifications.map((n) => n.toMap()).toList()),
+      );
+      
+      // Trigger UI update callback if set
+      onNotificationListChanged?.call();
+    }
   }
 
   /// Use this method to detect if the user dismissed a notification.
@@ -249,6 +288,42 @@ class NotificationUtil {
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
+    // Ensure the notification is stored when it's clicked
+    final prefs = await SharedPreferences.getInstance();
+    final String? notificationsJson = prefs.getString(_notificationsKey);
+    
+    List<app_notification.NotificationModel> notifications = [];
+    if (notificationsJson != null) {
+      List<dynamic> notificationsList = jsonDecode(notificationsJson);
+      notifications = notificationsList
+          .map((item) => app_notification.NotificationModel.fromMap(item))
+          .toList();
+    }
+    
+    // Check if this notification is already stored
+    bool alreadyStored = notifications.any((n) => n.id == receivedAction.id);
+    
+    // If not already stored, add it to ensure it's visible
+    if (!alreadyStored) {
+      notifications.add(
+        app_notification.NotificationModel(
+          id: receivedAction.id ?? 0,
+          title: receivedAction.title ?? 'Notification',
+          body: receivedAction.body ?? '',
+          channelKey: receivedAction.channelKey ?? AppStrings.BASIC_CHANNEL_KEY,
+          isScheduled: false,
+        ),
+      );
+      
+      await prefs.setString(
+        _notificationsKey,
+        jsonEncode(notifications.map((n) => n.toMap()).toList()),
+      );
+      
+      // Trigger UI update callback if set
+      onNotificationListChanged?.call();
+    }
+    
     // Reducing icon badge count on iOS when a basic notification is tapped/acted upon.
     // This is important for maintaining accurate badge counts.
     if (receivedAction.channelKey == AppStrings.BASIC_CHANNEL_KEY &&

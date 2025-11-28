@@ -7,6 +7,7 @@ import 'screens/calendar_screen.dart';
 import 'screens/progress_screen.dart';
 import 'screens/social_screen.dart';
 import 'screens/achievements_screen.dart';
+import 'screens/notification_screen.dart';
 import 'theme/app_theme.dart';
 import 'utils/responsive_helper.dart';
 
@@ -48,6 +49,7 @@ class _MainScreenState extends State<MainScreen> {
     TabItem(id: 'progress', label: 'Progress', icon: Icons.trending_up),
     TabItem(id: 'social', label: 'Friends', icon: Icons.people),
     TabItem(id: 'achievements', label: 'Awards', icon: Icons.emoji_events),
+    TabItem(id: 'notifcations', label: 'Notifications', icon: Icons.access_alarm),
   ];
 
   void _updateFishCoins(int newAmount) {
@@ -77,6 +79,8 @@ class _MainScreenState extends State<MainScreen> {
         return const SocialScreen();
       case 7:
         return const AchievementsScreen();
+      case 8:
+        return const NotificationScreen();
       default:
         return HomeScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
