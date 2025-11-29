@@ -143,6 +143,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | Kaitlyn | [@ktnngn](https://github.com/ktnngn) | Developer |
 | Sneha | [@CtrlChieftainMsSneha](https://github.com/CtrlChieftainMsSneha) | Developer |
 | Brandon | [@bbloob](https://github.com/bbloob) | Developer |
+| Ejeehi | | Developer |
 | Jack | [@jacknguyen1918](https://github.com/jacknguyen1918) | Developer |
 
 ---
