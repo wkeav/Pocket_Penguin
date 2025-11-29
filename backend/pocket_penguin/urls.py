@@ -14,15 +14,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# from django.contrib import admin
+# from django.urls import path, include
+# from django.http import HttpResponse
+
+# def hello_world(request):
+#     return HttpResponse("Hello World")
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('api/', include('penguin_app.urls')),  # All API endpoints under /api/
+#     path('', hello_world, name='hello')
+# ]
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
 
-def hello_world(request):
-    return HttpResponse("Hello World")
+# Simple view for testing
+def home(request):
+    return HttpResponse("Welcome to Pocket Penguin!")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('penguin_app.urls')),  # All API endpoints under /api/
-    path('', hello_world, name='hello')
+    path('', home),  # Add this for the root URL
+    # OR include your app URLs:
+    # path('', include('your_app.urls')),
 ]
