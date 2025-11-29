@@ -93,27 +93,6 @@ Current features and implementation status.
 
 ---
 
-## UI Features (No Backend)
-
-These features have UI built but NO backend functionality:
-
-### Habit Tracking (UI Only)
-
-**What You See:**
-- Habit list screen
-- Habit creation interface
-- Habit completion checkboxes
-- Calendar view
-
-**What Doesn't Work:**
-- No actual habit creation
-- No data persistence
-- No streak calculation
-- No backend storage
-- Using mock/dummy data
-
----
-
 ### Calendar View (UI Only)
 
 **What You See:**

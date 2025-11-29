@@ -32,7 +32,7 @@ class NotificationModel {
       title: map['title'],
       body: map['body'],
       channelKey: map['channelKey'],
-      scheduledDateTime: map['scheduledDateTime'] != null 
+      scheduledDateTime: map['scheduledDateTime'] != null
           ? DateTime.parse(map['scheduledDateTime'])
           : null,
       isScheduled: map['isScheduled'] ?? false,

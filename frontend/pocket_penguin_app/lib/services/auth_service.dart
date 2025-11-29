@@ -1,4 +1,4 @@
-import 'dart:convert'; //JSON encoding/decoding 
+import 'dart:convert'; //JSON encoding/decoding
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +39,10 @@ class AuthService {
         return {'success': false, 'error': error};
       }
     } catch (e) {
-      return {'success': false, 'error': {'message': e.toString()}};
+      return {
+        'success': false,
+        'error': {'message': e.toString()}
+      };
     }
   }
 
@@ -58,14 +61,15 @@ class AuthService {
         }),
       );
 
-      if (response.statusCode == 200) { //backend returns JWT token 
+      if (response.statusCode == 200) {
+        //backend returns JWT token
         final data = jsonDecode(response.body);
-        final accessToken = data['access'];  // Extract token from response
+        final accessToken = data['access']; // Extract token from response
         final refreshToken = data['refresh'];
         final userData = data['user'];
 
         // Save tokens and user data
-        await _saveTokens(accessToken, refreshToken);  // Save to local storage
+        await _saveTokens(accessToken, refreshToken); // Save to local storage
         await _saveUserData(userData);
 
         return {'success': true, 'data': data};
@@ -74,7 +78,10 @@ class AuthService {
         return {'success': false, 'error': error};
       }
     } catch (e) {
-      return {'success': false, 'error': {'message': e.toString()}};
+      return {
+        'success': false,
+        'error': {'message': e.toString()}
+      };
     }
   }
 
@@ -84,7 +91,10 @@ class AuthService {
     try {
       final token = await getAccessToken();
       if (token == null) {
-        return {'success': false, 'error': {'message': 'Not authenticated'}};
+        return {
+          'success': false,
+          'error': {'message': 'Not authenticated'}
+        };
       }
 
       final response = await http.get(
@@ -100,19 +110,107 @@ class AuthService {
         await _saveUserData(data);
         return {'success': true, 'data': data};
       } else {
-        return {'success': false, 'error': {'message': 'Failed to get user'}};
+        return {
+          'success': false,
+          'error': {'message': 'Failed to get user'}
+        };
       }
     } catch (e) {
-      return {'success': false, 'error': {'message': e.toString()}};
+      return {
+        'success': false,
+        'error': {'message': e.toString()}
+      };
+    }
+  }
+
+  // Update user profile
+  Future<Map<String, dynamic>> updateProfile({
+    String? username,
+    String? bio,
+    String? profilePicture,
+    String? dateOfBirth, // Format: YYYY-MM-DD
+  }) async {
+    try {
+      final token = await getAccessToken();
+      if (token == null) {
+        return {
+          'success': false,
+          'error': {'message': 'Not authenticated'}
+        };
+      }
+
+      // Build update data (only include non-null fields)
+      final Map<String, dynamic> updateData = {};
+      if (username != null) updateData['username'] = username;
+      if (bio != null) updateData['bio'] = bio;
+      if (profilePicture != null)
+        updateData['profile_picture'] = profilePicture;
+      if (dateOfBirth != null) updateData['date_of_birth'] = dateOfBirth;
+
+      final response = await http.patch(
+        Uri.parse('$baseUrl/users/me/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(updateData),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        await _saveUserData(data);
+        return {'success': true, 'data': data};
+      } else {
+        final error = jsonDecode(response.body);
+        return {'success': false, 'error': error};
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'error': {'message': e.toString()}
+      };
     }
   }
 
   // Logout user
-  Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(tokenKey);
-    await prefs.remove(refreshTokenKey);
-    await prefs.remove(userKey);
+  Future<Map<String, dynamic>> logout() async {
+    try {
+      final token = await getAccessToken();
+      final refreshToken = await getRefreshToken();
+
+      // Call backend logout endpoint if there's tokens
+      if (token != null && refreshToken != null) {
+        await http.post(
+          Uri.parse('$baseUrl/auth/token/revoke/'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization':
+                'Bearer $token', //actual token value is stored in the $token variable
+          },
+          body: jsonEncode({
+            'refresh': refreshToken,
+          }),
+        );
+      }
+
+      // Always delete tokens from local storage
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(tokenKey);
+      await prefs.remove(refreshTokenKey);
+      await prefs.remove(userKey);
+
+      return {'success': true, 'message': 'Logged out successfully'};
+    } catch (e) {
+      // Even if something fails, try to clear local storage
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(tokenKey);
+      await prefs.remove(refreshTokenKey);
+      await prefs.remove(userKey);
+      return {
+        'success': false,
+        'error': {'message': e.toString()}
+      };
+    }
   }
 
   // Check if user is logged in
@@ -156,4 +254,3 @@ class AuthService {
     await prefs.setString(userKey, jsonEncode(userData));
   }
 }
-
