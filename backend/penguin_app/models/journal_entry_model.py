@@ -1,7 +1,6 @@
 from django.db import models
 import uuid
 from django.utils import timezone
-<<<<<<< HEAD
 from .user_models import User  # Link journal entries to users
 
 """
@@ -41,7 +40,6 @@ class JournalEntry(models.Model):
     date = models.DateTimeField(default=timezone.now)
     
     # Automatic timestamps
-=======
 from .user_models import User  
 
 class JournalEntry(models.Model):
@@ -52,8 +50,6 @@ class JournalEntry(models.Model):
     mood = models.CharField(max_length=50)
     tags = models.JSONField(default=list, blank=True)  # store tags as a list
     date = models.DateTimeField(default=timezone.now)
-
->>>>>>> c2141f3 (added journal models)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
