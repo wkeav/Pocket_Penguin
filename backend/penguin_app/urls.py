@@ -1,15 +1,7 @@
-"""
-URL routing for penguin_app API endpoints.
-
-This module defines all URL patterns for the Pocket Penguin API.
-Organized by feature area (users, auth, etc.)
-
-Author: Astra
-"""
-
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentUserGameProfile, LogOutView
+from .views.calendar_views import CalendarEventListCreate, CalendarEventRetrieveUpdateDestroy
 
 app_name = 'penguin_app'
 
@@ -23,4 +15,8 @@ urlpatterns = [
     path('auth/token/', LoginView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/token/revoke/', LogOutView.as_view(), name='token_revoke'),
+
+    # Calendar Events
+    path('calendar/events/', CalendarEventListCreate.as_view(), name='calendar-list-create'),
+    path('calendar/events/<int:pk>/', CalendarEventRetrieveUpdateDestroy.as_view(), name='calendar-detail'),
 ]
