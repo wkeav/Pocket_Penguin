@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'auth_service.dart'; // Where your JWT token is stored
+import 'auth_service.dart';
 
 class CalendarService {
-  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  static const String baseUrl = 'http://127.0.0.1:8001/api';
 
-  // Fetch all events for the logged-in user
+  // Fetch all events for logged-in user
   static Future<List<dynamic>> getEvents() async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('User not authenticated');
@@ -18,14 +18,11 @@ class CalendarService {
       },
     );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load events: ${response.body}');
-    }
+    if (response.statusCode == 200) return jsonDecode(response.body);
+    throw Exception('Failed to load events');
   }
 
-  // Add a new event for the logged-in user
+  // Add a new event
   static Future<void> addEvent({
     required String title,
     required String description,
@@ -43,7 +40,7 @@ class CalendarService {
       },
       body: jsonEncode({
         'title': title,
-        'description': description, // Required now
+        'description': description,
         'start_time': startTime.toIso8601String(),
         'end_time': endTime.toIso8601String(),
       }),
@@ -51,6 +48,24 @@ class CalendarService {
 
     if (response.statusCode != 201) {
       throw Exception('Failed to add event: ${response.body}');
+    }
+  }
+
+  // Delete an event by id
+  static Future<void> deleteEvent(int id) async {
+    final token = await AuthService.getToken();
+    if (token == null) throw Exception('User not authenticated');
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/calendar/events/$id/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete event: ${response.body}');
     }
   }
 }
