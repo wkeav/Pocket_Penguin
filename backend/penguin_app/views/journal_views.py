@@ -36,12 +36,13 @@ class JournalEntryDetailView(generics.RetrieveUpdateDestroyAPIView):
         return JournalEntry.objects.filter(user=self.request.user)
 
     def perform_update(self, serializer):
-        # Optional, enforce extra checks if needed
+        # Only allow update if the entry belongs to user
         if serializer.instance.user != self.request.user:
             raise PermissionDenied("Cannot modify an entry you don't own.")
         serializer.save()
 
     def perform_destroy(self, instance):
+        # Only allow deletion if entry belongs to user
         if instance.user != self.request.user:
             raise PermissionDenied("Cannot delete an entry you don't own.")
         instance.delete()
