@@ -10,6 +10,7 @@ Author: Astra
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentUserGameProfile, LogOutView
+from .views.journal_views import JournalEntryListCreateView, JournalEntryDetailView 
 
 app_name = 'penguin_app'
 
@@ -23,5 +24,9 @@ urlpatterns = [
     path('auth/token/', LoginView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/token/revoke/', LogOutView.as_view(), name='token_revoke'),
+
+    # Journal feature
+    path('journal/', JournalEntryListCreateView.as_view(), name='journal-list-create'),
+    path('journal/<uuid:pk>/', JournalEntryDetailView.as_view(), name='journal-detail'),
 ]
 
