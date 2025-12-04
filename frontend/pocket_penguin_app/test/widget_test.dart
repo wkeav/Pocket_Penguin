@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pocket_penguin_app/main.dart';
 
 void main() {
-  testWidgets('Pocket Penguin app loads without crashing', (WidgetTester tester) async {
+  testWidgets('Pocket Penguin app loads without crashing',
+      (WidgetTester tester) async {
     await tester.pumpWidget(const PocketPenguinApp());
 
     // Verify that the app loads without crashing
@@ -20,7 +21,7 @@ void main() {
   testWidgets('Fish coins counter is displayed', (WidgetTester tester) async {
     await tester.pumpWidget(const PocketPenguinApp());
 
-    // Verify that fish coins are displayed 
+    // Verify that fish coins are displayed
     expect(find.text('127 coins'), findsOneWidget);
   });
 }

@@ -10,6 +10,12 @@ import 'screens/achievements_screen.dart';
 import 'theme/app_theme.dart';
 import 'screens/gamebox.dart';
 import 'screens/wardrobe_screen.dart';
+<<<<<<< HEAD
+=======
+import 'screens/auth_screen.dart';
+import 'screens/profile_screen.dart';
+import 'services/auth_service.dart';
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
 
 void main() {
   runApp(const PocketPenguinApp());
@@ -23,7 +29,7 @@ class PocketPenguinApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pocket Penguin',
       theme: AppTheme.lightTheme,
-      home: const MainScreen(),
+      home: const MainScreen(), // Always show main screen with mock data
       debugShowCheckedModeBanner: false,
     );
   }
@@ -41,15 +47,49 @@ class _MainScreenState extends State<MainScreen> {
   int _fishCoins = 127;
 
   final List<TabItem> _tabs = [
-    TabItem(id: 'habits', label: 'Habits', icon: Image.asset("images/icons/pockp_habits_icon.png", width: 32, height: 32)),
-    TabItem(id: 'wardrobe', label: 'Wardrobe', icon: Icon(Icons.door_sliding, size: 32)),
-    TabItem(id: 'home', label: 'Home', icon: Image.asset("images/pockpo_house.png", width: 32, height: 32)),
-    TabItem(id: 'todo', label: 'Todo', icon: Image.asset("images/icons/pockp_todo_icon.png", width: 32, height: 32)),
-    TabItem(id: 'journal', label: 'Journal', icon: Image.asset("images/icons/pockp_journal_icon.png", width: 32, height: 32)),
-    TabItem(id: 'calendar', label: 'Calendar', icon: Image.asset("images/icons/pockp_calendar_icon.png", width: 32, height: 32)),
-    TabItem(id: 'progress', label: 'Progress', icon: Image.asset("images/icons/pockp_progress_icon.png", width: 32, height: 32)),
-    TabItem(id: 'social', label: 'Friends', icon: Image.asset("images/icons/pockp_friends_icon.png", width: 32, height: 32)),
-    TabItem(id: 'achievements', label: 'Awards', icon: Image.asset("images/icons/pockp_awards_icon.png", width: 32, height: 32)),
+    TabItem(
+        id: 'habits',
+        label: 'Habits',
+        icon: Image.asset("images/icons/pockp_habits_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'wardrobe',
+        label: 'Wardrobe',
+        icon: Icon(Icons.door_sliding, size: 32)),
+    TabItem(
+        id: 'home',
+        label: 'Home',
+        icon: Image.asset("images/pockpo_house.png", width: 32, height: 32)),
+    TabItem(
+        id: 'todo',
+        label: 'Todo',
+        icon: Image.asset("images/icons/pockp_todo_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'journal',
+        label: 'Journal',
+        icon: Image.asset("images/icons/pockp_journal_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'calendar',
+        label: 'Calendar',
+        icon: Image.asset("images/icons/pockp_calendar_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'progress',
+        label: 'Progress',
+        icon: Image.asset("images/icons/pockp_progress_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'social',
+        label: 'Friends',
+        icon: Image.asset("images/icons/pockp_friends_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'achievements',
+        label: 'Awards',
+        icon: Image.asset("images/icons/pockp_awards_icon.png",
+            width: 32, height: 32)),
   ];
 
   void _updateFishCoins(int newAmount) {
@@ -62,12 +102,33 @@ class _MainScreenState extends State<MainScreen> {
     switch (_activeTab) {
       case 2:
         return Column(children: [
+<<<<<<< HEAD
           GameBox(background: Image.asset('images/backgrounds/pockp_cloud_land_theme.png'), sky: Image.asset('images/skies/pockp_day_sky_bground.png'),child: const SizedBox()), // TODO: Dynamically change sky according to time
           Expanded(child: HomeScreen(fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins))
         ]);
       case 1:
         return Column(children: [
           GameBox(background: Image.asset('images/backgrounds/pockp_cloud_land_theme.png'), sky: Image.asset('images/skies/pockp_day_sky_bground.png'),child: const SizedBox()), // TODO: Dynamically change sky according to time
+=======
+          GameBox(
+              background:
+                  Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
+              sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
+              child:
+                  const SizedBox()), // TODO: Dynamically change sky according to time
+          Expanded(
+              child: HomeScreen(
+                  fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins))
+        ]);
+      case 1:
+        return Column(children: [
+          GameBox(
+              background:
+                  Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
+              sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
+              child:
+                  const SizedBox()), // TODO: Dynamically change sky according to time
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
           const Expanded(child: WardrobeScreen())
         ]);
       case 0:
@@ -144,6 +205,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+<<<<<<< HEAD
                       Row(
                         children: [
                           Container(
@@ -162,6 +224,52 @@ class _MainScreenState extends State<MainScreen> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF1E3A8A),
+=======
+                      GestureDetector(
+                        onTap: () async {
+                          // Create auth service instance & if user is logged in
+                          final authService = AuthService();
+                          final isLoggedIn = await authService.isLoggedIn();
+                          if (mounted) {
+                            if (isLoggedIn) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProfileScreen(),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AuthScreen(),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            // Penguin logo and text
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Image.asset("images/logo.png",
+                                  width: 32, height: 32),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Pocket Penguin',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E3A8A),
+                              ),
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                             ),
                           ),
                         ],
@@ -211,7 +319,12 @@ class _MainScreenState extends State<MainScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
+<<<<<<< HEAD
                           color: isActive ? Colors.blue[100] : Colors.transparent,
+=======
+                          color:
+                              isActive ? Colors.blue[100] : Colors.transparent,
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
@@ -219,7 +332,13 @@ class _MainScreenState extends State<MainScreen> {
                           children: [
                             IconTheme(
                               data: IconThemeData(
+<<<<<<< HEAD
                                 color: isActive ? Colors.blue[600] : Colors.grey[500],
+=======
+                                color: isActive
+                                    ? Colors.blue[600]
+                                    : Colors.grey[500],
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                                 size: 20,
                               ),
                               child: tab.icon,
@@ -229,7 +348,13 @@ class _MainScreenState extends State<MainScreen> {
                               tab.label,
                               style: TextStyle(
                                 fontSize: 12,
+<<<<<<< HEAD
                                 color: isActive ? Colors.blue[600] : Colors.grey[500],
+=======
+                                color: isActive
+                                    ? Colors.blue[600]
+                                    : Colors.grey[500],
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                               ),
                             ),
                           ],

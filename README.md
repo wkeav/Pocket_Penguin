@@ -246,8 +246,12 @@ docker run -v $(pwd)/frontend/pocket_penguin_app:/app pocket-penguin-flutter \
 #### Backend Tests
 ```bash
 cd backend
+<<<<<<< HEAD
 python manage.py test
 ```
+=======
+python3 manage.py test
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
 
 #### Frontend Tests
 ```bash
@@ -376,11 +380,23 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Brandon** - [bbloob](https://github.com/bbloob)
 - **Jack** - [jacknguyen1918](https://github.com/jacknguyen1918)
 
+<<<<<<< HEAD
 ## Acknowledgments
 
 - Django community for excellent documentation
 - Flutter team for the amazing cross-platform framework
 - [Make a README](https://www.makeareadme.com/) for README best practices
+=======
+| Name | GitHub | Role |
+|------|--------|------|
+| Astra | [@wkeav](https://github.com/wkeav) | Developer |
+| Thien | [@SenPr](https://github.com/SenPr) | Developer |
+| Kaitlyn | [@ktnngn](https://github.com/ktnngn) | Developer |
+| Sneha | [@CtrlChieftainMsSneha](https://github.com/CtrlChieftainMsSneha) | Developer |
+| Brandon | [@bbloob](https://github.com/bbloob) | Developer |
+| Ejeehi | | Developer |
+| Jack | [@jacknguyen1918](https://github.com/jacknguyen1918) | Developer |
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
 
 ---
 Created by Team K 

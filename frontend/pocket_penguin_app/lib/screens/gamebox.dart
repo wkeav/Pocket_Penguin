@@ -17,6 +17,7 @@ class GameBox extends StatefulWidget {
 }
 
 class _GameBoxState extends State<GameBox> {
+<<<<<<< HEAD
   // penguin's outfit
   String _hat = 'none';
   String _clothes = 'none';
@@ -27,6 +28,18 @@ class _GameBoxState extends State<GameBox> {
   void changeClothes(String newClothes) =>
       setState(() => _clothes = newClothes);
   void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
+=======
+  // penguin's outfit (reserved for future use)
+  // String _hat = 'none';
+  // String _clothes = 'none';
+  // String _shoes = 'none';
+
+  // update functions (reserved for future use)
+  // void changeHat(String newHat) => setState(() => _hat = newHat);
+  // void changeClothes(String newClothes) =>
+  //     setState(() => _clothes = newClothes);
+  // void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +63,18 @@ class _GameBoxState extends State<GameBox> {
               Positioned.fill(
                   child: Image(
                       image: widget.sky.image,
+<<<<<<< HEAD
+=======
+                      key: const Key('sky'),
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                       fit: BoxFit.cover)), // Sky (behind everything)
               Positioned.fill(
                   child: Image(
                       image: widget.background.image,
+<<<<<<< HEAD
+=======
+                      key: const Key('background'),
+>>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                       fit: BoxFit.cover)), // Background
               widget.child, // Decorations
               Image.asset('images/logo.png',
