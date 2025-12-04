@@ -10,12 +10,9 @@ import 'screens/achievements_screen.dart';
 import 'theme/app_theme.dart';
 import 'screens/gamebox.dart';
 import 'screens/wardrobe_screen.dart';
-<<<<<<< HEAD
-=======
 import 'screens/auth_screen.dart';
 import 'screens/profile_screen.dart';
 import 'services/auth_service.dart';
->>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
 
 void main() {
   runApp(const PocketPenguinApp());
@@ -102,14 +99,6 @@ class _MainScreenState extends State<MainScreen> {
     switch (_activeTab) {
       case 2:
         return Column(children: [
-<<<<<<< HEAD
-          GameBox(background: Image.asset('images/backgrounds/pockp_cloud_land_theme.png'), sky: Image.asset('images/skies/pockp_day_sky_bground.png'),child: const SizedBox()), // TODO: Dynamically change sky according to time
-          Expanded(child: HomeScreen(fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins))
-        ]);
-      case 1:
-        return Column(children: [
-          GameBox(background: Image.asset('images/backgrounds/pockp_cloud_land_theme.png'), sky: Image.asset('images/skies/pockp_day_sky_bground.png'),child: const SizedBox()), // TODO: Dynamically change sky according to time
-=======
           GameBox(
               background:
                   Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
@@ -128,7 +117,6 @@ class _MainScreenState extends State<MainScreen> {
               sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
               child:
                   const SizedBox()), // TODO: Dynamically change sky according to time
->>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
           const Expanded(child: WardrobeScreen())
         ]);
       case 0:
@@ -205,26 +193,6 @@ class _MainScreenState extends State<MainScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-<<<<<<< HEAD
-                      Row(
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Image.asset("images/logo.png", width: 32, height: 32),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'Pocket Penguin',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1E3A8A),
-=======
                       GestureDetector(
                         onTap: () async {
                           // Create auth service instance & if user is logged in
@@ -269,17 +237,16 @@ class _MainScreenState extends State<MainScreen> {
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF1E3A8A),
                               ),
->>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
-                          border: Border.all(color: const Color(0xFFF59E0B)),
+                          border: Border.all(color: Color.fromARGB(255, 19, 18, 16)),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -289,7 +256,7 @@ class _MainScreenState extends State<MainScreen> {
                                 size: 16, color: Color(0xFFF59E0B)),
                             const SizedBox(width: 4),
                             Text(
-                              '$_fishCoins coins',
+                              "$_fishCoins coins",
                               style: const TextStyle(
                                 color: Color(0xFFF59E0B),
                                 fontWeight: FontWeight.w500,
@@ -319,12 +286,8 @@ class _MainScreenState extends State<MainScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-<<<<<<< HEAD
-                          color: isActive ? Colors.blue[100] : Colors.transparent,
-=======
                           color:
                               isActive ? Colors.blue[100] : Colors.transparent,
->>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Column(
@@ -332,13 +295,9 @@ class _MainScreenState extends State<MainScreen> {
                           children: [
                             IconTheme(
                               data: IconThemeData(
-<<<<<<< HEAD
-                                color: isActive ? Colors.blue[600] : Colors.grey[500],
-=======
                                 color: isActive
                                     ? Colors.blue[600]
                                     : Colors.grey[500],
->>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                                 size: 20,
                               ),
                               child: tab.icon,
@@ -348,13 +307,9 @@ class _MainScreenState extends State<MainScreen> {
                               tab.label,
                               style: TextStyle(
                                 fontSize: 12,
-<<<<<<< HEAD
-                                color: isActive ? Colors.blue[600] : Colors.grey[500],
-=======
                                 color: isActive
                                     ? Colors.blue[600]
                                     : Colors.grey[500],
->>>>>>> f8d3d03644b52cdfc75cccf6a0cf19a75e8a8c95
                               ),
                             ),
                           ],
