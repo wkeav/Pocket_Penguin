@@ -66,7 +66,7 @@ class ProgressViewTests(APITestCase):
 
     # All-Time Progress Tests
     def test_all_time_progress_view(self):
-        url = reverse("alltime-progress")
+        url = reverse("all-time-progress")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
