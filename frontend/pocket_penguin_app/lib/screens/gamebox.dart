@@ -21,12 +21,15 @@ class GameBoxState extends State<GameBox> {
   String _hat = 'none';
   String _clothes = 'none';
   String _shoes = 'none';
+  String _background = 'none';
 
-  // update functions (reserved for future use)
-  // void changeHat(String newHat) => setState(() => _hat = newHat);
-  // void changeClothes(String newClothes) =>
-  //     setState(() => _clothes = newClothes);
-  // void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
+  // update functions
+  void changeHat(String newHat) => setState(() => _hat = newHat);
+  void changeClothes(String newClothes) =>
+      setState(() => _clothes = newClothes);
+  void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
+  void changeBackground(String newBackground) =>
+      setState(() => _background = newBackground);
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +58,18 @@ class GameBoxState extends State<GameBox> {
                       filterQuality: FilterQuality.none,
                       isAntiAlias: false,)), // Sky (behind everything)
               Positioned.fill(
-                  child: Image(
-                      image: widget.background.image,
-                      key: const Key('background'),
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                      isAntiAlias: false,)), // Background
+                  child: Builder(builder: (context) {
+                final ImageProvider backgroundImage = _background != 'none'
+                    ? AssetImage('images/backgrounds/$_background.png')
+                    : widget.background.image;
+                return Image(
+                  image: backgroundImage,
+                  key: const Key('background'),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.none,
+                  isAntiAlias: false,
+                );
+              })), // Background (selectable, defaults to widget.background)
               widget.child, // Decorations
               // Penguin base and outfit layers
               Transform.scale(
@@ -83,6 +92,7 @@ class GameBoxState extends State<GameBox> {
                   scale: 3.5,
                   child: Image.asset('images/shoes/$_shoes.png', isAntiAlias: false, filterQuality: FilterQuality.none)
                 ),
+              
             ])));
   }
 }
