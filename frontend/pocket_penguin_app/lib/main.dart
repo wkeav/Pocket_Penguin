@@ -100,48 +100,27 @@ class _MainScreenState extends State<MainScreen> {
   Widget _renderContent() {
     switch (_activeTab) {
       case 2:
-        return Column(children: [
-          GameBox(
-              key: gameBoxKey,
-              background:
-                  Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
-              sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
-              child:
-                  const SizedBox()), // TODO: Dynamically change sky according to time
-          Expanded(
-              child: HomeScreen(
-                  fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins))
-        ]);
+        return HomeScreen(
+            fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
       case 1:
-        return Column(children: [
-          GameBox(
-              key: gameBoxKey,
-              background:
-                  Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
-              sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
-              child:
-                  const SizedBox()), // TODO: Dynamically change sky according to time
-          Expanded(
-            child: WardrobeScreen(
-              onItemSelected: (category, itemName) {
-                switch (category) {
-                  case 'Hat':
-                    gameBoxKey.currentState?.changeHat(itemName);
-                    break;
-                  case 'Clothes':
-                    gameBoxKey.currentState?.changeClothes(itemName);
-                    break;
-                  case 'Shoes':
-                    gameBoxKey.currentState?.changeShoes(itemName);
-                    break;
-                  case 'Background':
-                    // Implement background change method in GameBoxState
-                    break;
-                }
-              },
-            ),
-          ),
-        ]);
+        return WardrobeScreen(
+          onItemSelected: (category, itemName) {
+            switch (category) {
+              case 'Hat':
+                gameBoxKey.currentState?.changeHat(itemName);
+                break;
+              case 'Clothes':
+                gameBoxKey.currentState?.changeClothes(itemName);
+                break;
+              case 'Shoes':
+                gameBoxKey.currentState?.changeShoes(itemName);
+                break;
+              case 'Background':
+                gameBoxKey.currentState?.changeBackground(itemName);
+                break;
+            }
+          },
+        );
       case 0:
         return HabitsScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
@@ -293,6 +272,16 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 // Content
+                // GameBox is kept in the tree so its state persists across tabs
+                Offstage(
+                  offstage: !(_activeTab == 1 || _activeTab == 2),
+                  child: GameBox(
+                    key: gameBoxKey,
+                    background: Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
+                    sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
+                    child: const SizedBox(),
+                  ),
+                ),
                 Expanded(
                   child: _renderContent(),
                 ),
