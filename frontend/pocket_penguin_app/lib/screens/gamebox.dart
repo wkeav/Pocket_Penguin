@@ -76,12 +76,12 @@ class GameBoxState extends State<GameBox> {
               if (_clothes != 'none')
                 Transform.scale(
                   scale: 3.5,
-                  child: Image.asset('images/clothes/$_hat.png', isAntiAlias: false, filterQuality: FilterQuality.none)
+                  child: Image.asset('images/clothes/$_clothes.png', isAntiAlias: false, filterQuality: FilterQuality.none)
                 ),
               if (_shoes != 'none')
                 Transform.scale(
                   scale: 3.5,
-                  child: Image.asset('images/shoes/$_hat.png', isAntiAlias: false, filterQuality: FilterQuality.none)
+                  child: Image.asset('images/shoes/$_shoes.png', isAntiAlias: false, filterQuality: FilterQuality.none)
                 ),
             ])));
   }

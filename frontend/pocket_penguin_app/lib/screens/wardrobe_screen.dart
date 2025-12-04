@@ -49,16 +49,43 @@ class WardrobeScreen extends StatelessWidget {
       case 'Clothes':
         return [
           WardrobeItem(
-            name: 'Blue Striped Shirt',
+            name: 'Red Bib',
             category: 'Clothes',
-            fileName: 'pockp_blue_striped_shirt',
-            imagePath: 'images/clothes/pockp_blue_striped_shirt.png',
+            fileName: 'pockp_bib_red',
+            imagePath: 'images/clothes/pockp_bib_red.png',
           ),
           WardrobeItem(
-            name: 'Red Overalls',
+            name: 'Red Bowtie',
             category: 'Clothes',
-            fileName: 'pockp_red_overalls',
-            imagePath: 'images/clothes/pockp_red_overalls.png',
+            fileName: 'pockp_bowtie_red',
+            imagePath: 'images/clothes/pockp_bowtie_red.png',
+          ),
+          WardrobeItem(
+            name: 'Red Shirt',
+            category: 'Clothes',
+            fileName: 'pockp_shirt_red',
+            imagePath: 'images/clothes/pockp_shirt_red.png',
+          ),
+          WardrobeItem(
+            name: 'Striped Red Shirt',
+            category: 'Clothes',
+            fileName: 'pockp_striped_shirt_red',
+            imagePath: 'images/clothes/pockp_striped_shirt_red.png',
+          )
+        ];
+      case 'Shoes':
+        return [
+          WardrobeItem(
+            name: 'Purple Gold Drip',
+            category: 'Shoes',
+            fileName: 'pockp_drip_purple_gold',
+            imagePath: 'images/shoes/pockp_drip_purple_gold.png',
+          ),
+          WardrobeItem(
+            name: 'Red Drip',
+            category: 'Shoes',
+            fileName: 'pockp_drip_red',
+            imagePath: 'images/shoes/pockp_drip_red.png',
           )
         ];
       default:
@@ -158,9 +185,13 @@ class _ItemGrid extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           final item = items[index];
-
+          final offset = 
+            category == 'Hat' ? const Offset(0, 32)
+          : category == 'Clothes' ? const Offset(0, 0)
+          : category == 'Shoes' ? const Offset(0, -16)
+          : Offset.zero;
           return GestureDetector(
-            onTap: () => onItemSelected(category, item.fileName),
+            onTap: () => onItemSelected(item.category, item.fileName),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -173,7 +204,7 @@ class _ItemGrid extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Transform.translate(
-                        offset: const Offset(0, 32),
+                        offset: offset,
                         child: Transform.scale(
                           scale: 2,
                           child: Image.asset(
