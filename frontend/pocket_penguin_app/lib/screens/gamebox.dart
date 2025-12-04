@@ -13,10 +13,10 @@ class GameBox extends StatefulWidget {
       required this.background});
 
   @override
-  State<GameBox> createState() => _GameBoxState();
+  State<GameBox> createState() => GameBoxState();
 }
 
-class _GameBoxState extends State<GameBox> {
+class GameBoxState extends State<GameBox> {
   // penguin's outfit
   String _hat = 'none';
   String _clothes = 'none';
@@ -51,15 +51,38 @@ class _GameBoxState extends State<GameBox> {
                   child: Image(
                       image: widget.sky.image,
                       key: const Key('sky'),
-                      fit: BoxFit.cover)), // Sky (behind everything)
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
+                      isAntiAlias: false,)), // Sky (behind everything)
               Positioned.fill(
                   child: Image(
                       image: widget.background.image,
                       key: const Key('background'),
-                      fit: BoxFit.cover)), // Background
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
+                      isAntiAlias: false,)), // Background
               widget.child, // Decorations
-              Image.asset('images/logo.png',
-                  width: 120), // Basic penguin, can change in the future
+              // Penguin base and outfit layers
+              Transform.scale(
+                scale: 3.5,
+                child: Image.asset('images/penguin.png', filterQuality: FilterQuality.none, isAntiAlias: false,)
+              ),
+              // Outfit layers
+              if (_hat != 'none')
+                Transform.scale(
+                  scale: 3.5,
+                  child: Image.asset('images/hats/$_hat.png', isAntiAlias: false, filterQuality: FilterQuality.none)
+                ),
+              if (_clothes != 'none')
+                Transform.scale(
+                  scale: 3.5,
+                  child: Image.asset('images/clothes/$_hat.png', isAntiAlias: false, filterQuality: FilterQuality.none)
+                ),
+              if (_shoes != 'none')
+                Transform.scale(
+                  scale: 3.5,
+                  child: Image.asset('images/shoes/$_hat.png', isAntiAlias: false, filterQuality: FilterQuality.none)
+                ),
             ])));
   }
 }

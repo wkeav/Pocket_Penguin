@@ -39,6 +39,8 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+final GlobalKey<GameBoxState> gameBoxKey = GlobalKey<GameBoxState>();
+
 class _MainScreenState extends State<MainScreen> {
   int _activeTab = 2;
   int _fishCoins = 127;
@@ -100,6 +102,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         return Column(children: [
           GameBox(
+              key: gameBoxKey,
               background:
                   Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
               sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
@@ -112,12 +115,32 @@ class _MainScreenState extends State<MainScreen> {
       case 1:
         return Column(children: [
           GameBox(
+              key: gameBoxKey,
               background:
                   Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
               sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
               child:
                   const SizedBox()), // TODO: Dynamically change sky according to time
-          const Expanded(child: WardrobeScreen())
+          Expanded(
+            child: WardrobeScreen(
+              onItemSelected: (category, itemName) {
+                switch (category) {
+                  case 'Hat':
+                    gameBoxKey.currentState?.changeHat(itemName);
+                    break;
+                  case 'Clothes':
+                    gameBoxKey.currentState?.changeClothes(itemName);
+                    break;
+                  case 'Shoes':
+                    gameBoxKey.currentState?.changeShoes(itemName);
+                    break;
+                  case 'Background':
+                    // Implement background change method in GameBoxState
+                    break;
+                }
+              },
+            ),
+          ),
         ]);
       case 0:
         return HabitsScreen(
