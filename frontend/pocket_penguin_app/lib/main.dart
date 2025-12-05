@@ -450,7 +450,7 @@ class TabItem {
   final String label;
   final Widget icon;
 
-  TabItem({
+  const TabItem({
     required this.id,
     required this.label,
     required this.icon,
