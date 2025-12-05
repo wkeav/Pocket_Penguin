@@ -39,6 +39,8 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+final GlobalKey<GameBoxState> gameBoxKey = GlobalKey<GameBoxState>();
+
 class _MainScreenState extends State<MainScreen> {
   int _activeTab = 2;
   int _fishCoins = 127;
@@ -98,27 +100,27 @@ class _MainScreenState extends State<MainScreen> {
   Widget _renderContent() {
     switch (_activeTab) {
       case 2:
-        return Column(children: [
-          GameBox(
-              background:
-                  Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
-              sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
-              child:
-                  const SizedBox()), // TODO: Dynamically change sky according to time
-          Expanded(
-              child: HomeScreen(
-                  fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins))
-        ]);
+        return HomeScreen(
+            fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
       case 1:
-        return Column(children: [
-          GameBox(
-              background:
-                  Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
-              sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
-              child:
-                  const SizedBox()), // TODO: Dynamically change sky according to time
-          const Expanded(child: WardrobeScreen())
-        ]);
+        return WardrobeScreen(
+          onItemSelected: (category, itemName) {
+            switch (category) {
+              case 'Hat':
+                gameBoxKey.currentState?.changeHat(itemName);
+                break;
+              case 'Clothes':
+                gameBoxKey.currentState?.changeClothes(itemName);
+                break;
+              case 'Shoes':
+                gameBoxKey.currentState?.changeShoes(itemName);
+                break;
+              case 'Background':
+                gameBoxKey.currentState?.changeBackground(itemName);
+                break;
+            }
+          },
+        );
       case 0:
         return HabitsScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
@@ -246,7 +248,8 @@ class _MainScreenState extends State<MainScreen> {
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
-                          border: Border.all(color: const Color(0xFFF59E0B)),
+                          border: Border.all(
+                              color: Color.fromARGB(255, 19, 18, 16)),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -256,7 +259,7 @@ class _MainScreenState extends State<MainScreen> {
                                 size: 16, color: Color(0xFFF59E0B)),
                             const SizedBox(width: 4),
                             Text(
-                              '$_fishCoins coins',
+                              "$_fishCoins coins",
                               style: const TextStyle(
                                 color: Color(0xFFF59E0B),
                                 fontWeight: FontWeight.w500,
@@ -270,6 +273,17 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 // Content
+                // GameBox is kept in the tree so its state persists across tabs
+                Offstage(
+                  offstage: !(_activeTab == 1 || _activeTab == 2),
+                  child: GameBox(
+                    key: gameBoxKey,
+                    background: Image.asset(
+                        'images/backgrounds/pockp_cloud_land_theme.png'),
+                    sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
+                    child: const SizedBox(),
+                  ),
+                ),
                 Expanded(
                   child: _renderContent(),
                 ),
@@ -436,7 +450,7 @@ class TabItem {
   final String label;
   final Widget icon;
 
-  TabItem({
+  const TabItem({
     required this.id,
     required this.label,
     required this.icon,
