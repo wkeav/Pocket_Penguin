@@ -1,7 +1,8 @@
 from django.db import models
 import uuid
 from django.utils import timezone
-from .user_models import User  # Link journal entries to users
+from .user_models import User  # link journal entries to users
+
 
 """
 Journal models for Pocket Penguin application.
@@ -20,26 +21,16 @@ Database Design:
 - Automatic timestamps track creation and last update of entries.
 
 Author: Kaitlyn
-"""
+"""    
 
 class JournalEntry(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
-    # Link journal entry to a user
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="journal_entries")
-    
-    # Entry content
     title = models.CharField(max_length=200)
     content = models.TextField()
     mood = models.CharField(max_length=50)
-    
-    # Optional tags stored as a list
-    tags = models.JSONField(default=list, blank=True)
-    
-    # Date of the journal entry
+    tags = models.JSONField(default=list, blank=True)  # store tags as a list
     date = models.DateTimeField(default=timezone.now)
-    
-    # Automatic timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -48,3 +39,4 @@ class JournalEntry(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.title[:20]}"
+

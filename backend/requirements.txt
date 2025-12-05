@@ -30,3 +30,5 @@ djangorestframework-simplejwt==5.3.0
 # Code quality (development only)
 # flake8==6.1.0
 # black==23.11.0
+django-sendgrid-v5==1.3.0
+sendgrid==6.12.5

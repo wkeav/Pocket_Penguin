@@ -10,6 +10,7 @@ Author: Astra
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentUserGameProfile, LogOutView
+from .views.journal_views import JournalEntryListCreateView, JournalEntryDetailView
 from penguin_app.views.progress_views import WeeklyProgressView, MonthlyProgressView, AllTimeProgressView
 
 
@@ -25,6 +26,10 @@ urlpatterns = [
     path('auth/token/', LoginView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/token/revoke/', LogOutView.as_view(), name='token_revoke'),
+    
+    # Journal feature
+    path('journal/', JournalEntryListCreateView.as_view(), name='journal-list-create'),
+    path('journal/<uuid:pk>/', JournalEntryDetailView.as_view(), name='journal-detail'),
     
     # Progress and stats
     path("api/progress/weekly/", WeeklyProgressView.as_view(), name="weekly-progress"),
