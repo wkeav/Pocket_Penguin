@@ -39,7 +39,8 @@ class GameBoxState extends State<GameBox> {
 
   void changeClothes(String newClothes) {
     try {
-      final validatedClothes = GameBoxSecurityValidator.validateClothes(newClothes);
+      final validatedClothes =
+          GameBoxSecurityValidator.validateClothes(newClothes);
       setState(() => _clothes = validatedClothes);
     } catch (e) {
       debugPrint('Invalid clothes input: $e');
@@ -57,7 +58,8 @@ class GameBoxState extends State<GameBox> {
 
   void changeBackground(String newBackground) {
     try {
-      final validatedBackground = GameBoxSecurityValidator.validateBackground(newBackground);
+      final validatedBackground =
+          GameBoxSecurityValidator.validateBackground(newBackground);
       setState(() => _background = validatedBackground);
     } catch (e) {
       debugPrint('Invalid background input: $e');
@@ -89,7 +91,8 @@ class GameBoxState extends State<GameBox> {
                 final bool isDay = hour >= 6 && hour < 18;
                 final ImageProvider skyImage = isDay
                     ? const AssetImage('images/skies/pockp_day_sky_bground.png')
-                    : const AssetImage('images/skies/pockp_night_sky_bground.png');
+                    : const AssetImage(
+                        'images/skies/pockp_night_sky_bground.png');
                 return Image(
                   image: skyImage,
                   key: const Key('sky'),
@@ -113,26 +116,28 @@ class GameBoxState extends State<GameBox> {
               widget.child, // Decorations
               // Penguin base and outfit layers
               Transform.scale(
-                scale: 3.5,
-                child: Image.asset('images/penguin.png', filterQuality: FilterQuality.none, isAntiAlias: false,)
-              ),
+                  scale: 3.5,
+                  child: Image.asset(
+                    'images/penguin.png',
+                    filterQuality: FilterQuality.none,
+                    isAntiAlias: false,
+                  )),
               // Outfit layers
               if (_hat != 'none')
                 Transform.scale(
-                  scale: 3.5,
-                  child: Image.asset('images/hats/$_hat.png', isAntiAlias: false, filterQuality: FilterQuality.none)
-                ),
+                    scale: 3.5,
+                    child: Image.asset('images/hats/$_hat.png',
+                        isAntiAlias: false, filterQuality: FilterQuality.none)),
               if (_clothes != 'none')
                 Transform.scale(
-                  scale: 3.5,
-                  child: Image.asset('images/clothes/$_clothes.png', isAntiAlias: false, filterQuality: FilterQuality.none)
-                ),
+                    scale: 3.5,
+                    child: Image.asset('images/clothes/$_clothes.png',
+                        isAntiAlias: false, filterQuality: FilterQuality.none)),
               if (_shoes != 'none')
                 Transform.scale(
-                  scale: 3.5,
-                  child: Image.asset('images/shoes/$_shoes.png', isAntiAlias: false, filterQuality: FilterQuality.none)
-                ),
-              
+                    scale: 3.5,
+                    child: Image.asset('images/shoes/$_shoes.png',
+                        isAntiAlias: false, filterQuality: FilterQuality.none)),
             ])));
   }
 }

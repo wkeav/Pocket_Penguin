@@ -178,7 +178,10 @@ class WardrobeItem {
   final String imagePath;
 
   WardrobeItem(
-      {required this.name, required this.category, required this.fileName, required this.imagePath});
+      {required this.name,
+      required this.category,
+      required this.fileName,
+      required this.imagePath});
 }
 
 class _ItemGrid extends StatelessWidget {
@@ -206,11 +209,13 @@ class _ItemGrid extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           final item = items[index];
-          final offset = 
-            category == 'Hat' ? const Offset(0, 32)
-          : category == 'Clothes' ? const Offset(0, 0)
-          : category == 'Shoes' ? const Offset(0, -16)
-          : Offset.zero;
+          final offset = category == 'Hat'
+              ? const Offset(0, 32)
+              : category == 'Clothes'
+                  ? const Offset(0, 0)
+                  : category == 'Shoes'
+                      ? const Offset(0, -16)
+                      : Offset.zero;
           return GestureDetector(
             onTap: () => onItemSelected(item.category, item.fileName),
             child: Card(
@@ -224,30 +229,30 @@ class _ItemGrid extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                        child: item.category == 'Background'
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
+                      child: item.category == 'Background'
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                item.imagePath,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                                isAntiAlias: false,
+                                filterQuality: FilterQuality.none,
+                              ),
+                            )
+                          : Transform.translate(
+                              offset: offset,
+                              child: Transform.scale(
+                                scale: 2,
                                 child: Image.asset(
                                   item.imagePath,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
+                                  fit: BoxFit.contain,
                                   isAntiAlias: false,
                                   filterQuality: FilterQuality.none,
                                 ),
-                              )
-                            : Transform.translate(
-                                offset: offset,
-                                child: Transform.scale(
-                                  scale: 2,
-                                  child: Image.asset(
-                                    item.imagePath,
-                                    fit: BoxFit.contain,
-                                    isAntiAlias: false,
-                                    filterQuality: FilterQuality.none,
-                                  ),
-                                ),
                               ),
+                            ),
                     ),
                     const SizedBox(height: 8),
                     Text(
