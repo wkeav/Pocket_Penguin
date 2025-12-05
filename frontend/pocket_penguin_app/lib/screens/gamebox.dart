@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gamebox_security_validator.dart';
 
 // Game box
 class GameBox extends StatefulWidget {
@@ -25,12 +26,43 @@ class GameBoxState extends State<GameBox> {
   String _background = '';
 
   // update functions
-  void changeHat(String newHat) => setState(() => _hat = newHat);
-  void changeClothes(String newClothes) =>
-      setState(() => _clothes = newClothes);
-  void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
-  void changeBackground(String newBackground) =>
-      setState(() => _background = newBackground);
+  /// CWE-20 Mitigation: Validate input before updating state
+  void changeHat(String newHat) {
+    try {
+      final validatedHat = GameBoxSecurityValidator.validateHat(newHat);
+      setState(() => _hat = validatedHat);
+    } catch (e) {
+      debugPrint('Invalid hat input: $e');
+      // Optionally show error to user or silently reject
+    }
+  }
+
+  void changeClothes(String newClothes) {
+    try {
+      final validatedClothes = GameBoxSecurityValidator.validateClothes(newClothes);
+      setState(() => _clothes = validatedClothes);
+    } catch (e) {
+      debugPrint('Invalid clothes input: $e');
+    }
+  }
+
+  void changeShoes(String newShoes) {
+    try {
+      final validatedShoes = GameBoxSecurityValidator.validateShoes(newShoes);
+      setState(() => _shoes = validatedShoes);
+    } catch (e) {
+      debugPrint('Invalid shoes input: $e');
+    }
+  }
+
+  void changeBackground(String newBackground) {
+    try {
+      final validatedBackground = GameBoxSecurityValidator.validateBackground(newBackground);
+      setState(() => _background = validatedBackground);
+    } catch (e) {
+      debugPrint('Invalid background input: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
