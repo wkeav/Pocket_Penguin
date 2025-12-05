@@ -248,7 +248,8 @@ class _MainScreenState extends State<MainScreen> {
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
-                          border: Border.all(color: Color.fromARGB(255, 19, 18, 16)),
+                          border: Border.all(
+                              color: Color.fromARGB(255, 19, 18, 16)),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -277,7 +278,8 @@ class _MainScreenState extends State<MainScreen> {
                   offstage: !(_activeTab == 1 || _activeTab == 2),
                   child: GameBox(
                     key: gameBoxKey,
-                    background: Image.asset('images/backgrounds/pockp_cloud_land_theme.png'),
+                    background: Image.asset(
+                        'images/backgrounds/pockp_cloud_land_theme.png'),
                     sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
                     child: const SizedBox(),
                   ),
