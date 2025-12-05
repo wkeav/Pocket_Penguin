@@ -21,7 +21,8 @@ class GameBoxState extends State<GameBox> {
   String _hat = 'none';
   String _clothes = 'none';
   String _shoes = 'none';
-  String _background = 'none';
+  // empty string means "no background chosen" (show only sky)
+  String _background = '';
 
   // update functions
   void changeHat(String newHat) => setState(() => _hat = newHat);
@@ -36,7 +37,7 @@ class GameBoxState extends State<GameBox> {
     return Container(
         padding: const EdgeInsets.only(bottom: 12.0),
         width: double.infinity,
-        height: 120,
+        height: 160,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
@@ -50,26 +51,33 @@ class GameBoxState extends State<GameBox> {
         child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Stack(alignment: Alignment.center, children: [
-              Positioned.fill(
-                  child: Image(
-                      image: widget.sky.image,
-                      key: const Key('sky'),
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.none,
-                      isAntiAlias: false,)), // Sky (behind everything)
-              Positioned.fill(
-                  child: Builder(builder: (context) {
-                final ImageProvider backgroundImage = _background != 'none'
-                    ? AssetImage('images/backgrounds/$_background.png')
-                    : widget.background.image;
+              // Sky: choose day/night based on device time (fallback to widget.sky)
+              Positioned.fill(child: Builder(builder: (context) {
+                final hour = DateTime.now().hour;
+                final bool isDay = hour >= 6 && hour < 18;
+                final ImageProvider skyImage = isDay
+                    ? const AssetImage('images/skies/pockp_day_sky_bground.png')
+                    : const AssetImage('images/skies/pockp_night_sky_bground.png');
                 return Image(
-                  image: backgroundImage,
-                  key: const Key('background'),
+                  image: skyImage,
+                  key: const Key('sky'),
                   fit: BoxFit.cover,
                   filterQuality: FilterQuality.none,
                   isAntiAlias: false,
                 );
-              })), // Background (selectable, defaults to widget.background)
+              })), // Sky (day/night)
+
+              // Background: only render when a background has been selected
+              if (_background.isNotEmpty)
+                Positioned.fill(
+                  child: Image(
+                    image: AssetImage('images/backgrounds/$_background.png'),
+                    key: const Key('background'),
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.none,
+                    isAntiAlias: false,
+                  ),
+                ),
               widget.child, // Decorations
               // Penguin base and outfit layers
               Transform.scale(
