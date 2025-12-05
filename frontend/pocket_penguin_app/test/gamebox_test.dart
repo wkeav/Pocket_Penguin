@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pocket_penguin_app/main.dart';
 import 'package:pocket_penguin_app/screens/gamebox.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +6,10 @@ void main() {
   testWidgets('GameBox renders correctly with sky, background, and child',
       (WidgetTester tester) async {
     // Load sample images for testing (you can use placeholder images)
-    final sky = Image.asset('images/backgrounds/pockp_cloud_land_theme.png', key: const Key('sky'));
-    final background = Image.asset('images/skies/pockp_day_sky_bground.png', key: const Key('background'));
+    final sky = Image.asset('images/backgrounds/pockp_cloud_land_theme.png',
+        key: const Key('sky'));
+    final background = Image.asset('images/skies/pockp_day_sky_bground.png',
+        key: const Key('background'));
 
     // The child widget we expect to see
     const childWidget = Text('Hello Penguin');

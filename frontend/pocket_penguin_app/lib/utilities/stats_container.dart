@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 
 class StatsContainer extends StatelessWidget {
-  StatsContainer({
+  const StatsContainer({
     Key? key,
     required this.icon,
     required this.stat,
     this.iconColor = Colors.orange,
   }) : super(key: key);
 
-  Color iconColor;
+  final Color iconColor;
   final IconData icon;
   final String stat;
 

@@ -19,7 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _bioController = TextEditingController();
   final _profilePictureController = TextEditingController();
-  
+
   Map<String, dynamic>? _userData;
   bool _isLoading = true;
   bool _isEditing = false;
@@ -50,8 +50,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _userData = result['data'];
         _bioController.text = result['data']['bio'] ?? '';
-        _profilePictureController.text = result['data']['profile_picture'] ?? '';
-        
+        _profilePictureController.text =
+            result['data']['profile_picture'] ?? '';
+
         // Parse date_of_birth if it exists
         if (result['data']['date_of_birth'] != null) {
           try {
@@ -60,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _selectedDate = null;
           }
         }
-        
+
         _isLoading = false;
       });
     } else {
@@ -87,7 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now().subtract(const Duration(days: 365 * 18)),
+      initialDate: _selectedDate ??
+          DateTime.now().subtract(const Duration(days: 365 * 18)),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       builder: (context, child) {
@@ -126,9 +128,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     final result = await _authService.updateProfile(
-      bio: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
-      profilePicture: _profilePictureController.text.trim().isEmpty 
-          ? null 
+      bio: _bioController.text.trim().isEmpty
+          ? null
+          : _bioController.text.trim(),
+      profilePicture: _profilePictureController.text.trim().isEmpty
+          ? null
           : _profilePictureController.text.trim(),
       dateOfBirth: dateOfBirth,
     );
@@ -153,8 +157,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } else {
       if (mounted) {
-        final errorMessage = result['error']?['message'] ?? 
-            (result['error'] is Map ? result['error'].toString() : 'Failed to update profile');
+        final errorMessage = result['error']?['message'] ??
+            (result['error'] is Map
+                ? result['error'].toString()
+                : 'Failed to update profile');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $errorMessage'),
@@ -192,7 +198,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Logged out successfully. You can continue using the app.'),
+            content: Text(
+                'Logged out successfully. You can continue using the app.'),
             backgroundColor: Colors.blue,
             duration: Duration(seconds: 2),
           ),
@@ -262,7 +269,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: Image.asset("images/logo.png", width: 32, height: 32),
+                            child: Image.asset("images/logo.png",
+                                width: 32, height: 32),
                           ),
                           const SizedBox(width: 12),
                           const Text(
@@ -279,7 +287,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           if (!_isEditing)
                             IconButton(
-                              icon: const Icon(Icons.edit, color: Color(0xFF1E3A8A)),
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF1E3A8A)),
                               onPressed: () {
                                 setState(() {
                                   _isEditing = true;
@@ -288,7 +297,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               tooltip: 'Edit Profile',
                             ),
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Color(0xFF1E3A8A)),
+                            icon: const Icon(Icons.arrow_back,
+                                color: Color(0xFF1E3A8A)),
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -311,36 +321,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 // Profile Avatar
                                 Center(
                                   child: GestureDetector(
-                                    onTap: _isEditing ? () {
-                                      // Show dialog to enter profile picture URL
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text('Profile Picture URL'),
-                                          content: TextField(
-                                            controller: _profilePictureController,
-                                            decoration: const InputDecoration(
-                                              hintText: 'Enter image URL (https://...)',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            keyboardType: TextInputType.url,
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(context),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                setState(() {});
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('OK'),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    } : null,
+                                    onTap: _isEditing
+                                        ? () {
+                                            // Show dialog to enter profile picture URL
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text(
+                                                    'Profile Picture URL'),
+                                                content: TextField(
+                                                  controller:
+                                                      _profilePictureController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    hintText:
+                                                        'Enter image URL (https://...)',
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                  ),
+                                                  keyboardType:
+                                                      TextInputType.url,
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      setState(() {});
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('OK'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        : null,
                                     child: Container(
                                       width: 100,
                                       height: 100,
@@ -352,16 +371,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 3,
                                         ),
                                       ),
-                                      child: _profilePictureController.text.isNotEmpty &&
-                                              _profilePictureController.text.startsWith('http')
+                                      child: _profilePictureController
+                                                  .text.isNotEmpty &&
+                                              _profilePictureController.text
+                                                  .startsWith('http')
                                           ? ClipRRect(
-                                              borderRadius: BorderRadius.circular(47),
+                                              borderRadius:
+                                                  BorderRadius.circular(47),
                                               child: Image.network(
                                                 _profilePictureController.text,
                                                 width: 100,
                                                 height: 100,
                                                 fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) {
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
                                                   return const Icon(
                                                     Icons.person,
                                                     size: 50,
@@ -406,36 +429,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      _buildInfoRow('Email', _userData?['email'] ?? 'N/A'),
+                                      _buildInfoRow('Email',
+                                          _userData?['email'] ?? 'N/A'),
                                       const Divider(),
-                                      _buildInfoRow('Username', _userData?['username'] ?? 'N/A'),
+                                      _buildInfoRow('Username',
+                                          _userData?['username'] ?? 'N/A'),
                                       const Divider(),
                                       _buildInfoRow(
                                         'Verified',
-                                        _userData?['is_verified'] == true ? 'Yes' : 'No',
+                                        _userData?['is_verified'] == true
+                                            ? 'Yes'
+                                            : 'No',
                                       ),
                                       if (!_isEditing) ...[
                                         const Divider(),
                                         _buildInfoRow(
                                           'Birthday',
                                           _selectedDate != null
-                                              ? DateFormat('MMMM d, yyyy').format(_selectedDate!)
+                                              ? DateFormat('MMMM d, yyyy')
+                                                  .format(_selectedDate!)
                                               : 'Not set',
                                         ),
                                         if (_bioController.text.isNotEmpty) ...[
                                           const Divider(),
-                                          _buildInfoRow('Bio', _bioController.text),
+                                          _buildInfoRow(
+                                              'Bio', _bioController.text),
                                         ],
                                       ],
                                       if (_isEditing) ...[
                                         const Divider(),
                                         // Birthday field
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'Birthday',
@@ -446,27 +478,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               ),
                                               const SizedBox(height: 8),
                                               InkWell(
-                                                onTap: () => _selectDate(context),
+                                                onTap: () =>
+                                                    _selectDate(context),
                                                 child: Container(
-                                                  padding: const EdgeInsets.all(12),
+                                                  padding:
+                                                      const EdgeInsets.all(12),
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(color: Colors.grey[300]!),
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    border: Border.all(
+                                                        color:
+                                                            Colors.grey[300]!),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
                                                       Text(
                                                         _selectedDate != null
-                                                            ? DateFormat('MMMM d, yyyy').format(_selectedDate!)
+                                                            ? DateFormat(
+                                                                    'MMMM d, yyyy')
+                                                                .format(
+                                                                    _selectedDate!)
                                                             : 'Select birthday',
                                                         style: TextStyle(
-                                                          color: _selectedDate != null
-                                                              ? Colors.black
-                                                              : Colors.grey[400],
+                                                          color:
+                                                              _selectedDate !=
+                                                                      null
+                                                                  ? Colors.black
+                                                                  : Colors.grey[
+                                                                      400],
                                                         ),
                                                       ),
-                                                      const Icon(Icons.calendar_today, size: 20),
+                                                      const Icon(
+                                                          Icons.calendar_today,
+                                                          size: 20),
                                                     ],
                                                   ),
                                                 ),
@@ -477,9 +525,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         const Divider(),
                                         // Bio field
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'Bio',
@@ -494,14 +544,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 maxLines: 4,
                                                 maxLength: 700,
                                                 decoration: InputDecoration(
-                                                  hintText: 'Tell us about yourself...',
+                                                  hintText:
+                                                      'Tell us about yourself...',
                                                   border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
-                                                  contentPadding: const EdgeInsets.all(12),
+                                                  contentPadding:
+                                                      const EdgeInsets.all(12),
                                                 ),
                                                 validator: (value) {
-                                                  if (value != null && value.length > 700) {
+                                                  if (value != null &&
+                                                      value.length > 700) {
                                                     return 'Bio must be 700 characters or less';
                                                   }
                                                   return null;
@@ -522,7 +577,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.blue[600],
                                       foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
@@ -533,11 +589,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             width: 20,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
-                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.white),
                                             ),
                                           )
                                         : const Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               SizedBox(width: 8),
                                               Text(
@@ -563,13 +622,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           },
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: Colors.grey[700],
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
                                     child: const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(Icons.cancel),
                                         SizedBox(width: 8),
@@ -591,7 +652,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red[600],
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),

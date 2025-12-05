@@ -80,7 +80,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           color: Colors.blue[100],
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Image.asset("images/logo.png", width: 32, height: 32),
+                        child: Image.asset("images/logo.png",
+                            width: 32, height: 32),
                       ),
                       const SizedBox(width: 12),
                       const Text(
@@ -108,4 +109,3 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
-

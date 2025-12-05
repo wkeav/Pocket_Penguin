@@ -2,7 +2,7 @@
 API views for user authentication in Pocket Penguin.
 
 This module provides REST API endpoints for:
-- User registration
+- User registration and create JWT token 
 - User login with JWT tokens
 - Token refresh
 - User profile management (get and update)
@@ -24,6 +24,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.utils import timezone
+from django.contrib.auth.tokens import default_token_generator
 
 from ..serializers.user_serializers import UserRegistrationSerializer, UserProfileSerializer, CustomTokenObtainPairSerializer, UserGameProfileSerializer
 
@@ -48,6 +49,11 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         
+        # Generate JWT tokens for the new user
+        token = default_token_generator.make_token(user)
+        user.verification_token_expires = timezone.now() + timezone.timedelta(hours=24)
+        user.save()
+
         # Return user data (excluding password)
         response_data = {
             'id': str(user.id),
