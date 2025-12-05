@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'gamebox_security_validator.dart';
+import 'package:pocket_penguin_app/screens/gamebox_security_validator.dart';
 
 // Game box
 class GameBox extends StatefulWidget {
