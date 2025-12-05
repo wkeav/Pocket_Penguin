@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pocket_penguin_app/screens/gamebox_security_validator.dart';
 
 // Game box
 class GameBox extends StatefulWidget {
@@ -14,64 +13,27 @@ class GameBox extends StatefulWidget {
       required this.background});
 
   @override
-  State<GameBox> createState() => GameBoxState();
+  State<GameBox> createState() => _GameBoxState();
 }
 
-class GameBoxState extends State<GameBox> {
-  // penguin's outfit
-  String _hat = 'none';
-  String _clothes = 'none';
-  String _shoes = 'none';
-  // empty string means "no background chosen" (show only sky)
-  String _background = '';
+class _GameBoxState extends State<GameBox> {
+  // penguin's outfit (reserved for future use)
+  // String _hat = 'none';
+  // String _clothes = 'none';
+  // String _shoes = 'none';
 
-  // update functions
-  /// CWE-20 Mitigation: Validate input before updating state
-  void changeHat(String newHat) {
-    try {
-      final validatedHat = GameBoxSecurityValidator.validateHat(newHat);
-      setState(() => _hat = validatedHat);
-    } catch (e) {
-      debugPrint('Invalid hat input: $e');
-      // Optionally show error to user or silently reject
-    }
-  }
-
-  void changeClothes(String newClothes) {
-    try {
-      final validatedClothes =
-          GameBoxSecurityValidator.validateClothes(newClothes);
-      setState(() => _clothes = validatedClothes);
-    } catch (e) {
-      debugPrint('Invalid clothes input: $e');
-    }
-  }
-
-  void changeShoes(String newShoes) {
-    try {
-      final validatedShoes = GameBoxSecurityValidator.validateShoes(newShoes);
-      setState(() => _shoes = validatedShoes);
-    } catch (e) {
-      debugPrint('Invalid shoes input: $e');
-    }
-  }
-
-  void changeBackground(String newBackground) {
-    try {
-      final validatedBackground =
-          GameBoxSecurityValidator.validateBackground(newBackground);
-      setState(() => _background = validatedBackground);
-    } catch (e) {
-      debugPrint('Invalid background input: $e');
-    }
-  }
+  // update functions (reserved for future use)
+  // void changeHat(String newHat) => setState(() => _hat = newHat);
+  // void changeClothes(String newClothes) =>
+  //     setState(() => _clothes = newClothes);
+  // void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
 
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.only(bottom: 12.0),
         width: double.infinity,
-        height: 160,
+        height: 120,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
@@ -85,59 +47,19 @@ class GameBoxState extends State<GameBox> {
         child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Stack(alignment: Alignment.center, children: [
-              // Sky: choose day/night based on device time (fallback to widget.sky)
-              Positioned.fill(child: Builder(builder: (context) {
-                final hour = DateTime.now().hour;
-                final bool isDay = hour >= 6 && hour < 18;
-                final ImageProvider skyImage = isDay
-                    ? const AssetImage('images/skies/pockp_day_sky_bground.png')
-                    : const AssetImage(
-                        'images/skies/pockp_night_sky_bground.png');
-                return Image(
-                  image: skyImage,
-                  key: const Key('sky'),
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.none,
-                  isAntiAlias: false,
-                );
-              })), // Sky (day/night)
-
-              // Background: only render when a background has been selected
-              if (_background.isNotEmpty)
-                Positioned.fill(
+              Positioned.fill(
                   child: Image(
-                    image: AssetImage('images/backgrounds/$_background.png'),
-                    key: const Key('background'),
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.none,
-                    isAntiAlias: false,
-                  ),
-                ),
+                      image: widget.sky.image,
+                      key: const Key('sky'),
+                      fit: BoxFit.cover)), // Sky (behind everything)
+              Positioned.fill(
+                  child: Image(
+                      image: widget.background.image,
+                      key: const Key('background'),
+                      fit: BoxFit.cover)), // Background
               widget.child, // Decorations
-              // Penguin base and outfit layers
-              Transform.scale(
-                  scale: 3.5,
-                  child: Image.asset(
-                    'images/penguin.png',
-                    filterQuality: FilterQuality.none,
-                    isAntiAlias: false,
-                  )),
-              // Outfit layers
-              if (_hat != 'none')
-                Transform.scale(
-                    scale: 3.5,
-                    child: Image.asset('images/hats/$_hat.png',
-                        isAntiAlias: false, filterQuality: FilterQuality.none)),
-              if (_clothes != 'none')
-                Transform.scale(
-                    scale: 3.5,
-                    child: Image.asset('images/clothes/$_clothes.png',
-                        isAntiAlias: false, filterQuality: FilterQuality.none)),
-              if (_shoes != 'none')
-                Transform.scale(
-                    scale: 3.5,
-                    child: Image.asset('images/shoes/$_shoes.png',
-                        isAntiAlias: false, filterQuality: FilterQuality.none)),
+              Image.asset('images/logo.png',
+                  width: 120), // Basic penguin, can change in the future
             ])));
   }
 }
