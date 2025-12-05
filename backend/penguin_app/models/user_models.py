@@ -42,6 +42,7 @@ class User(AbstractUser):
     # Store secure token for password reset 
     password_reset_token = models.CharField(max_length=100,blank=True)
     password_reset_expires = models.DateTimeField(null=True,blank=True)
+    verification_token_expires = models.DateTimeField(null=True, blank=True)
     
     # Timestamps 
     created_at = models.DateTimeField(auto_now_add=True)

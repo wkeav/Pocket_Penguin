@@ -152,3 +152,22 @@ JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+# Email Configuration - SendGrid (Production-ready)
+# 
+# Development: Uses console backend if SENDGRID_API_KEY is not set
+# Production: Uses SendGrid API when SENDGRID_API_KEY is set in environment
+
+SENDGRID_API_KEY = config('SENDGRID_API_KEY', default=None)
+
+if SENDGRID_API_KEY:
+    # Production: Use SendGrid for reliable email delivery
+    EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+else:
+    # Development: Use console backend (emails print to terminal)
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@pocketpenguin.com')
+
+# Frontend URL for verification links in email templates
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
