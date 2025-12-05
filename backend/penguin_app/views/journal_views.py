@@ -1,8 +1,10 @@
 # backend/penguin_app/views.py
 from rest_framework import generics, permissions
 from rest_framework.exceptions import PermissionDenied
-from .models.journal_entry_model import JournalEntry
-from .serializers import JournalEntrySerializer
+from penguin_app.models.journal_entry_model import JournalEntry
+from penguin_app.serializers.journal_serializers import JournalEntrySerializer
+
+
 
 class JournalEntryListCreateView(generics.ListCreateAPIView):
     """
