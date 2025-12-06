@@ -6,8 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
   Handles all communications with backend API 
 */
 
-
-
 class AuthService {
   static const String baseUrl = 'http://127.0.0.1:8000/api';
   static const String tokenKey = 'access_token';
@@ -249,16 +247,17 @@ class AuthService {
     await prefs.setString(tokenKey, accessToken);
     await prefs.setString(refreshTokenKey, refreshToken);
   }
-static Future<String?> getToken() async {
+
+  static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token');
   }
+
   // Save user data
   Future<void> _saveUserData(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userKey, jsonEncode(userData));
 
-     // Get stored JWT access token
-  
+    // Get stored JWT access token
   }
 }

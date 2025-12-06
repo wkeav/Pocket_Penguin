@@ -20,15 +20,17 @@ void main() {
 
         if (authHeader == 'Bearer token-for-user1') {
           // User1 can access their own events
-          return http.Response(jsonEncode([
-            {
-              'id': 1,
-              'title': 'Event 1',
-              'description': 'Desc',
-              'start_time': '2025-12-06T09:00:00',
-              'end_time': '2025-12-06T10:00:00'
-            }
-          ]), 200);
+          return http.Response(
+              jsonEncode([
+                {
+                  'id': 1,
+                  'title': 'Event 1',
+                  'description': 'Desc',
+                  'start_time': '2025-12-06T09:00:00',
+                  'end_time': '2025-12-06T10:00:00'
+                }
+              ]),
+              200);
         } else {
           // Any other token is unauthorized
           return http.Response('Unauthorized', 401);

@@ -1,6 +1,6 @@
 // import 'dart:convert'; //reads json stuff
 // import 'package:http/http.dart' as http; //talks to internt
-// import 'auth_service.dart'; //gets the token 
+// import 'auth_service.dart'; //gets the token
 
 // class CalendarService {
 //   static const String baseUrl = 'http://127.0.0.1:8000/api'; //base url for api
@@ -8,17 +8,17 @@
 //   //  // get all events for user
 //   static Future<List<dynamic>> getEvents() async {
 //     final token = await AuthService.getToken(); //grabs token
-//     if (token == null) throw Exception('User not authenticated'); //no token throw and exception 
+//     if (token == null) throw Exception('User not authenticated'); //no token throw and exception
 
 //     final response = await http.get(
 //       Uri.parse('$baseUrl/calendar/events/'), //goes to events page
 //       headers: {
-//         'Content-Type': 'application/json', //speaks to json 
-//         'Authorization': 'Bearer $token',  //shows the token badge 
+//         'Content-Type': 'application/json', //speaks to json
+//         'Authorization': 'Bearer $token',  //shows the token badge
 //       },
 //     );
 
-//     if (response.statusCode == 200) return jsonDecode(response.body); // got events 
+//     if (response.statusCode == 200) return jsonDecode(response.body); // got events
 //     throw Exception('Failed to load events'); //failed to get events case
 //   }
 
@@ -26,10 +26,10 @@
 //   static Future<void> addEvent({
 //     required String title, // event name
 //     required String description, //notes
-//     required DateTime startTime, //start time 
-//     required DateTime endTime, //end time 
+//     required DateTime startTime, //start time
+//     required DateTime endTime, //end time
 //   }) async {
-//     final token = await AuthService.getToken(); //needs token again 
+//     final token = await AuthService.getToken(); //needs token again
 //     if (token == null) throw Exception('User not authenticated'); //no token? needs it!
 
 //     final response = await http.post(
@@ -60,7 +60,7 @@
 //       Uri.parse('$baseUrl/calendar/events/$id/'), //goes to delete it
 //       headers: {
 //         'Content-Type': 'application/json', // json talk again
-//         'Authorization': 'Bearer $token', // token badge again 
+//         'Authorization': 'Bearer $token', // token badge again
 //       },
 //     );
 
@@ -72,15 +72,17 @@
 
 import 'dart:convert'; // reads json stuff
 import 'package:http/http.dart' as http; // talks to internet
-import 'auth_service.dart'; // gets the token 
+import 'auth_service.dart'; // gets the token
 
 class CalendarService {
   static const String baseUrl = 'http://127.0.0.1:8000/api'; // base url for API
 
   // Get all events for user (supports optional test token)
   static Future<List<dynamic>> getEvents({String? testToken}) async {
-    final token = testToken ?? await AuthService.getToken(); // use test token if provided
-    if (token == null) throw Exception('User not authenticated'); // no token? stop
+    final token =
+        testToken ?? await AuthService.getToken(); // use test token if provided
+    if (token == null)
+      throw Exception('User not authenticated'); // no token? stop
 
     final response = await http.get(
       Uri.parse('$baseUrl/calendar/events/'), // API endpoint
@@ -98,8 +100,8 @@ class CalendarService {
   static Future<void> addEvent({
     required String title, // event name
     required String description, // notes
-    required DateTime startTime, // start time 
-    required DateTime endTime, // end time 
+    required DateTime startTime, // start time
+    required DateTime endTime, // end time
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('User not authenticated');
@@ -129,7 +131,8 @@ class CalendarService {
     if (token == null) throw Exception('User not authenticated');
 
     final response = await http.delete(
-      Uri.parse('$baseUrl/calendar/events/$id/'), // API endpoint to delete event
+      Uri.parse(
+          '$baseUrl/calendar/events/$id/'), // API endpoint to delete event
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

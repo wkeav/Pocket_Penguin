@@ -4,8 +4,7 @@ class CalendarEvent {
   final String title; // Name of the event
   final String description; // Description (required)
   final DateTime startDate; // Start time
-  final DateTime endDate;   // End time
-
+  final DateTime endDate; // End time
 
   CalendarEvent({
     required this.title,
@@ -14,4 +13,3 @@ class CalendarEvent {
     required this.endDate,
   });
 }
-

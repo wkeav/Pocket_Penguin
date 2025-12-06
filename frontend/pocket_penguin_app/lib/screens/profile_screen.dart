@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/auth_service.dart';
 
-
 /*
   Shows user information and logout
   Allows editing: bio, birthday, profile picture

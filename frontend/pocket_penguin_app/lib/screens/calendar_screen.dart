@@ -35,7 +35,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   //The month we are looking at. we can flip months like pages in a book.
   DateTime _focusedDate = DateTime.now();
   //Map from a day(midnight) to a list of events on that day.
-  //It's like each day it keeps its events. 
+  //It's like each day it keeps its events.
   final Map<DateTime, List<CalendarEvent>> _events = {};
   //Are we busy fetching data? if yes, show a loading idea later.
   bool isLoading = false;
@@ -43,7 +43,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-    //When this page wakes up, ask the backend for events. 
+    //When this page wakes up, ask the backend for events.
     _loadEvents();
   }
 
@@ -71,7 +71,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         if (!tempEvents.containsKey(dayKey)) tempEvents[dayKey] = [];
         tempEvents[dayKey]!.add(eventObj);
       }
-        //Replace our events with the new ones from the server.
+      //Replace our events with the new ones from the server.
       setState(() {
         _events.clear();
         _events.addAll(tempEvents);
@@ -83,6 +83,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
     setState(() => isLoading = false); //Loading is done.
   }
+
 //Get events for a particular day.
   List<CalendarEvent> _getEventsForDay(DateTime day) {
     return _events[DateTime(day.year, day.month, day.day)] ?? [];
@@ -95,12 +96,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final descriptionController = TextEditingController();
     DateTime? startDate = _selectedDate; //Start day defaults to selected day
     TimeOfDay? startTime;
-    DateTime? endDate = _selectedDate; //End day defaults too 
+    DateTime? endDate = _selectedDate; //End day defaults too
     TimeOfDay? endTime;
 
     showDialog(
       context: context,
-      //StatefulBuilder lets the dialog change its own little bits 
+      //StatefulBuilder lets the dialog change its own little bits
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           title: const Text('Add Event'),
@@ -122,7 +123,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 const SizedBox(height: 16),
                 // Start time picker
-                const Text('Start Time', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Start Time',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 ElevatedButton(
                   onPressed: () async {
                     //Pick date for start
@@ -153,7 +155,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 const SizedBox(height: 16),
                 // End time pickers
-                const Text('End Time', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('End Time',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 ElevatedButton(
                   onPressed: () async {
                     //Pick a date for end
@@ -186,7 +189,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           actions: [
             //Cancel button closes the dialog with no changes.
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel')),
             //Add button saves the event if everything is filled
             TextButton(
               onPressed: () async {
@@ -196,13 +201,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     startTime == null ||
                     endDate == null ||
                     endTime == null) {
-                      //Tell the user to fill all fields.
+                  //Tell the user to fill all fields.
                   ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Please fill everything')));
                   return;
                 }
 
-                 //Make full DateTime objects from chosen dates and times.
+                //Make full DateTime objects from chosen dates and times.
                 final startDateTime = DateTime(
                   startDate!.year,
                   startDate!.month,
@@ -254,8 +259,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       await CalendarService.deleteEvent(event.id);
       await _loadEvents();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete event: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to delete event: $e')));
     }
   }
 
@@ -278,8 +283,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  event.title, //Big title of the event 
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  event.title, //Big title of the event
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
                 ),
               ),
               //Trash button to delete the event
@@ -298,25 +304,51 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           const SizedBox(height: 4),
           //Smaller gray description text.
-          Text(event.description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(event.description,
+              style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       ),
     );
   }
+
 //Tiny helper-are two datetimes the same day?
 //We compare year, month, and day only. time of day doesn't matter.
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 //Format selected date like "Jan 5" for the header under events.
   String _formatSelectedDate() {
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     return '${months[_selectedDate.month - 1]} ${_selectedDate.day}';
   }
 
 //Format the month and year like "Januart 2025" for the top of the calendar.
   String _getMonthYear(DateTime date) {
     const months = [
-      'January','February','March','April','May','June','July','August','September','October','November','December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return '${months[date.month - 1]} ${date.year}';
   }
@@ -325,18 +357,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
 //We make 6 rows x 7 colums and leave empty boxes for out-of-month days.
   Widget _buildCalendarGrid() {
     //Figure out how many days are in the focused month.
-    final daysInMonth = DateTime(_focusedDate.year, _focusedDate.month + 1, 0).day;
+    final daysInMonth =
+        DateTime(_focusedDate.year, _focusedDate.month + 1, 0).day;
     //First day of the month to know which weekday it starts on.
     final firstDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month, 1);
     //Convert weekday 1..7 to 0..6 so Sunday is 0.
-    
+
     final firstWeekday = firstDayOfMonth.weekday % 7;
 
     return Column(
       children: [
         //Weekday labels row.
         Row(
-          children: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+          children: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
               .map((day) => Expanded(
                     child: Center(
                         child: Text(day,
@@ -356,7 +389,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               //If the number is not inside this month, show an empty box.
               if (dayNumber < 1 || dayNumber > daysInMonth)
                 return const Expanded(child: SizedBox(height: 40));
-              final date = DateTime(_focusedDate.year, _focusedDate.month, dayNumber);
+              final date =
+                  DateTime(_focusedDate.year, _focusedDate.month, dayNumber);
               final isSelected = _isSameDay(date, _selectedDate);
               final isToday = _isSameDay(date, DateTime.now());
               final hasEvents = _getEventsForDay(date).isNotEmpty;
@@ -370,16 +404,28 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     margin: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
                       //Special color for selected day and light color for today.
-                      color: isSelected ? Colors.blue[600] : isToday ? Colors.blue[100] : null,
+                      color: isSelected
+                          ? Colors.blue[600]
+                          : isToday
+                              ? Colors.blue[100]
+                              : null,
                       borderRadius: BorderRadius.circular(8),
                       //Orange border if there are events on this day.
-                      border: hasEvents ? Border.all(color: Colors.orange, width: 2) : null,
+                      border: hasEvents
+                          ? Border.all(color: Colors.orange, width: 2)
+                          : null,
                     ),
                     child: Center(
                       child: Text(dayNumber.toString(),
                           style: TextStyle(
-                              color: isSelected ? Colors.white : isToday ? Colors.blue[600] : Colors.black,
-                              fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal)),
+                              color: isSelected
+                                  ? Colors.white
+                                  : isToday
+                                      ? Colors.blue[600]
+                                      : Colors.black,
+                              fontWeight: isSelected || isToday
+                                  ? FontWeight.bold
+                                  : FontWeight.normal)),
                     ),
                   ),
                 ),
@@ -393,7 +439,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //Get the events for the day that the user picked. 
+    //Get the events for the day that the user picked.
     final eventsForSelectedDay = _getEventsForDay(_selectedDate);
 
     return SingleChildScrollView(
@@ -409,7 +455,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       DateTime(_focusedDate.year, _focusedDate.month - 1)),
                   icon: const Icon(Icons.chevron_left)),
               Text(_getMonthYear(_focusedDate),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w600)),
               IconButton(
                   onPressed: () => setState(() => _focusedDate =
                       DateTime(_focusedDate.year, _focusedDate.month + 1)),
@@ -420,7 +467,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           //Callendar itself
           _buildCalendarGrid(),
           const SizedBox(height: 16),
-          // Events list for the selected day. 
+          // Events list for the selected day.
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -430,28 +477,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   const SizedBox(width: 8),
                   //Header like "events for Jan 5"
                   Text('Events for ${_formatSelectedDate()}',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600)),
                 ],
               ),
               const SizedBox(height: 16),
-              //If no events, show a friendly empty state. 
+              //If no events, show a friendly empty state.
               if (eventsForSelectedDay.isEmpty)
                 const Center(
                   child: Column(
                     children: [
                       Icon(Icons.calendar_today, size: 40, color: Colors.grey),
                       SizedBox(height: 8),
-                      Text('No events for this day', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                      Text('No events for this day',
+                          style: TextStyle(color: Colors.grey, fontSize: 14)),
                     ],
                   ),
                 )
               else
-              //Otherwise show each event in a little card. 
-                ...eventsForSelectedDay
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: _buildEventItem(e),
-                        )),
+                //Otherwise show each event in a little card.
+                ...eventsForSelectedDay.map((e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: _buildEventItem(e),
+                    )),
             ],
           ),
           const SizedBox(height: 16),
@@ -466,4 +514,3 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 }
-
