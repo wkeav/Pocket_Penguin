@@ -6,6 +6,7 @@ class CalendarEvent {
   final DateTime startDate; // Start time
   final DateTime endDate;   // End time
 
+
   CalendarEvent({
     required this.title,
     required this.description,
@@ -13,3 +14,4 @@ class CalendarEvent {
     required this.endDate,
   });
 }
+
