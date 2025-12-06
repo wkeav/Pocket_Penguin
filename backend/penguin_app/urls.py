@@ -13,11 +13,6 @@ from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentU
 from .views.journal_views import JournalEntryListCreateView, JournalEntryDetailView
 from penguin_app.views.progress_views import WeeklyProgressView, MonthlyProgressView, AllTimeProgressView
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fb46f7cf8ab4a9bf59f0fa7997e9f10e211b0524
-
 app_name = 'penguin_app'
 
 urlpatterns = [
@@ -39,9 +34,5 @@ urlpatterns = [
     path("api/progress/weekly/", WeeklyProgressView.as_view(), name="weekly-progress"),
     path("api/progress/monthly/", MonthlyProgressView.as_view(), name="monthly-progress"),
     path("api/progress/all-time/", AllTimeProgressView.as_view(), name="all-time-progress"),
-<<<<<<< HEAD
-
-=======
->>>>>>> fb46f7cf8ab4a9bf59f0fa7997e9f10e211b0524
 ]
 
