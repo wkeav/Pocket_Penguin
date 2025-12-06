@@ -13,7 +13,6 @@ from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentU
 from .views.journal_views import JournalEntryListCreateView, JournalEntryDetailView
 from penguin_app.views.progress_views import WeeklyProgressView, MonthlyProgressView, AllTimeProgressView
 
-
 app_name = 'penguin_app'
 
 urlpatterns = [

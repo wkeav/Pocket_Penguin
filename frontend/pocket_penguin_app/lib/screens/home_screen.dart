@@ -66,10 +66,10 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildStatCard(
                         'Level', '5', Icons.trending_up, Colors.blue),
-                    const SizedBox(width: 12),
                     _buildStatCard('Streak', '7 days',
                         Icons.local_fire_department, Colors.orange),
                   ],
@@ -85,16 +85,18 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
-                  children: [
+                Row(
+                  children: const [
                     Icon(Icons.today, color: Color(0xFF1D4ED8), size: 20),
                     SizedBox(width: 8),
-                    Text(
-                      'Today\'s Progress',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1D4ED8),
+                    Expanded(
+                      child: Text(
+                        'Today\'s Progress',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1D4ED8),
+                        ),
                       ),
                     ),
                   ],
@@ -120,12 +122,14 @@ class HomeScreen extends StatelessWidget {
                       const Icon(Icons.catching_pokemon,
                           color: Color(0xFFF59E0B), size: 20),
                       const SizedBox(width: 8),
-                      Text(
-                        'Earned 23 fish coins today!',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.amber[800],
+                      Expanded(
+                        child: Text(
+                          'Earned 23 fish coins today!',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.amber[800],
+                          ),
                         ),
                       ),
                     ],
@@ -150,23 +154,30 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    _buildActionButton(
-                        'Add Habit', Icons.add_circle, Colors.green),
-                    const SizedBox(width: 8),
-                    _buildActionButton('Add Todo', Icons.add_task, Colors.blue),
-                  ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildActionButton(
+                          'Add Habit', Icons.add_circle, Colors.green),
+                      const SizedBox(width: 8),
+                      _buildActionButton(
+                          'Add Todo', Icons.add_task, Colors.blue),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
-                    _buildActionButton(
-                        'Journal Entry', Icons.book, Colors.purple),
-                    const SizedBox(width: 8),
-                    _buildActionButton(
-                        'View Progress', Icons.bar_chart, Colors.orange),
-                  ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildActionButton(
+                          'Journal Entry', Icons.book, Colors.purple),
+                      const SizedBox(width: 8),
+                      _buildActionButton(
+                          'View Progress', Icons.bar_chart, Colors.orange),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -179,16 +190,18 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
-                  children: [
+                Row(
+                  children: const [
                     Icon(Icons.home, color: Color(0xFF0284C7), size: 20),
                     SizedBox(width: 8),
-                    Text(
-                      'Waddles\' Home',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF0284C7),
+                    Expanded(
+                      child: Text(
+                        'Waddles\' Home',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF0284C7),
+                        ),
                       ),
                     ),
                   ],
@@ -259,17 +272,19 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
-                  children: [
+                Row(
+                  children: const [
                     Icon(Icons.emoji_events,
                         color: Color(0xFFF59E0B), size: 20),
                     SizedBox(width: 8),
-                    Text(
-                      'Recent Achievements',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF374151),
+                    Expanded(
+                      child: Text(
+                        'Recent Achievements',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF374151),
+                        ),
                       ),
                     ),
                   ],
@@ -381,7 +396,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildActionButton(String label, IconData icon, Color color) {
-    return Expanded(
+    return SizedBox(
+      width: 100,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
