@@ -1,3 +1,6 @@
+// Ignore constant identifier lint (project uses SCREAMING_SNAKE for constants)
+// ignore_for_file: constant_identifier_names
+
 class AppStrings {
   static const String BASIC_CHANNEL_KEY = 'basic_channel';
   static const String BASIC_CHANNEL_NAME = 'Basic Notifications';
