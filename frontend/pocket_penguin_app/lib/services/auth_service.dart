@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /*
   Handles all communications with backend API 
 */
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 class AuthService {

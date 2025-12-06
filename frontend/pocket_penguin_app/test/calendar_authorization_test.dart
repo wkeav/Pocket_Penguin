@@ -6,12 +6,12 @@ import 'package:pocket_penguin_app/services/calendar_service.dart';
 
 void main() {
   group('Calendar Authorization Tests', () {
-    late CalendarService service;
+    // late CalendarService service;
 
-    setUp(() {
-      // Replace the http client with a mock for testing
-      service = CalendarService();
-    });
+    // setUp(() {
+    //   // Replace the http client with a mock for testing
+    //   service = CalendarService();
+    // });
 
     test('User cannot access another user’s events', () async {
       // Mock client to simulate backend behavior
