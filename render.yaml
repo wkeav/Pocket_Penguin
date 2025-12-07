@@ -14,8 +14,6 @@ services:
     envVars:
       - key: DEBUG
         value: "False"
-      - key: SECRET_KEY
-        generateValue: true
       - key: PYTHONUNBUFFERED
         value: "1"
       - key: ALLOWED_HOST
