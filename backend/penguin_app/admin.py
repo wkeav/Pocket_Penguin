@@ -9,7 +9,7 @@ from django.utils import timezone
 
 # Custom Admin Site with dashboard stats
 class PocketPenguinAdminSite(AdminSite):
-    site_header = "🐧 Pocket Penguin Administration"
+    site_header = "Pocket Penguin Administration"
     site_title = "Pocket Penguin Admin"
     index_title = "Welcome to Pocket Penguin Admin Dashboard"
     
