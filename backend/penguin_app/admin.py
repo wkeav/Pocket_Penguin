@@ -14,8 +14,8 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(UserGameProfile)
 class UserGameProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'current_streak', 'total_entries', 'created_at')
-    list_filter = ('created_at',)
+    list_display = ('user', 'level', 'streak_days', 'created_at')
+    list_filter = ('created_at', 'level')
     search_fields = ('user__username', 'user__email')
 
 # Journal Management
@@ -29,14 +29,14 @@ class JournalEntryAdmin(admin.ModelAdmin):
 # Progress Management
 @admin.register(Progress)
 class ProgressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'week_date', 'entries_count', 'created_at')
-    list_filter = ('week_date', 'created_at')
-    search_fields = ('user__username',)
+    list_display = ('profile', 'week_start', 'completion_rate', 'created_at')
+    list_filter = ('created_at', 'completion_rate')
+    search_fields = ('profile__user__username',)
 
 # Calendar Management
 @admin.register(CalendarEvent)
 class CalendarEventAdmin(admin.ModelAdmin):
-    list_display = ('user', 'event_date', 'title', 'created_at')
-    list_filter = ('event_date', 'created_at')
+    list_display = ('user', 'title', 'start_time', 'end_time')
+    list_filter = ('start_time', 'user')
     search_fields = ('user__username', 'title', 'description')
-    readonly_fields = ('created_at', 'updated_at', 'id')
+    readonly_fields = ('user',)
