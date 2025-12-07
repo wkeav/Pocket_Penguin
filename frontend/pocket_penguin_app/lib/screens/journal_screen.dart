@@ -11,8 +11,6 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
-  late JournalApi journalApi;
-
   List<JournalEntry> _entries = [];
   bool _loading = true;
 
@@ -41,14 +39,12 @@ class _JournalScreenState extends State<JournalScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: replace YOUR_TOKEN with the real JWT from your login service
-    journalApi = JournalApi("YOUR_TOKEN");
     loadEntries();
   }
 
   Future<void> loadEntries() async {
     try {
-      final entries = await journalApi.fetchEntries();
+      final entries = await JournalApi.fetchEntries();
       setState(() {
         _entries = entries.reversed.toList(); // newest first
         _loading = false;
@@ -73,14 +69,25 @@ class _JournalScreenState extends State<JournalScreen> {
     );
 
     try {
-      await journalApi.createEntry(newEntry);
+      await JournalApi.createEntry(newEntry);
       await loadEntries();
 
       _titleController.clear();
       _contentController.clear();
       _selectedMood = 'Neutral';
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Entry saved successfully!')),
+        );
+      }
     } catch (e) {
       print("Error creating entry: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save entry: $e')),
+        );
+      }
     }
   }
 

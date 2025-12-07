@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-fallback-key-change-this')
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lambda v: [s.strip() for s in v.split(',')])
 
@@ -31,6 +31,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lamb
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',  # Must be before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,6 +123,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'penguin_app' / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -171,3 +176,93 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@pocketpenguin
 
 # Frontend URL for verification links in email templates
 FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
+# Jazzmin Admin Theme Configuration
+JAZZMIN_SETTINGS = {
+    "site_title": "Pocket Penguin Admin",
+    "site_header": "🐧 Pocket Penguin",
+    "site_brand": "Pocket Penguin",
+    "site_logo": None,
+    "welcome_sign": "Welcome to Pocket Penguin Admin",
+    "copyright": "Pocket Penguin",
+    "search_model": "penguin_app.User",
+    
+    # Top menu links
+    "topmenu_links": [
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "View Site", "url": "/", "new_window": True},
+    ],
+    
+    # Whether to show the UI customizer on the sidebar
+    "show_ui_builder": True,  # Enable UI builder so you can customize live
+    
+    # Order apps
+    "order_with_respect_to": ["penguin_app"],
+    
+    # Custom icons for models (Font Awesome 5)
+    "icons": {
+        "penguin_app.User": "fas fa-users",
+        "penguin_app.UserGameProfile": "fas fa-gamepad",
+        "penguin_app.JournalEntry": "fas fa-book-open",
+        "penguin_app.ProgressGoal": "fas fa-chart-line",
+        "penguin_app.CalendarEvent": "fas fa-calendar-alt",
+        "auth.Group": "fas fa-users-cog",
+    },
+    
+    # Use horizontal tabs for better layout
+    "changeform_format": "horizontal_tabs",
+    
+    # Show related modal instead of popup
+    "related_modal_active": True,
+    
+    # Use custom CSS
+    "custom_css": None,
+    "custom_js": None,
+    
+    # Show language chooser
+    "show_sidebar": True,
+    
+    # Navigation expanded by default
+    "navigation_expanded": True,
+    
+    # Hide these apps/models
+    "hide_apps": [],
+    "hide_models": [],
+    
+    # Custom links for app
+    "usermenu_links": [
+        {"model": "auth.user"}
+    ],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-primary",  # Blue navbar
+    "accent": "accent-info",  # Cyan accents
+    "navbar": "navbar-white navbar-light",  # Light navbar
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",  # Dark blue sidebar
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+    "theme": "flatly",  # Clean, modern theme (other options: cosmo, litera, lux, materia, minty, pulse, sandstone, simplex, united, yeti)
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": False,
+}
