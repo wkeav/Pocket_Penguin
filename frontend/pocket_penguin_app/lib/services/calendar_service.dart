@@ -8,8 +8,7 @@ class CalendarService {
 
   // Get all events for user (supports optional test token)
   static Future<List<dynamic>> getEvents({String? testToken}) async {
-    final token =
-        testToken ?? await AuthService.getToken();
+    final token = testToken ?? await AuthService.getToken();
     if (token == null) throw Exception('User not authenticated');
 
     final response = await http.get(
