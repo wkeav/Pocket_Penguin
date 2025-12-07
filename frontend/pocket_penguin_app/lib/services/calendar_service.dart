@@ -3,7 +3,7 @@
 // import 'auth_service.dart'; //gets the token
 
 // class CalendarService {
-//   static const String baseUrl = 'http://127.0.0.1:8000/api'; //base url for api
+//   static const String baseUrl = 'https://pocket-penguin.onrender.com/api'; //base url for api
 
 //   //  // get all events for user
 //   static Future<List<dynamic>> getEvents() async {

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 */
 
 class AuthService {
-  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  static const String baseUrl = 'https://pocket-penguin.onrender.com/api';
   static const String tokenKey = 'access_token';
   static const String refreshTokenKey = 'refresh_token';
   static const String userKey = 'user_data';
