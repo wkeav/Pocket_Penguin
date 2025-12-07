@@ -1,1 +1,5 @@
-const String api = 'http://127.0.0.1:8000/api';
+import 'package:flutter/foundation.dart';
+
+const String api = kIsWeb
+    ? 'http://localhost:8000/api' // Local dev
+    : 'https://your-production-api.com/api'; // Production

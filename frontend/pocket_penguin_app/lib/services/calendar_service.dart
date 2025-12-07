@@ -73,9 +73,10 @@
 import 'dart:convert'; // reads json stuff
 import 'package:http/http.dart' as http; // talks to internet
 import 'auth_service.dart'; // gets the token
+import 'api_service.dart';
 
 class CalendarService {
-  static const String baseUrl = 'http://127.0.0.1:8000/api'; // base url for API
+  static final String baseUrl = api; // base url for API
 
   // Get all events for user (supports optional test token)
   static Future<List<dynamic>> getEvents({String? testToken}) async {
