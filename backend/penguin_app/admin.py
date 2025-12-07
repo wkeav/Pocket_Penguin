@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models.user_models import User, UserGameProfile
+from django.contrib import admin
+from .models import CalendarEvent
+
+
 
 ## Built in web interface for managing databases 
 @admin.register(User)
@@ -42,3 +46,14 @@ class UserGameProfileAdmin(admin.ModelAdmin):
         ('Settings', {'fields': ('notification_settings',)}),
         ('Timestamps', {'fields': ('created_at', 'updated_at')}),
     )
+from django.contrib import admin
+from .models import CalendarEvent
+
+@admin.register(CalendarEvent)
+class CalendarEventAdmin(admin.ModelAdmin):
+    list_display = ('title', 'start_time', 'end_time', 'get_user')
+
+    # Show the username in admin instead of the raw user object
+    def get_user(self, obj):
+        return obj.user.username  # or str(obj.user) if username doesn't exist
+    get_user.short_description = 'User'
