@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pocket_penguin_app/models/journal.dart';
 import 'auth_service.dart';
+import 'api_service.dart';
 
 class JournalApi {
-  static const String baseUrl = 'http://127.0.0.1:8000/api/journal/';
+  static final String baseUrl = '$api/journal/';
 
   static Future<List<JournalEntry>> fetchEntries() async {
     final token = await AuthService.getToken();
