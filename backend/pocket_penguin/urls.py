@@ -16,13 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.http import HttpResponse
-
-def hello_world(request):
-    return HttpResponse("Hello World")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('penguin_app.urls')),  # All API endpoints under /api/
-    path('', hello_world, name='hello')
+    path('api/', include('penguin_app.urls')),
 ]

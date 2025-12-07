@@ -1,44 +1,42 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models.user_models import User, UserGameProfile
+from .models.journal_entry_model import JournalEntry
+from .models.progress_models import Progress
+from .models.calendar_models import CalendarEvent
 
-## Built in web interface for managing databases 
+# User Management
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
-    """Admin interface for User model."""
-    list_display = ['email', 'username', 'is_verified', 'is_staff', 'is_active', 'created_at']
-    list_filter = ['is_verified', 'is_staff', 'is_active', 'created_at']
-    search_fields = ['email', 'username']
-    ordering = ['-created_at']
-    readonly_fields = ['id', 'created_at', 'updated_at']  # Add 'id' here
-    
-    fieldsets = (
-        (None, {'fields': ('id', 'email', 'username', 'password')}),  # Add 'id' here
-        ('Personal info', {'fields': ('bio', 'profile_picture', 'date_of_birth')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Verification', {'fields': ('is_verified', 'verification_token')}),
-        ('Security', {'fields': ('failed_login_attempts', 'locked_until', 'last_login_ip')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined', 'created_at', 'updated_at')}),
-    )
-    
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'username', 'password1', 'password2'),
-        }),
-    )
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'is_verified', 'created_at')
+    list_filter = ('is_verified', 'created_at')
+    search_fields = ('username', 'email')
+    readonly_fields = ('created_at', 'updated_at', 'id')
 
 @admin.register(UserGameProfile)
 class UserGameProfileAdmin(admin.ModelAdmin):
-    """Admin interface for UserGameProfile model."""
-    list_display = ['user', 'fish_coins', 'level', 'streak_days', 'total_habits', 'completed_tasks', 'created_at']
-    list_filter = ['level', 'created_at']
-    search_fields = ['user__email', 'user__username']
-    readonly_fields = ['created_at', 'updated_at']
-    
-    fieldsets = (
-        ('User', {'fields': ('user',)}),
-        ('Game Stats', {'fields': ('fish_coins', 'level', 'streak_days', 'total_habits', 'completed_tasks')}),
-        ('Settings', {'fields': ('notification_settings',)}),
-        ('Timestamps', {'fields': ('created_at', 'updated_at')}),
-    )
+    list_display = ('user', 'level', 'streak_days', 'created_at')
+    list_filter = ('created_at', 'level')
+    search_fields = ('user__username', 'user__email')
+
+# Journal Management
+@admin.register(JournalEntry)
+class JournalEntryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'date', 'mood', 'created_at')
+    list_filter = ('mood', 'date', 'created_at')
+    search_fields = ('user__username', 'content')
+    readonly_fields = ('created_at', 'updated_at', 'id')
+
+# Progress Management
+@admin.register(Progress)
+class ProgressAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'week_start', 'completion_rate', 'created_at')
+    list_filter = ('created_at', 'completion_rate')
+    search_fields = ('profile__user__username',)
+
+# Calendar Management
+@admin.register(CalendarEvent)
+class CalendarEventAdmin(admin.ModelAdmin):
+    list_display = ('user', 'title', 'start_time', 'end_time')
+    list_filter = ('start_time', 'user')
+    search_fields = ('user__username', 'title', 'description')
+    readonly_fields = ('user',)

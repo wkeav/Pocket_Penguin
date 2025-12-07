@@ -1,0 +1,48 @@
+[07/Dec/2025 03:24:36] "POST /api/users/ HTTP/1.1" 500 145
+Performing system checks...
+
+System check identified no issues (0 silenced).
+December 07, 2025 - 03:24:34
+Django version 4.2.7, using settings 'pocket_penguin.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+Performing system checks...
+
+System check identified no issues (0 silenced).
+December 07, 2025 - 03:26:59
+Django version 4.2.7, using settings 'pocket_penguin.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+Performing system checks...
+
+System check identified no issues (0 silenced).
+December 07, 2025 - 03:27:16
+Django version 4.2.7, using settings 'pocket_penguin.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+[07/Dec/2025 03:30:33] "POST /api/users/ HTTP/1.1" 201 142
+[07/Dec/2025 03:32:46] "OPTIONS /api/journal/ HTTP/1.1" 200 0
+[07/Dec/2025 03:32:46] "GET /api/journal/ HTTP/1.1" 401 172
+[07/Dec/2025 03:34:54] "GET /api/journal/ HTTP/1.1" 401 172
+[07/Dec/2025 03:35:09] "POST /api/journal/ HTTP/1.1" 401 172
+[07/Dec/2025 03:35:15] "OPTIONS /api/calendar/events/ HTTP/1.1" 200 0
+[07/Dec/2025 03:35:15] "GET /api/calendar/events/ HTTP/1.1" 401 172
+[07/Dec/2025 03:35:22] "GET /api/journal/ HTTP/1.1" 401 172
+[07/Dec/2025 03:35:25] "GET /api/calendar/events/ HTTP/1.1" 401 172
+Performing system checks...
+
+System check identified no issues (0 silenced).
+December 07, 2025 - 03:27:22
+Django version 4.2.7, using settings 'pocket_penguin.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+Fatal Python error: init_sys_streams: can't initialize sys standard streams
+Python runtime state: core initialized
+OSError: [Errno 9] Bad file descriptor
+
+Current thread 0x0000000209ffe0c0 (most recent call first):
+  <no Python frame>

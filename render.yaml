@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: pocket-penguin-api
+    runtime: python
+    pythonVersion: 3.13
+    plan: free
+    rootDir: backend
+    buildCommand: |
+      pip install --upgrade pip setuptools
+      pip install -r requirements.txt
+      mkdir -p staticfiles
+      python manage.py collectstatic --noinput --clear
+      python manage.py migrate
+    startCommand: gunicorn pocket_penguin.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: ALLOWED_HOST
+        value: "pocket-penguin.onrender.com"

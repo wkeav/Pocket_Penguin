@@ -71,27 +71,43 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Image.asset("images/logo.png",
-                            width: 32, height: 32),
+                      // Back button
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back,
+                            color: Color(0xFF1E3A8A)),
+                        onPressed: () => Navigator.of(context).pop(),
+                        tooltip: 'Back to Home',
                       ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Pocket Penguin',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E3A8A),
+                      // Logo and title centered
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Image.asset("images/logo.png",
+                                  width: 32, height: 32),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Pocket Penguin',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1E3A8A),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      // Placeholder to balance the back button
+                      const SizedBox(width: 48),
                     ],
                   ),
                 ),

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 */
 
 class AuthService {
-  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  static const String baseUrl = 'https://pocket-penguin.onrender.com/api';
   static const String tokenKey = 'access_token';
   static const String refreshTokenKey = 'refresh_token';
   static const String userKey = 'user_data';
@@ -248,9 +248,16 @@ class AuthService {
     await prefs.setString(refreshTokenKey, refreshToken);
   }
 
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
   // Save user data
   Future<void> _saveUserData(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userKey, jsonEncode(userData));
+
+    // Get stored JWT access token
   }
 }

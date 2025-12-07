@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.conf import settings
 import uuid
 
 """ 
@@ -42,6 +43,7 @@ class User(AbstractUser):
     # Store secure token for password reset 
     password_reset_token = models.CharField(max_length=100,blank=True)
     password_reset_expires = models.DateTimeField(null=True,blank=True)
+    verification_token_expires = models.DateTimeField(null=True, blank=True)
     
     # Timestamps 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -56,6 +58,24 @@ class User(AbstractUser):
     # Security tracking
     failed_login_attempts = models.IntegerField(default=0)
     locked_until = models.DateTimeField(null=True, blank=True)
+    
+    # Override AbstractUser fields to avoid related_name conflicts
+    groups = models.ManyToManyField(
+        'auth.Group',
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+        related_name="penguin_user_set",
+        related_query_name="penguin_user",
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name="penguin_user_set",
+        related_query_name="penguin_user",
+    )
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username'] 
@@ -73,7 +93,7 @@ class User(AbstractUser):
 # User game profile table 
 class UserGameProfile(models.Model):
     # Each user has one profile, and if user is deleted then delete their profile too
-    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile') 
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='profile') 
     
     fish_coins = models.IntegerField(default=0)
     level = models.IntegerField(default=1)
