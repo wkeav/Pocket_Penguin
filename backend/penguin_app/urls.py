@@ -14,7 +14,6 @@ from .views.journal_views import JournalEntryListCreateView, JournalEntryDetailV
 from penguin_app.views.progress_views import WeeklyProgressView, MonthlyProgressView, AllTimeProgressView
 from .views.calendar_views import CalendarEventListCreate, CalendarEventRetrieveUpdateDestroy
 
-
 app_name = 'penguin_app'
 
 urlpatterns = [
