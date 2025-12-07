@@ -53,15 +53,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from penguin_app.admin import admin_site  # Import custom admin site
 
 def hello_world(request):
     return HttpResponse("Hello World")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin_site.urls),  # Use custom admin site
     path('api/', include('penguin_app.urls')),  # All API endpoints under /api/
     path('', hello_world, name='hello')
 ]

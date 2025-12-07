@@ -36,6 +36,9 @@ class JournalEntry(models.Model):
 
     class Meta:
         db_table = "journal_entries"
+        indexes = [
+            models.Index(fields=["user", "-date", "-created_at"], name="journal_user_date_idx"),
+        ]
 
     def __str__(self):
         return f"{self.user.email} - {self.title[:20]}"

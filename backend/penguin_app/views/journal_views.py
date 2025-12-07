@@ -1,9 +1,16 @@
 # backend/penguin_app/views.py
 from rest_framework import generics, permissions
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import PermissionDenied
 from penguin_app.models.journal_entry_model import JournalEntry
 from penguin_app.serializers.journal_serializers import JournalEntrySerializer
 
+
+
+class JournalEntryPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = "page_size"
+    max_page_size = 100
 
 
 class JournalEntryListCreateView(generics.ListCreateAPIView):
@@ -13,10 +20,15 @@ class JournalEntryListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = JournalEntrySerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = JournalEntryPagination
 
     def get_queryset(self):
         # Only return entries that belong to the current user
-        return JournalEntry.objects.filter(user=self.request.user).order_by('-date', '-created_at')
+        return (
+            JournalEntry.objects.filter(user=self.request.user)
+            .select_related("user")
+            .order_by('-date', '-created_at')
+        )
 
     def perform_create(self, serializer):
         # Save the current user as the owner of the entry
