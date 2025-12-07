@@ -75,7 +75,7 @@ class _JournalScreenState extends State<JournalScreen> {
       _titleController.clear();
       _contentController.clear();
       _selectedMood = 'Neutral';
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Entry saved successfully!')),

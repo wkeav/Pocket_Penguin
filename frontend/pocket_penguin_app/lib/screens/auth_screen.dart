@@ -74,7 +74,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       // Back button
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Color(0xFF1E3A8A)),
+                        icon: const Icon(Icons.arrow_back,
+                            color: Color(0xFF1E3A8A)),
                         onPressed: () => Navigator.of(context).pop(),
                         tooltip: 'Back to Home',
                       ),

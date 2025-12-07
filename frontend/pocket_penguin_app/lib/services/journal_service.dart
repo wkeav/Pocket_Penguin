@@ -21,9 +21,8 @@ class JournalApi {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       // Handle paginated response (DRF pagination returns {results: [...]})
-      final List jsonList = data is Map && data.containsKey('results') 
-          ? data['results'] 
-          : data;
+      final List jsonList =
+          data is Map && data.containsKey('results') ? data['results'] : data;
       return jsonList.map((e) => JournalEntry.fromJson(e)).toList();
     } else {
       throw Exception('Failed to fetch entries');
@@ -50,7 +49,8 @@ class JournalApi {
     print('Response body: ${response.body}');
 
     if (response.statusCode != 201) {
-      throw Exception('Failed to create entry: ${response.statusCode} - ${response.body}');
+      throw Exception(
+          'Failed to create entry: ${response.statusCode} - ${response.body}');
     }
   }
 }
