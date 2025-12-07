@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'penguin_app',
 ]
 
+# Custom user model
+AUTH_USER_MODEL = 'penguin_app.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
