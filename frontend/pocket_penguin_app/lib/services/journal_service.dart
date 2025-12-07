@@ -2,14 +2,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pocket_penguin_app/models/journal.dart';
 import 'auth_service.dart';
-import 'api_service.dart';
 
 class JournalApi {
-  static const String baseUrl = "$api/journal/";
+  static const String baseUrl =
+      'https://pocket-penguin.onrender.com/api/journal';
 
   static Future<List<JournalEntry>> fetchEntries() async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('User not authenticated');
+    if (token == null) {
+      throw Exception('User not authenticated');
+    }
 
     final response = await http.get(
       Uri.parse(baseUrl),
@@ -32,7 +34,9 @@ class JournalApi {
 
   static Future<void> createEntry(JournalEntry entry) async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('User not authenticated');
+    if (token == null) {
+      throw Exception('User not authenticated');
+    }
 
     print('Creating entry with token: ${token.substring(0, 20)}...');
     print('Entry data: ${json.encode(entry.toJson())}');
