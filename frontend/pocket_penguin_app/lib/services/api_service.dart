@@ -1,5 +1,4 @@
-import 'package:flutter/foundation.dart';
-
-const String api = kIsWeb
-    ? 'http://localhost:8000/api' // Local dev
-    : 'https://your-production-api.com/api'; // Production
+// Central API base URL for all services
+// Keep this pointing to Render in production; do not use localhost for web
+// Use localhost only for local testing and development
+const String api = 'https://pocket-penguin.onrender.com/api';

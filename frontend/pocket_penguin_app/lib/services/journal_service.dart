@@ -5,7 +5,7 @@ import 'auth_service.dart';
 import 'api_service.dart';
 
 class JournalApi {
-  static final String baseUrl = '$api/journal/';
+  static const String baseUrl = "$api/journal/";
 
   static Future<List<JournalEntry>> fetchEntries() async {
     final token = await AuthService.getToken();

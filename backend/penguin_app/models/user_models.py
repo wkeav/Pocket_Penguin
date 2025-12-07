@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.conf import settings
 import uuid
 
 """ 
@@ -92,7 +93,7 @@ class User(AbstractUser):
 # User game profile table 
 class UserGameProfile(models.Model):
     # Each user has one profile, and if user is deleted then delete their profile too
-    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name='profile') 
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='profile') 
     
     fish_coins = models.IntegerField(default=0)
     level = models.IntegerField(default=1)
