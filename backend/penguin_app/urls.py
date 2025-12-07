@@ -32,9 +32,9 @@ urlpatterns = [
     path('journal/<uuid:pk>/', JournalEntryDetailView.as_view(), name='journal-detail'),
     
     # Progress and stats
-    path("api/progress/weekly/", WeeklyProgressView.as_view(), name="weekly-progress"),
-    path("api/progress/monthly/", MonthlyProgressView.as_view(), name="monthly-progress"),
-    path("api/progress/all-time/", AllTimeProgressView.as_view(), name="all-time-progress"),
+    path("progress/weekly/", WeeklyProgressView.as_view(), name="weekly-progress"),
+    path("progress/monthly/", MonthlyProgressView.as_view(), name="monthly-progress"),
+    path("progress/all-time/", AllTimeProgressView.as_view(), name="all-time-progress"),
    
     # Calendar Events
     path('calendar/events/', CalendarEventListCreate.as_view(), name='calendar-list-create'),
