@@ -23,4 +23,4 @@ class JournalEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create a new JournalEntry instance, with automatically attatched user"""
         user = self.context['request'].user
-        return JournalEntry.objects.create(**validated_data)
+        return JournalEntry.objects.create(user=user, **validated_data)

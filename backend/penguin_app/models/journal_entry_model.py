@@ -1,7 +1,7 @@
 from django.db import models
+from django.conf import settings
 import uuid
 from django.utils import timezone
-from .user_models import User  # link journal entries to users
 
 
 """
@@ -25,7 +25,7 @@ Author: Kaitlyn
 
 class JournalEntry(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="journal_entries")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="journal_entries")
     title = models.CharField(max_length=200)
     content = models.TextField()
     mood = models.CharField(max_length=50)
