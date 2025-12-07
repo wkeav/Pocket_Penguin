@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'penguin_app'
+    'penguin_app',
 ]
 
 AUTH_USER_MODEL = 'penguin_app.User'

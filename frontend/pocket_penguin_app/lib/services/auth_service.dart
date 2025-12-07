@@ -248,9 +248,16 @@ class AuthService {
     await prefs.setString(refreshTokenKey, refreshToken);
   }
 
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
   // Save user data
   Future<void> _saveUserData(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(userKey, jsonEncode(userData));
+
+    // Get stored JWT access token
   }
 }
