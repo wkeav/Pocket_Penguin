@@ -1,6 +1,6 @@
 # Pocket Penguin
 <img width="588" height="672" alt="Screenshot 2025-12-06 at 18 10 05" src="https://github.com/user-attachments/assets/04e7be0f-5372-4ee8-aca3-f3c90661b692"
-ex=68c52cd2&is=68c3db52&hm=f2af49d2b3fbe3d054efa6506f9284a934079e6093a0997ac8a90f90172fb894&=&format=webp&quality=lossless&width=640&height=640" width=150 height=150/>
+ex=68c52cd2&is=68c3db52&hm=f2af49d2b3fbe3d054efa6506f9284a934079e6093a0997ac8a90f90172fb894&=&format=webp&quality=lossless&width=640&height=640" width=150 height=150>
 
 **A gamified wellness and habit-tracking mobile app that makes building healthy habits fun with your personal penguin companion.It aims to help users build daily habits, track progress, and engage with habit formation through playful, penguin-themed interactive features.**
 
