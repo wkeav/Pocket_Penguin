@@ -1,23 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/calendar_service.dart';
-
-// Model class for calendar event.
-//Tiny box that holds one event's info.
-class CalendarEvent {
-  final int id;
-  final String title;
-  final String description;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  CalendarEvent({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.startDate,
-    required this.endDate,
-  });
-}
+import '../models/calendar_event.dart';
 
 // Main calendar screen.
 //Page that shows calendar and events.

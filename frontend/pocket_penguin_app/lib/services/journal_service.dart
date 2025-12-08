@@ -5,7 +5,7 @@ import 'auth_service.dart';
 
 class JournalApi {
   static const String baseUrl =
-      'https://pocket-penguin.onrender.com/api/journal';
+      'https://pocket-penguin.onrender.com/api/journal/';
 
   static Future<List<JournalEntry>> fetchEntries() async {
     final token = await AuthService.getToken();
