@@ -2,13 +2,10 @@ from rest_framework import serializers
 from penguin_app.models.calendar_models import CalendarEvent
 
 class CalendarEventSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
+    
     class Meta:
         model = CalendarEvent
-        # these are the pieces we want to show
-        # no "user" here because we add the user ourselves in the view
         fields = ['id', 'title', 'description', 'start_time', 'end_time']
         read_only_fields = ['id']
-        extra_kwargs = {
-            'user': {'required': False}  # user is set by the view, not by the client
-        }
 

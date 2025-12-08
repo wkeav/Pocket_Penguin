@@ -15,10 +15,9 @@ Author: Kaitlyn
 class JournalEntrySerializer(serializers.ModelSerializer):
     """Serializer for creating and representing journal entries."""
     
+    user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
+    
     class Meta:
         model = JournalEntry
         fields = ['id', 'title', 'content', 'mood', 'tags', 'date', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']  # auto-generated fields
-        extra_kwargs = {
-            'user': {'required': False}  # user is set by the view, not by the client
-        }
+        read_only_fields = ['id', 'created_at', 'updated_at']
