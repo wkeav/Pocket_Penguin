@@ -101,15 +101,32 @@ if DEBUG:
     }
 else:
     # Production: Use PostgreSQL (robust, scalable database)
-    # Database URL is provided by Render automatically
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    # Parse DATABASE_URL manually to avoid import issues during build
+    database_url = os.getenv('DATABASE_URL', '')
+    
+    if database_url:
+        # Parse postgres://user:password@host:port/dbname
+        import re
+        match = re.match(r'postgres(?:ql)?://([^:]+):([^@]+)@([^:]+):(\d+)/(.+)', database_url)
+        if match:
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.postgresql',
+                    'NAME': match.group(5),
+                    'USER': match.group(1),
+                    'PASSWORD': match.group(2),
+                    'HOST': match.group(3),
+                    'PORT': match.group(4),
+                    'CONN_MAX_AGE': 600,
+                    'OPTIONS': {
+                        'connect_timeout': 10,
+                    }
+                }
+            }
+        else:
+            raise ValueError(f"Invalid DATABASE_URL format: {database_url}")
+    else:
+        raise ValueError("DATABASE_URL environment variable not set for production")
 
 
 # Password validation
