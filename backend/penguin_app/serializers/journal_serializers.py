@@ -15,8 +15,6 @@ Author: Kaitlyn
 class JournalEntrySerializer(serializers.ModelSerializer):
     """Serializer for creating and representing journal entries."""
     
-    user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
-    
     class Meta:
         model = JournalEntry
         fields = ['id', 'title', 'content', 'mood', 'tags', 'date', 'created_at', 'updated_at']
