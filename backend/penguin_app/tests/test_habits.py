@@ -127,6 +127,9 @@ class HabitAPITests(TestCase):
     
     def test_list_habits_authenticated(self):
         "Test authenticated user can list their habits."
+        # Clear any existing habits first
+        Habit.objects.all().delete()
+        
         Habit.objects.create(
             user=self.user,
             name='Drink Water',
@@ -136,6 +139,12 @@ class HabitAPITests(TestCase):
         )
         
         response = self.client.get(self.list_url)
+        
+        # Debug: print what we got
+        print(f"\nTotal habits in DB: {Habit.objects.count()}")
+        print(f"Habits returned by API: {len(response.data)}")
+        for habit_data in response.data:
+            print(f"  - {habit_data['title']} (user: {habit_data.get('user', 'N/A')})")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
