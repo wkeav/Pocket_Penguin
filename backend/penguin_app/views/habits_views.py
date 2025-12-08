@@ -1,5 +1,12 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.utils import timezone
+from datetime import timedelta
+
 from penguin_app.models.habit_models import Habit
+from penguin_app.models.progress_models import Progress
 from penguin_app.serializers.habit_serializers import HabitSerializer
 
 
@@ -58,3 +65,74 @@ class HabitDetailView(generics.RetrieveUpdateDestroyAPIView):
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
+
+
+class HabitCompleteView(APIView):
+    """
+    POST /api/habits/<uuid:pk>/complete/
+    
+    Mark a habit as completed for today.
+    - Updates today_count to daily_goal
+    - Updates last_completed date
+    - Calculates and updates streak
+    - Awards fish coins to user's profile
+    - Updates weekly Progress model
+    
+    Returns the updated habit data.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk=None):
+        try:
+            # Get the habit (ensure it belongs to the user)
+            habit = Habit.objects.get(pk=pk, user=request.user)
+        except Habit.DoesNotExist:
+            return Response(
+                {"error": "Habit not found or does not belong to you."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Complete the habit
+        is_new_completion = habit.complete_for_today()
+
+        # Award fish coins and update Progress only if this is a new completion
+        if is_new_completion:
+            # Get or create user's game profile
+            from penguin_app.models.user_models import UserGameProfile
+            profile, created = UserGameProfile.objects.get_or_create(user=request.user)
+
+            # Award fish coins
+            profile.fish_coins += habit.reward
+            profile.save()
+
+            # Update weekly progress tracking
+            today = timezone.now().date()
+            week_start = today - timedelta(days=today.weekday())  # Monday of current week
+            
+            progress, created = Progress.objects.get_or_create(
+                profile=profile,
+                week_start=week_start,
+                defaults={
+                    'habits_completed': 0,
+                    'todos_completed': 0,
+                    'fish_coins_earned': 0,
+                    'completion_rate': 0.0
+                }
+            )
+            
+            progress.habits_completed += 1
+            progress.fish_coins_earned += habit.reward
+            progress.save()
+
+            message = f"Habit completed! Earned {habit.reward} fish coins. Streak: {habit.streak} days."
+        else:
+            message = "Habit was already completed today."
+
+        # Return updated habit data
+        serializer = HabitSerializer(habit, context={'request': request})
+        return Response({
+            "message": message,
+            "habit": serializer.data,
+            "coins_earned": habit.reward if is_new_completion else 0,
+            "new_completion": is_new_completion
+        }, status=status.HTTP_200_OK)

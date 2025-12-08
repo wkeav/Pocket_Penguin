@@ -150,3 +150,60 @@ class Habit(models.Model):
         if self.daily_goal <= 0:
             return 0.0
         return min(1.0, self.today_count / self.daily_goal)
+
+    def calculate_streak(self, completion_date=None):
+        """
+        Calculate and update the streak based on completion date.
+        If completed yesterday or today, increment streak.
+        If gap in completion, reset to 1.
+        """
+        from datetime import timedelta
+        
+        if completion_date is None:
+            completion_date = timezone.now().date()
+        
+        if self.last_completed is None:
+            # First time completing
+            self.streak = 1
+        else:
+            days_diff = (completion_date - self.last_completed).days
+            
+            if days_diff == 1:
+                # Consecutive day - increment streak
+                self.streak += 1
+            elif days_diff == 0:
+                # Same day - don't change streak
+                pass
+            else:
+                # Gap in completion - reset to 1
+                self.streak = 1
+        
+        return self.streak
+
+    def complete_for_today(self):
+        """
+        Mark habit as completed for today.
+        Updates today_count, last_completed, and streak.
+        Returns True if this is a new completion (wasn't already complete).
+        """
+        today = timezone.now().date()
+        was_complete = self.today_count >= self.daily_goal
+        
+        # Update progress
+        self.today_count = self.daily_goal
+        
+        # Update completion tracking
+        if self.last_completed != today:
+            self.calculate_streak(today)
+            self.last_completed = today
+        
+        self.save()
+        return not was_complete  # Return True if this is a new completion
+
+    def reset_daily_progress(self):
+        """
+        Reset today_count to 0.
+        Should be called daily by a scheduled task.
+        """
+        self.today_count = 0
+        self.save()

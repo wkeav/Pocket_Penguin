@@ -369,7 +369,7 @@ class HabitAPITests(TestCase):
             user=self.user,
             name='Test Habit',
             daily_goal=5,
-            reward=5
+            reward=10
         )
         
         url = f'/api/habits/{habit.id}/'
@@ -379,3 +379,145 @@ class HabitAPITests(TestCase):
         self.assertIn('weekProgress', response.data)
         self.assertIsInstance(response.data['weekProgress'], list)
         self.assertEqual(len(response.data['weekProgress']), 7)
+    
+    def test_complete_habit_success(self):
+        "Test completing a habit awards coins and updates progress."
+        from penguin_app.models.user_models import UserGameProfile
+        from penguin_app.models.progress_models import Progress
+        
+        # Ensure user has a profile
+        profile, _ = UserGameProfile.objects.get_or_create(user=self.user)
+        initial_coins = profile.fish_coins
+        
+        habit = Habit.objects.create(
+            user=self.user,
+            name='Morning Run',
+            daily_goal=1,
+            today_count=0,
+            reward=10
+        )
+        
+        url = f'/api/habits/{habit.id}/complete/'
+        response = self.client.post(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data['new_completion'])
+        self.assertEqual(response.data['coins_earned'], 10)
+        
+        # Verify habit updated
+        habit.refresh_from_db()
+        self.assertEqual(habit.today_count, habit.daily_goal)
+        self.assertIsNotNone(habit.last_completed)
+        self.assertEqual(habit.streak, 1)
+        
+        # Verify fish coins awarded
+        profile.refresh_from_db()
+        self.assertEqual(profile.fish_coins, initial_coins + 10)
+        
+        # Verify Progress model updated
+        today = date.today()
+        week_start = today - timedelta(days=today.weekday())
+        progress = Progress.objects.get(profile=profile, week_start=week_start)
+        self.assertEqual(progress.habits_completed, 1)
+        self.assertEqual(progress.fish_coins_earned, 10)
+    
+    def test_complete_habit_twice_same_day(self):
+        "Test completing habit twice on same day doesn't award coins twice."
+        from penguin_app.models.user_models import UserGameProfile
+        
+        profile, _ = UserGameProfile.objects.get_or_create(user=self.user)
+        initial_coins = profile.fish_coins
+        
+        habit = Habit.objects.create(
+            user=self.user,
+            name='Drink Water',
+            daily_goal=8,
+            today_count=0,
+            reward=5
+        )
+        
+        url = f'/api/habits/{habit.id}/complete/'
+        
+        # Complete first time
+        response1 = self.client.post(url)
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
+        self.assertTrue(response1.data['new_completion'])
+        self.assertEqual(response1.data['coins_earned'], 5)
+        
+        # Complete second time (same day)
+        response2 = self.client.post(url)
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+        self.assertFalse(response2.data['new_completion'])
+        self.assertEqual(response2.data['coins_earned'], 0)
+        
+        # Verify only 5 coins awarded (not 10)
+        profile.refresh_from_db()
+        self.assertEqual(profile.fish_coins, initial_coins + 5)
+    
+    def test_complete_other_user_habit_fails(self):
+        "Test user cannot complete another user's habit."
+        habit = Habit.objects.create(
+            user=self.other_user,
+            name='Other Habit',
+            daily_goal=1,
+            reward=5
+        )
+        
+        url = f'/api/habits/{habit.id}/complete/'
+        response = self.client.post(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_streak_calculation(self):
+        "Test streak increments for consecutive days."
+        from penguin_app.models.user_models import UserGameProfile
+        
+        # Ensure user has a profile
+        UserGameProfile.objects.get_or_create(user=self.user)
+        
+        habit = Habit.objects.create(
+            user=self.user,
+            name='Daily Habit',
+            daily_goal=1,
+            reward=5
+        )
+        
+        # Day 1
+        yesterday = date.today() - timedelta(days=1)
+        habit.last_completed = yesterday
+        habit.streak = 1
+        habit.save()
+        
+        # Complete today (Day 2)
+        url = f'/api/habits/{habit.id}/complete/'
+        response = self.client.post(url)
+        
+        habit.refresh_from_db()
+        self.assertEqual(habit.streak, 2)
+        
+    def test_streak_resets_after_gap(self):
+        "Test streak resets to 1 if there's a gap in completion."
+        from penguin_app.models.user_models import UserGameProfile
+        
+        # Ensure user has a profile
+        UserGameProfile.objects.get_or_create(user=self.user)
+        
+        habit = Habit.objects.create(
+            user=self.user,
+            name='Daily Habit',
+            daily_goal=1,
+            reward=5,
+            streak=5
+        )
+        
+        # Last completed 3 days ago
+        three_days_ago = date.today() - timedelta(days=3)
+        habit.last_completed = three_days_ago
+        habit.save()
+        
+        # Complete today (gap of 2 days)
+        url = f'/api/habits/{habit.id}/complete/'
+        response = self.client.post(url)
+        
+        habit.refresh_from_db()
+        self.assertEqual(habit.streak, 1)  # Reset to 1
