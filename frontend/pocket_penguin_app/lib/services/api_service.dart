@@ -19,4 +19,5 @@ class ApiConfig {
   static String get usersUrl => '$baseUrl/users';
   static String get calendarUrl => '$baseUrl/calendar';
   static String get journalUrl => '$baseUrl/journal';
+  static String get habitsUrl => '$baseUrl/habits';
 }

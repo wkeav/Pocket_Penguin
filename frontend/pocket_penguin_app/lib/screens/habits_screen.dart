@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import '../models/habit.dart';
 import '../theme/app_theme.dart';
+// import '../services/habit_service.dart'; // Uncomment when ready to use API
 
+/// HabitsScreen - Displays and manages user habits
+/// 
+/// TODO: Replace SampleHabits with API calls:
+/// 1. Load habits: habits = await HabitApi.fetchHabits();
+/// 2. Create habit: await HabitApi.createHabit(newHabit);
+/// 3. Update progress: await HabitApi.incrementProgress(habitId, newValue);
+/// 4. Delete habit: await HabitApi.deleteHabit(habitId);
 class HabitsScreen extends StatefulWidget {
   final int fishCoins;
   final Function(int) onFishCoinsChanged;
@@ -19,18 +27,18 @@ class HabitsScreen extends StatefulWidget {
 class _HabitsScreenState extends State<HabitsScreen> {
   List<Habit> habits = SampleHabits.habits;
 
-  void _updateHabitProgress(int habitId, int newValue) {
+  void _updateHabitProgress(String habitId, int newValue) {
     setState(() {
       final habitIndex = habits.indexWhere((h) => h.id == habitId);
       if (habitIndex != -1) {
         final habit = habits[habitIndex];
         final wasCompleted = habit.isCompleted;
-        final isNowCompleted = newValue >= habit.targetValue;
 
         habits[habitIndex] = habit.copyWith(
           currentValue: newValue,
-          isCompleted: isNowCompleted,
         );
+
+        final isNowCompleted = habits[habitIndex].isCompleted;
 
         // Award fish coins if completing for the first time
         if (!wasCompleted && isNowCompleted) {
@@ -213,7 +221,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  habit.icon,
+                  habit.iconData,
                   color:
                       habit.isCompleted ? Colors.green[600] : Colors.blue[600],
                   size: 20,
@@ -297,17 +305,17 @@ class _HabitsScreenState extends State<HabitsScreen> {
               const SizedBox(width: 16),
               if (!habit.isCompleted) ...[
                 IconButton(
-                  onPressed: habit.currentValue > 0
+                  onPressed: habit.currentValue > 0 && habit.id != null
                       ? () =>
-                          _updateHabitProgress(habit.id, habit.currentValue - 1)
+                          _updateHabitProgress(habit.id!, habit.currentValue - 1)
                       : null,
                   icon: const Icon(Icons.remove_circle_outline),
                   color: Colors.grey[600],
                 ),
                 IconButton(
-                  onPressed: habit.currentValue < habit.targetValue
+                  onPressed: habit.currentValue < habit.targetValue && habit.id != null
                       ? () =>
-                          _updateHabitProgress(habit.id, habit.currentValue + 1)
+                          _updateHabitProgress(habit.id!, habit.currentValue + 1)
                       : null,
                   icon: const Icon(Icons.add_circle_outline),
                   color: Colors.blue[600],
