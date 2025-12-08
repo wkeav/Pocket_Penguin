@@ -127,9 +127,6 @@ class HabitAPITests(TestCase):
     
     def test_list_habits_authenticated(self):
         "Test authenticated user can list their habits."
-        # Clear any existing habits first
-        Habit.objects.all().delete()
-        
         Habit.objects.create(
             user=self.user,
             name='Drink Water',
@@ -140,15 +137,10 @@ class HabitAPITests(TestCase):
         
         response = self.client.get(self.list_url)
         
-        # Debug: print what we got
-        print(f"\nTotal habits in DB: {Habit.objects.count()}")
-        print(f"Response type: {type(response.data)}")
-        print(f"Response data: {response.data}")
-        print(f"Response status: {response.status_code}")
-        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['title'], 'Drink Water')
+        # Response is paginated, so check 'results' key
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['title'], 'Drink Water')
     
     def test_list_habits_unauthenticated(self):
         "Test unauthenticated user cannot list habits."
@@ -203,8 +195,9 @@ class HabitAPITests(TestCase):
         response = self.client.get(self.list_url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['title'], 'User Habit')
+        # Response is paginated, so check 'results' key
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['title'], 'User Habit')
     
     def test_retrieve_habit_success(self):
         "Test retrieving a specific habit."
@@ -325,8 +318,9 @@ class HabitAPITests(TestCase):
         response = self.client.get(self.list_url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['title'], 'Active Habit')
+        # Response is paginated, so check 'results' key
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['title'], 'Active Habit')
     
     def test_habit_progress_calculation(self):
         "Test progress field is calculated correctly."
