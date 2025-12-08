@@ -102,26 +102,14 @@ if DEBUG:
 else:
     # Production: Use PostgreSQL (robust, scalable database)
     # Database URL is provided by Render automatically
-    try:
-        import dj_database_url
-        DATABASES = {
-            'default': dj_database_url.config(
-                default=os.getenv('DATABASE_URL'),
-                conn_max_age=600,
-                conn_health_checks=True,
-            )
-        }
-    except ImportError:
-        # Fallback if dj_database_url not installed yet
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': 'pocket_penguin',
-                'USER': 'pocket_penguin_user',
-                'HOST': os.getenv('DATABASE_URL', '').split('@')[1].split('/')[0] if '@' in os.getenv('DATABASE_URL', '') else 'localhost',
-                'PORT': '5432',
-            }
-        }
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
 
 
 # Password validation
