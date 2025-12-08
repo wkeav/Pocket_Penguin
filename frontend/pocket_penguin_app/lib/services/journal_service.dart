@@ -2,11 +2,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pocket_penguin_app/models/journal.dart';
 import 'auth_service.dart';
+import 'api_service.dart'; 
 
+// Service class for handling all journal-related API calls
+// Communicates with the backend to fetch, create, and delete journal entries
 class JournalApi {
-  static const String baseUrl =
-      'https://pocket-penguin.onrender.com/api/journal/';
+  // Get the base URL for journal API endpoints
+  static String get baseUrl {
+    final url = '${ApiConfig.journalUrl}/';
+    return url;
+  }
 
+  // Fetch all journal entries for the authenticated user
+  // Returns a list of JournalEntry objects
   static Future<List<JournalEntry>> fetchEntries() async {
     final token = await AuthService.getToken();
     if (token == null) {
@@ -23,7 +31,8 @@ class JournalApi {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // Handle paginated response (DRF pagination returns {results: [...]})
+      // Handle paginated response from Django REST Framework
+      // DRF returns {"count": n, "results": [...]}, but we only need the results array
       final List jsonList =
           data is Map && data.containsKey('results') ? data['results'] : data;
       return jsonList.map((e) => JournalEntry.fromJson(e)).toList();
@@ -32,6 +41,8 @@ class JournalApi {
     }
   }
 
+  // Create a new journal entry in the backend
+  // Requires authentication token and a JournalEntry object
   static Future<void> createEntry(JournalEntry entry) async {
     final token = await AuthService.getToken();
     if (token == null) {
@@ -56,6 +67,29 @@ class JournalApi {
     if (response.statusCode != 201) {
       throw Exception(
           'Failed to create entry: ${response.statusCode} - ${response.body}');
+    }
+  }
+
+  // Delete a journal entry by its ID
+  // Requires authentication and the entry's UUID
+  static Future<void> deleteEntry(String id) async {
+    final token = await AuthService.getToken();
+    if (token == null) {
+      throw Exception('User not authenticated');
+    }
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl$id/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Delete response status: ${response.statusCode}');
+    // 204 No Content indicates successful deletion
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete entry: ${response.statusCode} - ${response.body}');
     }
   }
 }

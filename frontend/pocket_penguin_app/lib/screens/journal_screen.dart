@@ -11,7 +11,9 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
+  // List of all journal entries fetched from backend
   List<JournalEntry> _entries = [];
+  // Loading state to show spinner while fetching data
   bool _loading = true;
 
   final TextEditingController _titleController = TextEditingController();
@@ -42,6 +44,8 @@ class _JournalScreenState extends State<JournalScreen> {
     loadEntries();
   }
 
+  // Load all journal entries from the backend
+  // Displays newest entries first by reversing the list
   Future<void> loadEntries() async {
     try {
       final entries = await JournalApi.fetchEntries();
@@ -55,6 +59,30 @@ class _JournalScreenState extends State<JournalScreen> {
     }
   }
 
+  // Delete a journal entry without confirmation
+  // Reloads the list after successful deletion
+  Future<void> _deleteEntry(JournalEntry entry) async {
+    try {
+      await JournalApi.deleteEntry(entry.id);
+      await loadEntries();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Entry deleted successfully!')),
+        );
+      }
+    } catch (e) {
+      print("Error deleting entry: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete entry: $e')),
+        );
+      }
+    }
+  }
+
+  // Create a new journal entry from the form data
+  // Validates that title and content are not empty before submitting
   Future<void> _addEntry() async {
     if (_titleController.text.trim().isEmpty ||
         _contentController.text.trim().isEmpty) return;
@@ -335,6 +363,13 @@ class _JournalScreenState extends State<JournalScreen> {
               ),
               Text(_formatDate(entry.date),
                   style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, size: 20),
+                color: Colors.red[400],
+                onPressed: () => _deleteEntry(entry),
+                tooltip: 'Delete entry',
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -366,6 +401,8 @@ class _JournalScreenState extends State<JournalScreen> {
     return '$diff days ago';
   }
 
+  // Calculate the current journaling streak (consecutive days with entries)
+  // Checks up to 7 days back from today
   int _getCurrentStreak() {
     if (_entries.isEmpty) return 0;
     int streak = 0;
