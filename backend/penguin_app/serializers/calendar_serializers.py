@@ -7,4 +7,5 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         # these are the pieces we want to show
         # no "user" here because we add the user ourselves in the view
         fields = ['id', 'title', 'description', 'start_time', 'end_time']
+        read_only_fields = ['id']
 

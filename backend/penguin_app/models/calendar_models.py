@@ -1,10 +1,12 @@
 from django.db import models
 from django.conf import settings
+import uuid
 
 # This model is for one calendar event
 class CalendarEvent(models.Model):
     # This links the event to the user who made it
     # Think: "this event belongs to this person"
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=255)  # the name of the event
