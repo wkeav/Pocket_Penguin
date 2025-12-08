@@ -1,0 +1,9 @@
+{
+  "dart.flutterSdkPath": ".fvm/flutter_sdk",
+  "dart.sdkPath": ".fvm/flutter_sdk/bin/cache/dart-sdk",
+  "dart.flutterDefaultDeviceId": "chrome",
+  "editor.formatOnSave": true
+}
+
+
+  
