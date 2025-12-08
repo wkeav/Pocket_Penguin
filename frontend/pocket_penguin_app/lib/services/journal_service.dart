@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pocket_penguin_app/models/journal.dart';
 import 'auth_service.dart';
-import 'api_service.dart'; 
+import 'api_service.dart';
 
 // Service class for handling all journal-related API calls
 // Communicates with the backend to fetch, create, and delete journal entries
@@ -89,7 +89,8 @@ class JournalApi {
     print('Delete response status: ${response.statusCode}');
     // 204 No Content indicates successful deletion
     if (response.statusCode != 204) {
-      throw Exception('Failed to delete entry: ${response.statusCode} - ${response.body}');
+      throw Exception(
+          'Failed to delete entry: ${response.statusCode} - ${response.body}');
     }
   }
 }

@@ -1,7 +1,8 @@
 // Using centralize configuration for API endpoints
 // This file defines the base URL used by other services to communicate with the backend API.
-// It helps maintain consistency and makes it easier to switch between development and production environments. 
+// It helps maintain consistency and makes it easier to switch between development and production environments.
 import 'package:flutter/foundation.dart';
+
 class ApiConfig {
   static String get baseUrl {
     if (kDebugMode) {
@@ -19,4 +20,3 @@ class ApiConfig {
   static String get calendarUrl => '$baseUrl/calendar';
   static String get journalUrl => '$baseUrl/journal';
 }
-

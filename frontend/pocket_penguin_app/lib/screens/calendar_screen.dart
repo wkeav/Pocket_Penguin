@@ -333,7 +333,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
               Text(
                 '${_getMonthName(_focusedDate.month)} ${_focusedDate.year}',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               IconButton(
                 icon: const Icon(Icons.chevron_right),
@@ -358,7 +359,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   // Calculates offset for first day of week and total days in month
   Widget _buildDaysGrid() {
     final firstDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month, 1);
-    final lastDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month + 1, 0);
+    final lastDayOfMonth =
+        DateTime(_focusedDate.year, _focusedDate.month + 1, 0);
     final daysInMonth = lastDayOfMonth.day;
     // Calculate which day of week the month starts (0=Sunday, 6=Saturday)
     final startWeekday = firstDayOfMonth.weekday % 7;
@@ -394,7 +396,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             decoration: BoxDecoration(
               color: isSelected ? Colors.blue : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
-              border: hasEvents ? Border.all(color: Colors.blue, width: 2) : null,
+              border:
+                  hasEvents ? Border.all(color: Colors.blue, width: 2) : null,
             ),
             child: Center(
               child: Text(
@@ -413,8 +416,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   String _getMonthName(int month) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return months[month - 1];
   }
