@@ -10,9 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
-from datetime import timedelta
-from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,31 +20,45 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-fallback-key-change-this')
+# SECURITY WARNING: keep the secret key used in production secret!
+# Secret key MUST be set via environment variable
+SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError('SECRET_KEY environment variable is not set!')
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'pocket-penguin.onrender.com',
+    os.getenv('ALLOWED_HOST', ''),
+]
+ALLOWED_HOSTS = [host for host in ALLOWED_HOSTS if host]  # Remove empty strings
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',  # Must come before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'corsheaders',
-    'penguin_app'
+    'rest_framework',
+    'penguin_app',
 ]
 
+# Custom user model
 AUTH_USER_MODEL = 'penguin_app.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,8 +90,7 @@ WSGI_APPLICATION = 'pocket_penguin.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# Use SQLite for both local development and production
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -121,34 +133,54 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS settings for frontend communication 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",  # Flutter
-    "http://127.0.0.1:8080",
-]
-CORS_ALLOW_CREDENTIALS = True
-
-# REST Framework settings 
+# REST Framework Configuration
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Allow registration without auth
-    ],
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
 }
 
-# JWT settings
-JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+# JWT Settings
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),  # Access token valid for 24 hours
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=24),   # Refresh token valid for 24 days
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': False,
 }
+
+# CORS Configuration
+if DEBUG:
+    # Development: Allow all localhost origins (Flutter uses random ports)
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^http://localhost:\d+$",
+# PostgreSQL adapter for Django for deployment # PostgreSQL adapter for Django for deployment         r"^http://127\.0\.0\.1:\d+$",
+    ]
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ]
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_ALLOW_HEADERS = ['*']
+    CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+else:
+    # Production: Only allow specific origins
+    CORS_ALLOWED_ORIGINS = [
+        'https://wkeav.github.io',
+        'https://pocket-penguin.onrender.com',
+        os.getenv('CORS_ALLOWED_ORIGIN', ''),
+    ]
+    CORS_ALLOWED_ORIGINS = [url for url in CORS_ALLOWED_ORIGINS if url]  # Remove empty strings
+    CORS_ALLOW_CREDENTIALS = True

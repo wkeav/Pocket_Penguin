@@ -42,3 +42,18 @@ MANIFEST
 
 # ETC 
 DEVELOPER_HANDOFF.md 
+
+# cache files (duplicate already covered above, but keeping for clarity)
+*.pyc
+
+# Local config files
+.fvm/
+.fvmrc
+
+
+# Allow tracking of the Flutter app `lib/` directory inside the frontend folder.
+# The top-level `.gitignore` intentionally ignores generic `lib/` folders
+# used by Python packaging, but we need to include the Flutter `lib/`
+# under `frontend/pocket_penguin_app` so Dart/Flutter sources can be tracked.
+!frontend/pocket_penguin_app/lib/
+!frontend/pocket_penguin_app/lib/**

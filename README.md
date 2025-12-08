@@ -1,6 +1,5 @@
 # Pocket Penguin
-
-<img src="https://media.discordapp.net/attachments/1409584507237044415/1415797929427468388/image.png?ex=68c52cd2&is=68c3db52&hm=f2af49d2b3fbe3d054efa6506f9284a934079e6093a0997ac8a90f90172fb894&=&format=webp&quality=lossless&width=640&height=640" width=150 height=150>
+<img width="588" height="672" alt="Screenshot 2025-12-06 at 18 10 05" src="https://github.com/user-attachments/assets/08d21ecf-a75b-4be5-ab2c-19d485403296" />
 
 **A gamified wellness and habit-tracking mobile app that makes building healthy habits fun with your personal penguin companion.It aims to help users build daily habits, track progress, and engage with habit formation through playful, penguin-themed interactive features.**
 
@@ -143,6 +142,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | Kaitlyn | [@ktnngn](https://github.com/ktnngn) | Developer |
 | Sneha | [@CtrlChieftainMsSneha](https://github.com/CtrlChieftainMsSneha) | Developer |
 | Brandon | [@bbloob](https://github.com/bbloob) | Developer |
+| Ejeehi | | Developer |
 | Jack | [@jacknguyen1918](https://github.com/jacknguyen1918) | Developer |
 
 ---

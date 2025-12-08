@@ -1,23 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pocket_penguin_app/models/journal.dart';
 import '../theme/app_theme.dart';
-
-class JournalEntry {
-  final String id;
-  final DateTime date;
-  final String title;
-  final String content;
-  final String mood;
-  final List<String> tags;
-
-  JournalEntry({
-    required this.id,
-    required this.date,
-    required this.title,
-    required this.content,
-    required this.mood,
-    required this.tags,
-  });
-}
+import '../services/journal_service.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -27,35 +11,10 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
-  final List<JournalEntry> _entries = [
-    JournalEntry(
-      id: '1',
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      title: 'Great progress today!',
-      content:
-          'Completed all my habits and felt really productive. Waddles seems happy too!',
-      mood: 'Happy',
-      tags: ['productive', 'habits'],
-    ),
-    JournalEntry(
-      id: '2',
-      date: DateTime.now().subtract(const Duration(days: 3)),
-      title: 'Meditation session',
-      content:
-          'Had a wonderful 15-minute meditation. Feeling more centered and calm.',
-      mood: 'Peaceful',
-      tags: ['meditation', 'wellness'],
-    ),
-    JournalEntry(
-      id: '3',
-      date: DateTime.now().subtract(const Duration(days: 5)),
-      title: 'Started my journey',
-      content:
-          'First day using Pocket Penguin! Excited to build better habits with Waddles.',
-      mood: 'Excited',
-      tags: ['start', 'motivation'],
-    ),
-  ];
+  // List of all journal entries fetched from backend
+  List<JournalEntry> _entries = [];
+  // Loading state to show spinner while fetching data
+  bool _loading = true;
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -69,6 +28,7 @@ class _JournalScreenState extends State<JournalScreen> {
     'Tired',
     'Anxious'
   ];
+
   final Map<String, IconData> _moodIcons = {
     'Happy': Icons.sentiment_very_satisfied,
     'Peaceful': Icons.self_improvement,
@@ -78,34 +38,98 @@ class _JournalScreenState extends State<JournalScreen> {
     'Anxious': Icons.sentiment_very_dissatisfied,
   };
 
-  void _addEntry() {
-    if (_titleController.text.trim().isNotEmpty &&
-        _contentController.text.trim().isNotEmpty) {
+  @override
+  void initState() {
+    super.initState();
+    loadEntries();
+  }
+
+  // Load all journal entries from the backend
+  // Displays newest entries first by reversing the list
+  Future<void> loadEntries() async {
+    try {
+      final entries = await JournalApi.fetchEntries();
       setState(() {
-        _entries.insert(
-            0,
-            JournalEntry(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              date: DateTime.now(),
-              title: _titleController.text.trim(),
-              content: _contentController.text.trim(),
-              mood: _selectedMood,
-              tags: [],
-            ));
-        _titleController.clear();
-        _contentController.clear();
-        _selectedMood = 'Neutral';
+        _entries = entries.reversed.toList(); // newest first
+        _loading = false;
       });
+    } catch (e) {
+      print("Error fetching entries: $e");
+      setState(() => _loading = false);
+    }
+  }
+
+  // Delete a journal entry without confirmation
+  // Reloads the list after successful deletion
+  Future<void> _deleteEntry(JournalEntry entry) async {
+    try {
+      await JournalApi.deleteEntry(entry.id);
+      await loadEntries();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Entry deleted successfully!')),
+        );
+      }
+    } catch (e) {
+      print("Error deleting entry: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete entry: $e')),
+        );
+      }
+    }
+  }
+
+  // Create a new journal entry from the form data
+  // Validates that title and content are not empty before submitting
+  Future<void> _addEntry() async {
+    if (_titleController.text.trim().isEmpty ||
+        _contentController.text.trim().isEmpty) return;
+
+    final newEntry = JournalEntry(
+      id: '',
+      title: _titleController.text.trim(),
+      content: _contentController.text.trim(),
+      mood: _selectedMood,
+      tags: [],
+      date: DateTime.now(),
+    );
+
+    try {
+      await JournalApi.createEntry(newEntry);
+      await loadEntries();
+
+      _titleController.clear();
+      _contentController.clear();
+      _selectedMood = 'Neutral';
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Entry saved successfully!')),
+        );
+      }
+    } catch (e) {
+      print("Error creating entry: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save entry: $e')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          // Header Stats
+          // Header Card
           ArcticCard(
             gradientColors: const [Color(0xFFFDF4FF), Color(0xFFFAE8FF)],
             child: Column(
@@ -139,6 +163,7 @@ class _JournalScreenState extends State<JournalScreen> {
               ],
             ),
           ),
+
           const SizedBox(height: 16),
 
           // New Entry Form
@@ -167,8 +192,6 @@ class _JournalScreenState extends State<JournalScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Entry Title',
                     border: OutlineInputBorder(),
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -178,31 +201,21 @@ class _JournalScreenState extends State<JournalScreen> {
                   decoration: const InputDecoration(
                     labelText: 'How was your day?',
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(12),
                   ),
                 ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    const Text(
-                      'Mood: ',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    const Text('Mood: ',
+                        style: TextStyle(fontWeight: FontWeight.w500)),
                     Expanded(
                       child: DropdownButton<String>(
                         value: _selectedMood,
                         isExpanded: true,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedMood = newValue!;
-                          });
-                        },
-                        items:
-                            _moods.map<DropdownMenuItem<String>>((String mood) {
-                          return DropdownMenuItem<String>(
+                        onChanged: (value) =>
+                            setState(() => _selectedMood = value!),
+                        items: _moods.map((mood) {
+                          return DropdownMenuItem(
                             value: mood,
                             child: Row(
                               children: [
@@ -228,31 +241,22 @@ class _JournalScreenState extends State<JournalScreen> {
               ],
             ),
           ),
+
           const SizedBox(height: 16),
 
-          // Journal Entries
+          // Entries List
           if (_entries.isEmpty)
             ArcticCard(
               child: Column(
-                children: [
-                  const Icon(Icons.book, size: 60, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  const Text(
+                children: const [
+                  Icon(Icons.book, size: 60, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
                     'No journal entries yet!',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Start reflecting on your daily journey',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  SizedBox(height: 8),
+                  Text('Start reflecting on your daily journey'),
                 ],
               ),
             )
@@ -264,7 +268,7 @@ class _JournalScreenState extends State<JournalScreen> {
 
           const SizedBox(height: 16),
 
-          // Writing Prompts
+          // Prompts
           ArcticCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,9 +290,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 ].map((prompt) => Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: InkWell(
-                        onTap: () {
-                          _titleController.text = prompt;
-                        },
+                        onTap: () => _titleController.text = prompt,
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
@@ -304,10 +306,7 @@ class _JournalScreenState extends State<JournalScreen> {
                               Expanded(
                                 child: Text(
                                   prompt,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.purple[700],
-                                  ),
+                                  style: TextStyle(color: Colors.purple[700]),
                                 ),
                               ),
                             ],
@@ -330,25 +329,14 @@ class _JournalScreenState extends State<JournalScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Column(
           children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
+            Text(value,
+                style: TextStyle(
+                    fontSize: 24, color: color, fontWeight: FontWeight.bold)),
+            Text(label,
+                style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
       ),
@@ -370,28 +358,26 @@ class _JournalScreenState extends State<JournalScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF374151),
                   ),
                 ),
               ),
-              Text(
-                _formatDate(entry.date),
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+              Text(_formatDate(entry.date),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, size: 20),
+                color: Colors.red[400],
+                onPressed: () => _deleteEntry(entry),
+                tooltip: 'Delete entry',
               ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            entry.content,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF4B5563),
-              height: 1.4,
-            ),
-          ),
+          Text(entry.content,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF4B5563),
+              )),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -401,47 +387,32 @@ class _JournalScreenState extends State<JournalScreen> {
                 backgroundColor: Colors.purple[100],
                 textColor: Colors.purple[700],
               ),
-              const SizedBox(width: 8),
-              ...entry.tags.map((tag) => Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: PenguinBadge(
-                      text: tag,
-                      backgroundColor: Colors.grey[100],
-                    ),
-                  )),
             ],
-          ),
+          )
         ],
       ),
     );
   }
 
   String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date).inDays;
-
-    if (difference == 0) {
-      return 'Today';
-    } else if (difference == 1) {
-      return 'Yesterday';
-    } else {
-      return '${difference} days ago';
-    }
+    final diff = DateTime.now().difference(date).inDays;
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Yesterday';
+    return '$diff days ago';
   }
 
+  // Calculate the current journaling streak (consecutive days with entries)
+  // Checks up to 7 days back from today
   int _getCurrentStreak() {
     if (_entries.isEmpty) return 0;
-
-    // Simple streak calculation - consecutive days with entries
     int streak = 0;
     DateTime checkDate = DateTime.now();
 
     for (int i = 0; i < 7; i++) {
-      // Check last 7 days
-      final hasEntry = _entries.any((entry) =>
-          entry.date.year == checkDate.year &&
-          entry.date.month == checkDate.month &&
-          entry.date.day == checkDate.day);
+      bool hasEntry = _entries.any((e) =>
+          e.date.year == checkDate.year &&
+          e.date.month == checkDate.month &&
+          e.date.day == checkDate.day);
 
       if (hasEntry) {
         streak++;
