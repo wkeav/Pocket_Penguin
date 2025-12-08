@@ -90,43 +90,13 @@ WSGI_APPLICATION = 'pocket_penguin.wsgi.application'
 
 
 # Database
-# Use SQLite for local development, PostgreSQL for production
-if DEBUG:
-    # Local development: Use SQLite (simple, file-based database)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+# Use SQLite for both local development and production
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Production: Use PostgreSQL (robust, scalable database)
-    # Parse DATABASE_URL manually to avoid import issues during build
-    database_url = os.getenv('DATABASE_URL', '')
-    
-    if database_url:
-        # Parse postgres://user:password@host:port/dbname
-        import re
-        match = re.match(r'postgres(?:ql)?://([^:]+):([^@]+)@([^:]+):(\d+)/(.+)', database_url)
-        if match:
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.postgresql',
-                    'NAME': match.group(5),
-                    'USER': match.group(1),
-                    'PASSWORD': match.group(2),
-                    'HOST': match.group(3),
-                    'PORT': match.group(4),
-                    'CONN_MAX_AGE': 600,
-                    'OPTIONS': {
-                        'connect_timeout': 10,
-                    }
-                }
-            }
-        else:
-            raise ValueError(f"Invalid DATABASE_URL format: {database_url}")
-    else:
-        raise ValueError("DATABASE_URL environment variable not set for production")
+}
 
 
 # Password validation
