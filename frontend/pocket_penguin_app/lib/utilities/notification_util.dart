@@ -11,6 +11,7 @@ class NotificationUtil {
   final AwesomeNotifications awesomeNotifications;
   static const String _notificationsKey = 'notifications_list';
   static VoidCallback? onNotificationListChanged;
+  static Function(String title, String body)? onNotificationDisplayedCallback;
 
   NotificationUtil({required this.awesomeNotifications});
 
@@ -84,6 +85,7 @@ class NotificationUtil {
   }
 
   /// Creates a basic notification that appears immediately.
+  /// [customName] and [customDescription] can be used to override the stored notification's display name/description
   Future<void> createBasicNotification({
     required int id,
     required String channelKey,
@@ -91,6 +93,8 @@ class NotificationUtil {
     required String body,
     String bigPicture = AppStrings.DEFAULT_ICON,
     NotificationLayout layout = NotificationLayout.BigPicture,
+    String? customName,
+    String? customDescription,
   }) async {
     // Create the notification
     await awesomeNotifications.createNotification(
@@ -108,8 +112,8 @@ class NotificationUtil {
     await _storeNotification(
       app_notification.NotificationModel(
         id: id,
-        title: title,
-        body: body,
+        title: customName ?? title,
+        body: customDescription ?? body,
         channelKey: channelKey,
         isScheduled: false,
       ),
@@ -117,6 +121,7 @@ class NotificationUtil {
   }
 
   /// Creates a scheduled notification that will appear at a specific time and can repeat.
+  /// [customName] and [customDescription] can be used to override the stored notification's display name/description
   Future<void> createScheduledNotification({
     required int id,
     required String channelKey,
@@ -125,6 +130,8 @@ class NotificationUtil {
     String bigPicture = AppStrings.DEFAULT_ICON,
     NotificationLayout layout = NotificationLayout.BigPicture,
     required NotificationCalendar notificationCalendar,
+    String? customName,
+    String? customDescription,
   }) async {
     // Create the notification
     await awesomeNotifications.createNotification(
@@ -166,15 +173,15 @@ class NotificationUtil {
 
     // Adjust the date to the next occurrence of the specified weekday
     while (scheduledDate.weekday != (notificationCalendar.weekday ?? 1)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+      scheduledDate = scheduledDate.add(const Duration(days: 0));
     }
 
     // Store the notification in preferences
     await _storeNotification(
       app_notification.NotificationModel(
         id: id,
-        title: title,
-        body: body,
+        title: customName ?? title,
+        body: customDescription ?? body,
         channelKey: channelKey,
         scheduledDateTime: scheduledDate,
         isScheduled: true,
@@ -274,6 +281,18 @@ class NotificationUtil {
       // Trigger UI update callback if set
       onNotificationListChanged?.call();
     }
+    
+    // Trigger popup callback for scheduled notifications hitting their deadline
+    // Note: This only works if the app is in the foreground
+    if (receivedNotification.channelKey == AppStrings.SCHEDULE_CHANNEL_KEY) {
+      // Use a short delay to ensure the callback is ready
+      Future.delayed(const Duration(milliseconds: 100), () {
+        onNotificationDisplayedCallback?.call(
+          receivedNotification.title ?? 'Notification',
+          receivedNotification.body ?? '',
+        );
+      });
+    }
   }
 
   /// Use this method to detect if the user dismissed a notification.
@@ -322,6 +341,14 @@ class NotificationUtil {
       
       // Trigger UI update callback if set
       onNotificationListChanged?.call();
+    }
+    
+    // Trigger popup for scheduled notifications when clicked
+    if (receivedAction.channelKey == AppStrings.SCHEDULE_CHANNEL_KEY) {
+      onNotificationDisplayedCallback?.call(
+        receivedAction.title ?? 'Reminder',
+        receivedAction.body ?? '',
+      );
     }
     
     // Reducing icon badge count on iOS when a basic notification is tapped/acted upon.
