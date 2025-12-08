@@ -13,8 +13,23 @@ import 'screens/wardrobe_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/profile_screen.dart';
 import 'services/auth_service.dart';
+import 'services/api_service.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
+  // Print debug information at startup
+  if (kDebugMode) {
+    print('===========================================');
+    print('DEBUG MODE: YES ✅');
+    print('RELEASE MODE: NO');
+    print('BASE URL: ${ApiConfig.baseUrl}');
+    print('===========================================');
+    print('🔍 TEST: kDebugMode = $kDebugMode');
+    print('🔍 TEST: kReleaseMode = $kReleaseMode');
+    print('🔍 TEST: ApiConfig.baseUrl = ${ApiConfig.baseUrl}');
+    print('🔍 TEST: ApiConfig.journalUrl = ${ApiConfig.journalUrl}');
+    print('🔍 TEST: ApiConfig.calendarUrl = ${ApiConfig.calendarUrl}');
+  }
   runApp(const PocketPenguinApp());
 }
 

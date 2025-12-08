@@ -17,10 +17,5 @@ class JournalEntrySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = JournalEntry
-        fields = ['id', 'user', 'title', 'content', 'mood', 'tags', 'date', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'user']  # auto-generated fields
-        
-    def create(self, validated_data):
-        """Create a new JournalEntry instance, with automatically attatched user"""
-        user = self.context['request'].user
-        return JournalEntry.objects.create(user=user, **validated_data)
+        fields = ['id', 'title', 'content', 'mood', 'tags', 'date', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']

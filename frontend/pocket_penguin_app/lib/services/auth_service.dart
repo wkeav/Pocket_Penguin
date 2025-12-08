@@ -1,13 +1,16 @@
 import 'dart:convert'; //JSON encoding/decoding
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api_service.dart';
 
 /*
   Handles all communications with backend API 
 */
 
 class AuthService {
-  static const String baseUrl = 'https://pocket-penguin.onrender.com/api';
+  // Helper getter to access centralized base URL
+  static String get baseUrl => ApiConfig.baseUrl;
+
   static const String tokenKey = 'access_token';
   static const String refreshTokenKey = 'refresh_token';
   static const String userKey = 'user_data';
