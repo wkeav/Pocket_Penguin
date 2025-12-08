@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-// 1. Custom Border Widget to enhance the pixel-art look
 class PixelBorder extends StatelessWidget {
   final Widget child;
   final Color color;
@@ -45,7 +44,6 @@ class PixelProgressIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(2),
-        // Add a pixel border around the whole track for definition
         border: Border.all(color: Colors.black, width: 1.0),
       ),
       child: ClipRRect(
@@ -56,10 +54,10 @@ class PixelProgressIndicator extends StatelessWidget {
           child: Container(
             color: color,
             child: PixelBorder(
+              child: const SizedBox.expand(),
               thickness: 1.0,
               cornerSize: 0,
               color: color.withOpacity(0.9),
-              child: const SizedBox.expand(),
             ),
           ),
         ),
@@ -94,11 +92,9 @@ class _ProgressScreenState extends State<ProgressScreen>
     with TickerProviderStateMixin {
   TimePeriod _selectedPeriod = TimePeriod.weekly;
 
-  // Animation fields
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  // Chart Data
   final Map<TimePeriod, Map<String, List<dynamic>>> _chartData = {
     TimePeriod.weekly: {
       'habits': <double>[0.8, 0.6, 1.0, 0.4, 0.9, 0.3, 0.7],
@@ -144,7 +140,7 @@ class _ProgressScreenState extends State<ProgressScreen>
   void _togglePeriod(TimePeriod period) {
     setState(() {
       _selectedPeriod = period;
-      _animateBars(); // Animate bars whenever the toggle changes
+      _animateBars();
     });
   }
 
@@ -205,7 +201,10 @@ class _ProgressScreenState extends State<ProgressScreen>
   }
 
   Widget _buildAnimatedBarChart(
-      List<String> labels, List<double> habitData, List<double> todoData) {
+    List<String> labels,
+    List<double> habitData,
+    List<double> todoData,
+  ) {
     const double maxHeight = 100;
     const double barWidth = 24;
 
@@ -215,83 +214,69 @@ class _ProgressScreenState extends State<ProgressScreen>
         animation: _animation,
         builder: (context, child) {
           final animationValue = _animation.value;
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              final totalBarWidth = labels.length * barWidth;
-              final availableWidth = constraints.maxWidth;
-              final numSpaces = labels.length - 1;
-              final spacing = numSpaces > 0
-                  ? (availableWidth - totalBarWidth) / numSpaces
-                  : 0;
 
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(labels.length, (index) {
-                  final animatedHabitHeight =
-                      (habitData[index] * maxHeight) * animationValue;
-                  final animatedTodoHeight =
-                      (todoData[index] * maxHeight) * animationValue;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(labels.length, (index) {
+              final animatedHabitHeight =
+                  (habitData[index] * maxHeight) * animationValue;
 
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: maxHeight,
-                        width: barWidth,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            // Habits Bar (Left)
-                            Container(
-                              width: barWidth / 2 - 2,
-                              height: animatedHabitHeight,
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              // FIX 1: Correctly use PixelBorder with a child
-                              child: const PixelBorder(
-                                child: SizedBox.expand(),
-                                thickness: 1,
-                                cornerSize: 2,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            // Todos Bar (Right)
-                            Container(
-                              width: barWidth / 2 - 2,
-                              height: animatedTodoHeight,
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              // FIX 1: Correctly use PixelBorder with a child
-                              child: const PixelBorder(
-                                child: SizedBox.expand(),
-                                thickness: 1,
-                                cornerSize: 2,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
+              final animatedTodoHeight =
+                  (todoData[index] * maxHeight) * animationValue;
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: maxHeight,
+                    width: barWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // Habits bar
+                        Container(
+                          width: barWidth / 2 - 2,
+                          height: animatedHabitHeight,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const PixelBorder(
+                            child: SizedBox.expand(),
+                            thickness: 1,
+                            cornerSize: 2,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        labels[index],
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                        const SizedBox(width: 4),
+                        // Todos bar
+                        Container(
+                          width: barWidth / 2 - 2,
+                          height: animatedTodoHeight,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const PixelBorder(
+                            child: SizedBox.expand(),
+                            thickness: 1,
+                            cornerSize: 2,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    labels[index],
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
               );
-            },
+            }),
           );
         },
       ),
