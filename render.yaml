@@ -1,3 +1,9 @@
+databases:
+  - name: pocket-penguin-db
+    databaseName: pocket_penguin
+    user: pocket_penguin_user
+    plan: free
+
 services:
   - type: web
     name: pocket-penguin-api
@@ -17,5 +23,9 @@ services:
         value: "False"
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pocket-penguin-db
+          property: connectionString
       - key: ALLOWED_HOST
         value: "pocket-penguin.onrender.com"
