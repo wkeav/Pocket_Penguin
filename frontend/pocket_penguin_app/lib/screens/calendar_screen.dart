@@ -41,7 +41,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       for (var event in data) {
         final eventObj = CalendarEvent.fromJson(event);
         //Make a day-only key so all events on the same day go together.
-        final dayKey = DateTime(eventObj.startDate.year, eventObj.startDate.month, eventObj.startDate.day);
+        final dayKey = DateTime(eventObj.startDate.year,
+            eventObj.startDate.month, eventObj.startDate.day);
         if (!tempEvents.containsKey(dayKey)) tempEvents[dayKey] = [];
         tempEvents[dayKey]!.add(eventObj);
       }
