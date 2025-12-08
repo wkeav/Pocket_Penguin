@@ -38,6 +38,6 @@ urlpatterns = [
    
     # Calendar Events
     path('calendar/events/', CalendarEventListCreate.as_view(), name='calendar-list-create'),
-    path('calendar/events/<int:pk>/', CalendarEventRetrieveUpdateDestroy.as_view(), name='calendar-detail'),
+    path('calendar/events/<uuid:pk>/', CalendarEventRetrieveUpdateDestroy.as_view(), name='calendar-detail'),
 
 ]

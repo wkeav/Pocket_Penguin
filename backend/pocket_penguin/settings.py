@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'pocket_penguin.wsgi.application'
 
 
 # Database
-
+# Use SQLite for both local development and production
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -161,11 +161,26 @@ SIMPLE_JWT = {
 }
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'https://wkeav.github.io',
-    'https://pocket-penguin.onrender.com',
-    os.getenv('CORS_ALLOWED_ORIGIN', ''),
-]
-CORS_ALLOWED_ORIGINS = [url for url in CORS_ALLOWED_ORIGINS if url]  # Remove empty strings
+if DEBUG:
+    # Development: Allow all localhost origins (Flutter uses random ports)
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^http://localhost:\d+$",
+# PostgreSQL adapter for Django for deployment # PostgreSQL adapter for Django for deployment         r"^http://127\.0\.0\.1:\d+$",
+    ]
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+    ]
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_ALLOW_HEADERS = ['*']
+    CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+else:
+    # Production: Only allow specific origins
+    CORS_ALLOWED_ORIGINS = [
+        'https://wkeav.github.io',
+        'https://pocket-penguin.onrender.com',
+        os.getenv('CORS_ALLOWED_ORIGIN', ''),
+    ]
+    CORS_ALLOWED_ORIGINS = [url for url in CORS_ALLOWED_ORIGINS if url]  # Remove empty strings
+    CORS_ALLOW_CREDENTIALS = True
