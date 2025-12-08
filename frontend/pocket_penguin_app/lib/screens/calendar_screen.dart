@@ -39,18 +39,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       final Map<DateTime, List<CalendarEvent>> tempEvents = {};
 
       for (var event in data) {
-        //Turn the string times into real DateTime objects.
-        final start = DateTime.parse(event['start_time']);
-        final end = DateTime.parse(event['end_time']);
-        final eventObj = CalendarEvent(
-          id: event['id'],
-          title: event['title'],
-          description: event['description'],
-          startDate: start,
-          endDate: end,
-        );
+        final eventObj = CalendarEvent.fromJson(event);
         //Make a day-only key so all events on the same day go together.
-        final dayKey = DateTime(start.year, start.month, start.day);
+        final dayKey = DateTime(eventObj.startDate.year, eventObj.startDate.month, eventObj.startDate.day);
         if (!tempEvents.containsKey(dayKey)) tempEvents[dayKey] = [];
         tempEvents[dayKey]!.add(eventObj);
       }

@@ -53,7 +53,7 @@ class CalendarService {
   }
 
   // Delete an event by id
-  static Future<void> deleteEvent(int id) async {
+  static Future<void> deleteEvent(String id) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('User not authenticated');
 
