@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'auth_service.dart';
-import 'api_service.dart';
 
 class CalendarService {
   static const String baseUrl =
-      'https://pocket-penguin.onrender.com/api/calendar/events';
+      'https://pocket-penguin.onrender.com/api/calendar/events/';
 
   // Get all events for user (supports optional test token)
   static Future<List<dynamic>> getEvents({String? testToken}) async {
