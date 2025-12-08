@@ -142,9 +142,9 @@ class HabitAPITests(TestCase):
         
         # Debug: print what we got
         print(f"\nTotal habits in DB: {Habit.objects.count()}")
-        print(f"Habits returned by API: {len(response.data)}")
-        for habit_data in response.data:
-            print(f"  - {habit_data['title']} (user: {habit_data.get('user', 'N/A')})")
+        print(f"Response type: {type(response.data)}")
+        print(f"Response data: {response.data}")
+        print(f"Response status: {response.status_code}")
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
