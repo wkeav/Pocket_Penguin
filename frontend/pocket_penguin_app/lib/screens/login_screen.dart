@@ -59,11 +59,50 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } else {
+      final errorMsg = result['error']?['message'] ??
+          result['error']?['detail'] ??
+          'Login failed. Please try again.';
+
       setState(() {
-        _errorMessage = result['error']?['message'] ??
-            result['error']?['detail'] ??
-            'Login failed. Please try again.';
+        _errorMessage = errorMsg;
       });
+
+      // Show alert dialog for wrong credentials
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Row(
+                children: [
+                  Icon(Icons.error_outline, color: Colors.red[700], size: 28),
+                  const SizedBox(width: 8),
+                  const Text('Login Failed'),
+                ],
+              ),
+              content: Text(
+                errorMsg,
+                style: const TextStyle(fontSize: 16),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    'Try Again',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            );
+          },
+        );
+      }
     }
   }
 
