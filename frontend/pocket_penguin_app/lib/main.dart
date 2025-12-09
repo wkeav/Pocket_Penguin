@@ -232,12 +232,24 @@ class _MainScreenState extends State<MainScreen> {
                                   ),
                                 );
                               } else {
-                                Navigator.push(
+                                final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const AuthScreen(),
                                   ),
                                 );
+                                // If login was successful, show success message and refresh
+                                if (result == true && mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Login successful!'),
+                                      backgroundColor: Colors.green,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                  // Refresh the state to update UI
+                                  setState(() {});
+                                }
                               }
                             }
                           },

@@ -47,16 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (result['success'] == true) {
       if (mounted) {
-        // Navigate back to main screen (pop auth screen)
-        Navigator.of(context).pop();
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        // Navigate back to main screen with success result
+        Navigator.of(context).pop(true);
       }
     } else {
       final errorMsg = result['error']?['message'] ??
