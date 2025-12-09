@@ -115,8 +115,8 @@ class Habit {
       'schedule': schedule,
       if (lastCompleted != null) 'last_completed': lastCompleted,
       'streak': streak,
-      // Don't send readonly fields
-      // 'weekProgress', 'is_active', 'is_archived', timestamps handled by backend
+      'weekProgress': weekProgress, // Send schedule days to backend
+      // Don't send readonly fields: 'is_active', 'is_archived', timestamps handled by backend
     };
   }
 

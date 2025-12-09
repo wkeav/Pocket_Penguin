@@ -21,8 +21,13 @@ class HabitSerializer(serializers.ModelSerializer):
     # Computed progress (today_count / daily_goal)
     progress = serializers.SerializerMethodField(read_only=True)
 
-    # Week progress (7-day boolean array)
-    weekProgress = serializers.SerializerMethodField(read_only=True)
+    # Week progress (7-day boolean array) - now writable
+    weekProgress = serializers.ListField(
+        child=serializers.BooleanField(),
+        required=False,
+        allow_null=True,
+        source='week_progress'
+    )
 
     class Meta:
         model = Habit
@@ -57,7 +62,6 @@ class HabitSerializer(serializers.ModelSerializer):
             "updated_at",
             "start_date",
             "progress",
-            "weekProgress",
             "streak",
         ]
 
@@ -67,23 +71,11 @@ class HabitSerializer(serializers.ModelSerializer):
             return 0.0
         return min(1.0, obj.today_count / obj.daily_goal)
 
-    def get_weekProgress(self, obj):
-        """Return 7-day completion history.
-        
-        Returns boolean array [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
-        marking which days the habit was completed.
-        Currently shows today's completion; full week tracking in phase 2.
-        """
-        today = timezone.now().date()
-        
-        # Initialize week array (Mon=0, Sun=6)
-        week = [False] * 7
-        
-        # Mark today as completed if habit was completed today
-        if obj.last_completed and obj.last_completed == today:
-            week[today.weekday()] = True
-        
-        return week
+    def validate_weekProgress(self, value):
+        """Validate that weekProgress is exactly 7 booleans if provided."""
+        if value is not None and len(value) != 7:
+            raise serializers.ValidationError("weekProgress must be an array of exactly 7 booleans.")
+        return value
 
     def validate_targetValue(self, value):
         "Validate that targetValue (daily_goal) is greater than 0."
