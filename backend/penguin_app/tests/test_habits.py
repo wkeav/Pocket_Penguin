@@ -471,22 +471,24 @@ class HabitAPITests(TestCase):
     def test_streak_calculation(self):
         "Test streak increments for consecutive days."
         from penguin_app.models.user_models import UserGameProfile
+        from django.utils import timezone
         
         # Ensure user has a profile
         UserGameProfile.objects.get_or_create(user=self.user)
+        
+        # Use timezone-aware dates to match the model's behavior
+        today = timezone.now().date()
+        yesterday = today - timedelta(days=1)
         
         habit = Habit.objects.create(
             user=self.user,
             name='Daily Habit',
             daily_goal=1,
-            reward=5
+            reward=5,
+            last_completed=yesterday,
+            streak=1,
+            today_count=0  # Reset for today (new day)
         )
-        
-        # Day 1
-        yesterday = date.today() - timedelta(days=1)
-        habit.last_completed = yesterday
-        habit.streak = 1
-        habit.save()
         
         # Complete today (Day 2)
         url = f'/api/habits/{habit.id}/complete/'
@@ -498,22 +500,23 @@ class HabitAPITests(TestCase):
     def test_streak_resets_after_gap(self):
         "Test streak resets to 1 if there's a gap in completion."
         from penguin_app.models.user_models import UserGameProfile
+        from django.utils import timezone
         
         # Ensure user has a profile
         UserGameProfile.objects.get_or_create(user=self.user)
+        
+        # Use timezone-aware dates
+        today = timezone.now().date()
+        three_days_ago = today - timedelta(days=3)
         
         habit = Habit.objects.create(
             user=self.user,
             name='Daily Habit',
             daily_goal=1,
             reward=5,
-            streak=5
+            streak=5,
+            last_completed=three_days_ago
         )
-        
-        # Last completed 3 days ago
-        three_days_ago = date.today() - timedelta(days=3)
-        habit.last_completed = three_days_ago
-        habit.save()
         
         # Complete today (gap of 2 days)
         url = f'/api/habits/{habit.id}/complete/'
