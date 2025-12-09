@@ -204,3 +204,13 @@ class Habit(models.Model):
         """
         self.today_count = 0
         self.save()
+
+    def completion_rate(self):
+        """
+        Calculate the completion rate for the habit.
+        Returns a value between 0.0 and 1.0, representing the proportion of the goal that has been achieved.
+        """
+        if self.daily_goal <= 0:
+            return 0.0
+        completion_rate = (self.today_count / self.daily_goal)
+        return min(1.0, completion_rate)  # Returns 0-1 decimal

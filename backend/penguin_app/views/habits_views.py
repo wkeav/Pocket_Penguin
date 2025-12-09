@@ -97,8 +97,8 @@ class HabitCompleteView(APIView):
         """
         Calculate weekly completion rate.
         
-        completion_rate = (habits_completed / total_active_habits) * 100
-        Returns float between 0.0 and 100.0
+        completion_rate = habits_completed / total_active_habits
+        Returns float between 0.0 and 1.0 (decimal format for Progress model).
         """
         # Count total active habits user had before or during this week
         total_habits = Habit.objects.filter(
@@ -117,8 +117,8 @@ class HabitCompleteView(APIView):
                 profile=user.profile,
                 week_start=week_start
             )
-            completion_rate = (progress.habits_completed / total_habits) * 100
-            return min(100.0, completion_rate)  # Cap at 100%
+            completion_rate = progress.habits_completed / total_habits
+            return min(1.0, completion_rate)  # Cap at 1.0 (100%)
         except:
             # If Progress not found yet, return 0
             return 0.0
