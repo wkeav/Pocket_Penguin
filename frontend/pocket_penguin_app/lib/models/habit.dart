@@ -86,10 +86,9 @@ class Habit {
       schedule: json['schedule'] as String? ?? 'DAILY',
       lastCompleted: json['last_completed'] as String?,
       streak: json['streak'] as int? ?? 0,
-      weekProgress: (json['weekProgress'] as List?)
-              ?.map((e) => e as bool)
-              .toList() ??
-          List.filled(7, false),
+      weekProgress:
+          (json['weekProgress'] as List?)?.map((e) => e as bool).toList() ??
+              List.filled(7, false),
       isActive: json['is_active'] as bool? ?? true,
       isArchived: json['is_archived'] as bool? ?? false,
       createdAt: json['created_at'] as String?,

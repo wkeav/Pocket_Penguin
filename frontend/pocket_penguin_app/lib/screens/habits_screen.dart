@@ -4,7 +4,7 @@ import '../theme/app_theme.dart';
 import '../services/habit_service.dart';
 
 /// HabitsScreen - Displays and manages user habits
-/// 
+///
 /// Features:
 /// 1. Load habits from API or show mock data
 /// 2. Add new habits via API
@@ -119,7 +119,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
     // Sync with backend only if not using mock data
     if (!useMockData) {
       try {
-        final updatedHabit = await HabitApi.incrementProgress(habitId, newValue);
+        final updatedHabit =
+            await HabitApi.incrementProgress(habitId, newValue);
         if (mounted) {
           setState(() {
             habits[habitIndex] = updatedHabit;
@@ -159,7 +160,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
     try {
       // Call the completion endpoint
       final response = await HabitApi.completeHabitEndpoint(habitId);
-      
+
       if (mounted) {
         // Update habit with server response
         setState(() {
@@ -168,9 +169,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
 
         // Award coins if this was a new completion
         if (response['new_completion'] == true) {
-          final coinsEarned = (response['coins_earned'] as int?) ?? habit.reward;
+          final coinsEarned =
+              (response['coins_earned'] as int?) ?? habit.reward;
           widget.onFishCoinsChanged(widget.fishCoins + coinsEarned);
-          
+
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

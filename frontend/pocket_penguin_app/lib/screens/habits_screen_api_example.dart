@@ -78,7 +78,7 @@ class _HabitsScreenWithApiState extends State<HabitsScreenWithApi> {
     // Sync with backend
     try {
       final updatedHabit = await HabitApi.incrementProgress(habitId, newValue);
-      
+
       // Update with server response (for streak, last_completed, etc.)
       setState(() {
         habits[habitIndex] = updatedHabit;
@@ -88,7 +88,7 @@ class _HabitsScreenWithApiState extends State<HabitsScreenWithApi> {
       setState(() {
         habits[habitIndex] = habit;
       });
-      
+
       // Revert fish coins
       if (!wasCompleted && isNowCompleted) {
         widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
@@ -109,7 +109,7 @@ class _HabitsScreenWithApiState extends State<HabitsScreenWithApi> {
       setState(() {
         habits.add(createdHabit);
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Habit created successfully!')),
       );
@@ -134,7 +134,7 @@ class _HabitsScreenWithApiState extends State<HabitsScreenWithApi> {
 
     try {
       await HabitApi.deleteHabit(habitId);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Habit deleted')),
       );
@@ -143,7 +143,7 @@ class _HabitsScreenWithApiState extends State<HabitsScreenWithApi> {
       setState(() {
         habits.insert(habitIndex, deletedHabit);
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to delete habit: $e')),
       );

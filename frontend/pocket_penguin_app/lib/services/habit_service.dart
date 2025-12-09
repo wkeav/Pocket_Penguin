@@ -92,7 +92,8 @@ class HabitApi {
   /// Update an existing habit (partial update - PATCH)
   /// Only sends the fields that changed
   /// Returns the updated Habit
-  static Future<Habit> updateHabit(String id, Map<String, dynamic> updates) async {
+  static Future<Habit> updateHabit(
+      String id, Map<String, dynamic> updates) async {
     final token = await AuthService.getToken();
     if (token == null) {
       throw Exception('User not authenticated');
