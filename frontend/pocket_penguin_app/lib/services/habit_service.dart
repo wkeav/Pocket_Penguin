@@ -167,6 +167,43 @@ class HabitApi {
     return updateHabit(id, {'currentValue': habit.targetValue});
   }
 
+  /// Call the dedicated completion endpoint on the backend
+  /// Handles streak updates, fish coins, and progress tracking
+  /// Returns a Map with:
+  ///   - 'habit': The updated Habit object
+  ///   - 'new_completion': bool indicating if coins were awarded
+  ///   - 'coins_earned': int amount of coins awarded (only if new_completion is true)
+  ///   - 'streak': The updated streak count
+  static Future<Map<String, dynamic>> completeHabitEndpoint(String id) async {
+    final token = await AuthService.getToken();
+    if (token == null) {
+      throw Exception('User not authenticated');
+    }
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}$id/complete/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Complete response status: ${response.statusCode}');
+    print('Complete response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      // Parse the habit from response
+      if (data['habit'] != null) {
+        data['habit'] = Habit.fromJson(data['habit']);
+      }
+      return data;
+    } else {
+      throw Exception(
+          'Failed to complete habit: ${response.statusCode} - ${response.body}');
+    }
+  }
+
   /// Delete a habit by its ID
   /// Requires authentication and the habit's UUID
   static Future<void> deleteHabit(String id) async {
