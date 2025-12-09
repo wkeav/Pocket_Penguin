@@ -201,7 +201,7 @@ class HabitCategories {
   ];
 }
 
-// Sample habits for initial data 
+// Sample habits for initial data
 class SampleHabits {
   static List<Habit> get habits => [
         Habit(

@@ -29,6 +29,10 @@ class HabitListCreateView(generics.ListCreateAPIView):
             is_archived=False
         ).order_by("created_at")
 
+    def perform_create(self, serializer):
+        """Ensure the habit is always created for the authenticated user."""
+        serializer.save(user=self.request.user)
+
 
 class HabitDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -111,15 +115,15 @@ class HabitCompleteView(APIView):
             return 0.0
         
         # Get habits completed this week from Progress
+        from penguin_app.models.progress_models import Progress as ProgressModel
         try:
-            from penguin_app.models.progress_models import Progress as ProgressModel
             progress = ProgressModel.objects.get(
                 profile=user.profile,
                 week_start=week_start
             )
             completion_rate = progress.habits_completed / total_habits
             return min(1.0, completion_rate)  # Cap at 1.0 (100%)
-        except:
+        except ProgressModel.DoesNotExist:
             # If Progress not found yet, return 0
             return 0.0
 

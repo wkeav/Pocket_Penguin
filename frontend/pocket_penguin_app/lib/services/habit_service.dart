@@ -72,9 +72,6 @@ class HabitApi {
       throw Exception('User not authenticated');
     }
 
-    print('Creating habit with token: ${token.substring(0, 20)}...');
-    print('Habit data: ${json.encode(habit.toJson())}');
-
     final response = await http.post(
       Uri.parse(baseUrl),
       headers: {
@@ -83,9 +80,6 @@ class HabitApi {
       },
       body: json.encode(habit.toJson()),
     );
-
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
 
     if (response.statusCode == 201) {
       return Habit.fromJson(json.decode(response.body));
@@ -104,8 +98,6 @@ class HabitApi {
       throw Exception('User not authenticated');
     }
 
-    print('Updating habit $id with: ${json.encode(updates)}');
-
     final response = await http.patch(
       Uri.parse('$baseUrl$id/'),
       headers: {
@@ -114,9 +106,6 @@ class HabitApi {
       },
       body: json.encode(updates),
     );
-
-    print('Update response status: ${response.statusCode}');
-    print('Update response body: ${response.body}');
 
     if (response.statusCode == 200) {
       return Habit.fromJson(json.decode(response.body));
@@ -188,9 +177,6 @@ class HabitApi {
       },
     );
 
-    print('Complete response status: ${response.statusCode}');
-    print('Complete response body: ${response.body}');
-
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       // Parse the habit from response
@@ -220,7 +206,6 @@ class HabitApi {
       },
     );
 
-    print('Delete response status: ${response.statusCode}');
     // 204 No Content indicates successful deletion
     if (response.statusCode != 204) {
       throw Exception(

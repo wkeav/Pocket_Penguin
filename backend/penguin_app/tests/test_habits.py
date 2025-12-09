@@ -493,7 +493,8 @@ class HabitAPITests(TestCase):
         # Complete today (Day 2)
         url = f'/api/habits/{habit.id}/complete/'
         response = self.client.post(url)
-        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         habit.refresh_from_db()
         self.assertEqual(habit.streak, 2)
         
@@ -521,6 +522,7 @@ class HabitAPITests(TestCase):
         # Complete today (gap of 2 days)
         url = f'/api/habits/{habit.id}/complete/'
         response = self.client.post(url)
-        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         habit.refresh_from_db()
         self.assertEqual(habit.streak, 1)  # Reset to 1

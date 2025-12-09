@@ -5,8 +5,7 @@ from penguin_app.models.habit_models import Habit
 
 class HabitSerializer(serializers.ModelSerializer):
     """
-    Serializers for Habit model.
-
+    Serializer for Habit model.
     """
 
     # Expose UUID as string so Flutter can use it
@@ -63,7 +62,7 @@ class HabitSerializer(serializers.ModelSerializer):
         ]
 
     def get_progress(self, obj):
-        "Return a floating number between 0 and 1."
+        """Return a floating-point number between 0 and 1."""
         if obj.daily_goal <= 0:
             return 0.0
         return min(1.0, obj.today_count / obj.daily_goal)
