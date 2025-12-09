@@ -7,7 +7,6 @@ import 'api_service.dart';
 class CalendarService {
   static String get baseUrl {
     final url = '${ApiConfig.calendarUrl}/events/';
-    print('🔍 CalendarService.baseUrl = $url');
     return url;
   }
 
@@ -18,7 +17,6 @@ class CalendarService {
       throw Exception('User not authenticated');
     }
 
-    print('🔍 Fetching calendar events from: $baseUrl');
     final response = await http.get(
       Uri.parse(baseUrl),
       headers: {
@@ -27,16 +25,15 @@ class CalendarService {
       },
     );
 
-    print('📅 Calendar GET response: ${response.statusCode}');
     if (response.statusCode == 200) {
       final dynamic data = jsonDecode(response.body);
       // Handle paginated response (DRF pagination returns {results: [...]})
-      final List<dynamic> eventsList =
-          data is Map && data.containsKey('results') ? data['results'] : data;
+      final List<dynamic> eventsList = data is Map && data.containsKey('results') 
+          ? data['results'] 
+          : data;
       return eventsList.map((json) => CalendarEvent.fromJson(json)).toList();
     } else {
-      throw Exception(
-          'Failed to load events: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to load events: ${response.statusCode} - ${response.body}');
     }
   }
 
@@ -59,8 +56,6 @@ class CalendarService {
       'end_time': endTime.toIso8601String(),
     };
 
-    print('🔍 Adding calendar event to: $baseUrl');
-    print('📅 Event data: $eventData');
 
     final response = await http.post(
       Uri.parse(baseUrl),
@@ -71,14 +66,10 @@ class CalendarService {
       body: jsonEncode(eventData),
     );
 
-    print('📅 Calendar POST response: ${response.statusCode}');
-    print('📅 Response body: ${response.body}');
-
     if (response.statusCode == 201) {
       return CalendarEvent.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception(
-          'Failed to add event: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to add event: ${response.statusCode} - ${response.body}');
     }
   }
 
@@ -89,19 +80,24 @@ class CalendarService {
       throw Exception('User not authenticated');
     }
 
-    print('🔍 Deleting calendar event: $baseUrl$id/');
+    final deleteUrl = '$baseUrl$id/';
+    print('DEBUG: Deleting calendar event at URL: $deleteUrl');
+    print('DEBUG: Event ID: $id');
+    print('DEBUG: Base URL: $baseUrl');
+
     final response = await http.delete(
-      Uri.parse('$baseUrl$id/'),
+      Uri.parse(deleteUrl),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
 
-    print('📅 Calendar DELETE response: ${response.statusCode}');
+    print('DEBUG: Delete response status: ${response.statusCode}');
+    print('DEBUG: Delete response body: ${response.body}');
+
     if (response.statusCode != 204) {
-      throw Exception(
-          'Failed to delete event: ${response.statusCode} - ${response.body}');
+      throw Exception('Failed to delete event: ${response.statusCode} - ${response.body}');
     }
   }
 }
