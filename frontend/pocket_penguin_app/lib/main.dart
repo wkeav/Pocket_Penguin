@@ -7,6 +7,7 @@ import 'screens/calendar_screen.dart';
 import 'screens/progress_screen.dart';
 import 'screens/social_screen.dart';
 import 'screens/achievements_screen.dart';
+import 'screens/notification_screen.dart';
 import 'theme/app_theme.dart';
 import 'screens/gamebox.dart';
 import 'screens/wardrobe_screen.dart';
@@ -104,6 +105,10 @@ class _MainScreenState extends State<MainScreen> {
         label: 'Awards',
         icon: Image.asset("images/icons/pockp_awards_icon.png",
             width: 32, height: 32)),
+    TabItem(
+        id: 'notifications',
+        label: 'Alerts',
+        icon: Icon(Icons.access_alarm, size: 32)),
   ];
 
   void _updateFishCoins(int newAmount) {
@@ -152,6 +157,8 @@ class _MainScreenState extends State<MainScreen> {
         return const SocialScreen();
       case 8:
         return const AchievementsScreen();
+      case 9:
+        return const NotificationScreen();
       default:
         return HomeScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
@@ -310,15 +317,15 @@ class _MainScreenState extends State<MainScreen> {
                 // Bottom Navigation
                 Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 16,
-                  runSpacing: 8,
+                  spacing: 10,
+                  runSpacing: 4,
                   children: _tabs.map((tab) {
                     final index = _tabs.indexOf(tab);
                     final isActive = _activeTab == index;
                     return GestureDetector(
                       onTap: () => setState(() => _activeTab = index),
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color:
                               isActive ? Colors.blue[100] : Colors.transparent,
@@ -332,15 +339,15 @@ class _MainScreenState extends State<MainScreen> {
                                 color: isActive
                                     ? Colors.blue[600]
                                     : Colors.grey[500],
-                                size: 20,
+                                size: 18,
                               ),
                               child: tab.icon,
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               tab.label,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: isActive
                                     ? Colors.blue[600]
                                     : Colors.grey[500],

@@ -41,6 +41,7 @@ dependencies:
   awesome_notifications_core: ^0.9.1
   intl: ^0.19.0
   flutter_secure_storage: ^8.0.0
+  cool_alert: any
 
 dev_dependencies:
   flutter_test:
