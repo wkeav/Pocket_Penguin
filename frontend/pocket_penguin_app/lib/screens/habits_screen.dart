@@ -908,6 +908,18 @@ class _CreateHabitDialogState extends State<_CreateHabitDialog> {
     super.dispose();
   }
 
+  String _getIconNameForCategory(String categoryName) {
+    final iconMap = {
+      'Health': 'favorite',
+      'Fitness': 'fitness_center',
+      'Mindfulness': 'self_improvement',
+      'Learning': 'school',
+      'Productivity': 'work',
+      'Social': 'people',
+    };
+    return iconMap[categoryName] ?? 'check_circle';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -1064,6 +1076,8 @@ class _CreateHabitDialogState extends State<_CreateHabitDialog> {
                   onChanged: (value) {
                     setState(() {
                       selectedCategory = value ?? 'Health';
+                      // Auto-set icon based on category
+                      selectedIcon = _getIconNameForCategory(selectedCategory);
                     });
                   },
                 ),
