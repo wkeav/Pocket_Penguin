@@ -17,5 +17,3 @@ class CalendarEvent(models.Model):
     # this is what we show when we print the event
     def __str__(self):
         return self.title
-
-
