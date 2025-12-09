@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_strings.dart';
 import '../constants/colors.dart';
+// import '../screens/stats_page.dart';  // Temporarily commented out for testing
 import '../models/notification_model.dart' as app_notification;
 
 class NotificationUtil {
   final AwesomeNotifications awesomeNotifications;
   static const String _notificationsKey = 'notifications_list';
-  static VoidCallback? onNotificationListChanged;
-  static Function(String title, String body)? onNotificationDisplayedCallback;
 
   NotificationUtil({required this.awesomeNotifications});
 
@@ -39,9 +38,6 @@ class NotificationUtil {
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
     );
-
-    // Trigger UI update callback if set
-    onNotificationListChanged?.call();
   }
 
   // Remove a notification
@@ -54,9 +50,6 @@ class NotificationUtil {
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
     );
-
-    // Trigger UI update callback if set
-    onNotificationListChanged?.call();
   }
 
   /// Remove all notifications from storage and cancel them in the system.
@@ -88,7 +81,6 @@ class NotificationUtil {
   }
 
   /// Creates a basic notification that appears immediately.
-  /// [customName] and [customDescription] can be used to override the stored notification's display name/description
   Future<void> createBasicNotification({
     required int id,
     required String channelKey,
@@ -96,8 +88,6 @@ class NotificationUtil {
     required String body,
     String bigPicture = AppStrings.DEFAULT_ICON,
     NotificationLayout layout = NotificationLayout.BigPicture,
-    String? customName,
-    String? customDescription,
   }) async {
     // Create the notification
     await awesomeNotifications.createNotification(
@@ -115,8 +105,8 @@ class NotificationUtil {
     await _storeNotification(
       app_notification.NotificationModel(
         id: id,
-        title: customName ?? title,
-        body: customDescription ?? body,
+        title: title,
+        body: body,
         channelKey: channelKey,
         isScheduled: false,
       ),
@@ -124,7 +114,6 @@ class NotificationUtil {
   }
 
   /// Creates a scheduled notification that will appear at a specific time and can repeat.
-  /// [customName] and [customDescription] can be used to override the stored notification's display name/description
   Future<void> createScheduledNotification({
     required int id,
     required String channelKey,
@@ -133,8 +122,6 @@ class NotificationUtil {
     String bigPicture = AppStrings.DEFAULT_ICON,
     NotificationLayout layout = NotificationLayout.BigPicture,
     required NotificationCalendar notificationCalendar,
-    String? customName,
-    String? customDescription,
   }) async {
     // Create the notification
     await awesomeNotifications.createNotification(
@@ -183,8 +170,8 @@ class NotificationUtil {
     await _storeNotification(
       app_notification.NotificationModel(
         id: id,
-        title: customName ?? title,
-        body: customDescription ?? body,
+        title: title,
+        body: body,
         channelKey: channelKey,
         scheduledDateTime: scheduledDate,
         isScheduled: true,
@@ -248,56 +235,8 @@ class NotificationUtil {
   @pragma("vm:entry-point")
   static Future<void> onNotificationDisplayedMethod(
       ReceivedNotification receivedNotification) async {
-    // Store the displayed notification to ensure it appears in the list
-    // This is especially important for basic notifications that are shown immediately
-    final prefs = await SharedPreferences.getInstance();
-    final String? notificationsJson = prefs.getString(_notificationsKey);
-
-    List<app_notification.NotificationModel> notifications = [];
-    if (notificationsJson != null) {
-      List<dynamic> notificationsList = jsonDecode(notificationsJson);
-      notifications = notificationsList
-          .map((item) => app_notification.NotificationModel.fromMap(item))
-          .toList();
-    }
-
-    // Check if this notification is already stored
-    bool alreadyStored =
-        notifications.any((n) => n.id == receivedNotification.id);
-
-    // If not already stored (shouldn't happen for properly created notifications, but ensures visibility)
-    if (!alreadyStored) {
-      notifications.add(
-        app_notification.NotificationModel(
-          id: receivedNotification.id ?? 0,
-          title: receivedNotification.title ?? 'Notification',
-          body: receivedNotification.body ?? '',
-          channelKey:
-              receivedNotification.channelKey ?? AppStrings.BASIC_CHANNEL_KEY,
-          isScheduled: false,
-        ),
-      );
-
-      await prefs.setString(
-        _notificationsKey,
-        jsonEncode(notifications.map((n) => n.toMap()).toList()),
-      );
-
-      // Trigger UI update callback if set
-      onNotificationListChanged?.call();
-    }
-
-    // Trigger popup callback for scheduled notifications hitting their deadline
-    // Note: This only works if the app is in the foreground
-    if (receivedNotification.channelKey == AppStrings.SCHEDULE_CHANNEL_KEY) {
-      // Use a short delay to ensure the callback is ready
-      Future.delayed(const Duration(milliseconds: 100), () {
-        onNotificationDisplayedCallback?.call(
-          receivedNotification.title ?? 'Notification',
-          receivedNotification.body ?? '',
-        );
-      });
-    }
+    // Your code to handle a notification being displayed can go here.
+    // For example, you might log the event or update a UI element.
   }
 
   /// Use this method to detect if the user dismissed a notification.
@@ -312,50 +251,6 @@ class NotificationUtil {
   @pragma("vm:entry-point")
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    // Ensure the notification is stored when it's clicked
-    final prefs = await SharedPreferences.getInstance();
-    final String? notificationsJson = prefs.getString(_notificationsKey);
-
-    List<app_notification.NotificationModel> notifications = [];
-    if (notificationsJson != null) {
-      List<dynamic> notificationsList = jsonDecode(notificationsJson);
-      notifications = notificationsList
-          .map((item) => app_notification.NotificationModel.fromMap(item))
-          .toList();
-    }
-
-    // Check if this notification is already stored
-    bool alreadyStored = notifications.any((n) => n.id == receivedAction.id);
-
-    // If not already stored, add it to ensure it's visible
-    if (!alreadyStored) {
-      notifications.add(
-        app_notification.NotificationModel(
-          id: receivedAction.id ?? 0,
-          title: receivedAction.title ?? 'Notification',
-          body: receivedAction.body ?? '',
-          channelKey: receivedAction.channelKey ?? AppStrings.BASIC_CHANNEL_KEY,
-          isScheduled: false,
-        ),
-      );
-
-      await prefs.setString(
-        _notificationsKey,
-        jsonEncode(notifications.map((n) => n.toMap()).toList()),
-      );
-
-      // Trigger UI update callback if set
-      onNotificationListChanged?.call();
-    }
-
-    // Trigger popup for scheduled notifications when clicked
-    if (receivedAction.channelKey == AppStrings.SCHEDULE_CHANNEL_KEY) {
-      onNotificationDisplayedCallback?.call(
-        receivedAction.title ?? 'Reminder',
-        receivedAction.body ?? '',
-      );
-    }
-
     // Reducing icon badge count on iOS when a basic notification is tapped/acted upon.
     // This is important for maintaining accurate badge counts.
     if (receivedAction.channelKey == AppStrings.BASIC_CHANNEL_KEY &&

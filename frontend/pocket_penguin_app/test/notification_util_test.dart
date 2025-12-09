@@ -1,99 +1,123 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 import 'package:pocket_penguin_app/utilities/notification_util.dart';
-import 'package:pocket_penguin_app/constants/app_strings.dart';
+
+/// A very small fake which overrides the specific methods used by NotificationUtil.
+class FakeAwesomeNotifications extends AwesomeNotifications {
+  bool cancelAllCalled = false;
+  bool cancelAllSchedulesCalled = false;
+
+  @override
+  Future<bool> createNotification({
+    List<NotificationActionButton>? actionButtons,
+    required NotificationContent content,
+    Map<String, NotificationLocalization>? localizations,
+    NotificationSchedule? schedule,
+  }) async {
+    // Intentionally do nothing for unit tests.
+    return true;
+  }
+
+  @override
+  Future<bool> cancelAll() async {
+    cancelAllCalled = true;
+    return true;
+  }
+
+  @override
+  Future<bool> cancelAllSchedules() async {
+    cancelAllSchedulesCalled = true;
+    return true;
+  }
+}
 
 void main() {
-  late NotificationUtil notificationUtil;
-  late AwesomeNotifications mockAwesomeNotifications;
-
-  // Reset state before each test to ensure isolation
-  setUp(() {
-    // Initialize mock shared preferences with empty state
-    SharedPreferences.setMockInitialValues({});
-    
-    // Create instances for testing
-    mockAwesomeNotifications = AwesomeNotifications();
-    notificationUtil = NotificationUtil(
-      awesomeNotifications: mockAwesomeNotifications,
-    );
-    
-    // Reset static callbacks to null to prevent cross-test interference
-    NotificationUtil.onNotificationListChanged = null;
-    NotificationUtil.onNotificationDisplayedCallback = null;
-  });
-
-  group('NotificationUtil - Core Functionality', () {
-    test('creates and retrieves basic notification', () async {
-      // Create a basic notification with id 1
-      await notificationUtil.createBasicNotification(
-        id: 1,
-        channelKey: AppStrings.BASIC_CHANNEL_KEY,
-        title: 'Test',
-        body: 'Body',
-      );
-
-      // Retrieve all notifications from storage
-      final notifications = await notificationUtil.getNotifications();
-      
-      // Verify the notification was stored correctly
-      expect(notifications.length, 1);
-      expect(notifications[0].id, 1);
-      expect(notifications[0].isScheduled, false);
+  group('NotificationUtil storage tests', () {
+    setUp(() async {
+      // Start each test with empty SharedPreferences
+      SharedPreferences.setMockInitialValues({});
     });
 
-    test('creates notification with custom name', () async {
-      // Create a notification with custom name/description that overrides defaults
-      await notificationUtil.createBasicNotification(
-        id: 2,
-        channelKey: AppStrings.BASIC_CHANNEL_KEY,
-        title: 'Default',
+    test('createBasicNotification stores a notification', () async {
+      final fake = FakeAwesomeNotifications();
+      final util = NotificationUtil(awesomeNotifications: fake);
+
+      await util.createBasicNotification(
+        id: 111,
+        channelKey: 'basic',
+        title: 'Test Basic',
         body: 'Body',
-        customName: 'Custom',
-        customDescription: 'Custom Body',
       );
 
-      // Retrieve notifications from storage
-      final notifications = await notificationUtil.getNotifications();
-      
-      // Verify the custom values were stored instead of default values
-      expect(notifications[0].title, 'Custom');
-      expect(notifications[0].body, 'Custom Body');
+      final list = await util.getNotifications();
+      expect(list, isNotNull);
+      expect(list.length, 1);
+      final n = list.first;
+      expect(n.id, 111);
+      expect(n.title, 'Test Basic');
+      expect(n.body, 'Body');
+      expect(n.isScheduled, false);
     });
 
-    test('removes notification by id', () async {
-      // Create a notification to be removed
-      await notificationUtil.createBasicNotification(
-        id: 10,
-        channelKey: AppStrings.BASIC_CHANNEL_KEY,
-        title: 'Test',
-        body: 'Body',
+    test('createScheduledNotification stores scheduled notification', () async {
+      final fake = FakeAwesomeNotifications();
+      final util = NotificationUtil(awesomeNotifications: fake);
+
+      final calendar = NotificationCalendar(hour: 9, minute: 30, weekday: 2);
+
+      await util.createScheduledNotification(
+        id: 222,
+        channelKey: 'schedule',
+        title: 'Test Scheduled',
+        body: 'Scheduled body',
+        notificationCalendar: calendar,
       );
 
-      // Remove the notification by its id
-      await notificationUtil.removeNotification(10);
-      
-      // Verify the notification list is now empty
-      final notifications = await notificationUtil.getNotifications();
-      expect(notifications, isEmpty);
+      final list = await util.getNotifications();
+      expect(list.length, 1);
+      final n = list.first;
+      expect(n.id, 222);
+      expect(n.title, 'Test Scheduled');
+      expect(n.isScheduled, true);
+      expect(n.scheduledDateTime, isNotNull);
     });
 
-    test('callback is triggered on notification creation', () async {
-      // Set up a callback that sets a flag when triggered
-      bool triggered = false;
-      NotificationUtil.onNotificationListChanged = () => triggered = true;
+    test('removeNotification removes the specific entry', () async {
+      final fake = FakeAwesomeNotifications();
+      final util = NotificationUtil(awesomeNotifications: fake);
 
-      // Create a notification which should trigger the callback
-      await notificationUtil.createBasicNotification(
-        id: 100,
-        channelKey: AppStrings.BASIC_CHANNEL_KEY,
-        title: 'Test',
-        body: 'Body',
-      );
+      await util.createBasicNotification(
+          id: 1, channelKey: 'c', title: 'A', body: 'a');
+      await util.createBasicNotification(
+          id: 2, channelKey: 'c', title: 'B', body: 'b');
 
-      // Verify the callback was triggered
-      expect(triggered, true);
+      var list = await util.getNotifications();
+      expect(list.length, 2);
+
+      await util.removeNotification(1);
+      list = await util.getNotifications();
+      expect(list.length, 1);
+      expect(list.first.id, 2);
+    });
+
+    test('removeAllNotification clears storage and cancels notifications',
+        () async {
+      final fake = FakeAwesomeNotifications();
+      final util = NotificationUtil(awesomeNotifications: fake);
+
+      await util.createBasicNotification(
+          id: 7, channelKey: 'c', title: 'X', body: 'x');
+      var list = await util.getNotifications();
+      expect(list.length, 1);
+
+      await util.removeAllNotification();
+
+      list = await util.getNotifications();
+      expect(list.length, 0);
+      // check that cancelAll was invoked on the fake
+      expect(fake.cancelAllCalled || fake.cancelAllSchedulesCalled, true);
     });
   });
 }

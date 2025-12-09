@@ -7,11 +7,29 @@ import 'screens/calendar_screen.dart';
 import 'screens/progress_screen.dart';
 import 'screens/social_screen.dart';
 import 'screens/achievements_screen.dart';
-import 'screens/notification_screen.dart';
 import 'theme/app_theme.dart';
-import 'utils/responsive_helper.dart';
+import 'screens/gamebox.dart';
+import 'screens/wardrobe_screen.dart';
+import 'screens/auth_screen.dart';
+import 'screens/profile_screen.dart';
+import 'services/auth_service.dart';
+import 'services/api_service.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
+  // Print debug information at startup
+  if (kDebugMode) {
+    print('===========================================');
+    print('DEBUG MODE: YES ✅');
+    print('RELEASE MODE: NO');
+    print('BASE URL: ${ApiConfig.baseUrl}');
+    print('===========================================');
+    print('🔍 TEST: kDebugMode = $kDebugMode');
+    print('🔍 TEST: kReleaseMode = $kReleaseMode');
+    print('🔍 TEST: ApiConfig.baseUrl = ${ApiConfig.baseUrl}');
+    print('🔍 TEST: ApiConfig.journalUrl = ${ApiConfig.journalUrl}');
+    print('🔍 TEST: ApiConfig.calendarUrl = ${ApiConfig.calendarUrl}');
+  }
   runApp(const PocketPenguinApp());
 }
 
@@ -23,7 +41,7 @@ class PocketPenguinApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pocket Penguin',
       theme: AppTheme.lightTheme,
-      home: const MainScreen(),
+      home: const MainScreen(), // Always show main screen with mock data
       debugShowCheckedModeBanner: false,
     );
   }
@@ -36,21 +54,56 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+final GlobalKey<GameBoxState> gameBoxKey = GlobalKey<GameBoxState>();
+
 class _MainScreenState extends State<MainScreen> {
-  int _activeTab = 0;
+  int _activeTab = 2;
   int _fishCoins = 127;
 
   final List<TabItem> _tabs = [
-    TabItem(id: 'home', label: 'Home', icon: Icons.home),
-    TabItem(id: 'habits', label: 'Habits', icon: Icons.check_box),
-    TabItem(id: 'todo', label: 'Todo', icon: Icons.book),
-    TabItem(id: 'journal', label: 'Journal', icon: Icons.book_outlined),
-    TabItem(id: 'calendar', label: 'Calendar', icon: Icons.calendar_today),
-    TabItem(id: 'progress', label: 'Progress', icon: Icons.trending_up),
-    TabItem(id: 'social', label: 'Friends', icon: Icons.people),
-    TabItem(id: 'achievements', label: 'Awards', icon: Icons.emoji_events),
     TabItem(
-        id: 'notifcations', label: 'Notifications', icon: Icons.access_alarm),
+        id: 'habits',
+        label: 'Habits',
+        icon: Image.asset("images/icons/pockp_habits_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'wardrobe',
+        label: 'Wardrobe',
+        icon: Icon(Icons.door_sliding, size: 32)),
+    TabItem(
+        id: 'home',
+        label: 'Home',
+        icon: Image.asset("images/pockpo_house.png", width: 32, height: 32)),
+    TabItem(
+        id: 'todo',
+        label: 'Todo',
+        icon: Image.asset("images/icons/pockp_todo_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'journal',
+        label: 'Journal',
+        icon: Image.asset("images/icons/pockp_journal_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'calendar',
+        label: 'Calendar',
+        icon: Image.asset("images/icons/pockp_calendar_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'progress',
+        label: 'Progress',
+        icon: Image.asset("images/icons/pockp_progress_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'social',
+        label: 'Friends',
+        icon: Image.asset("images/icons/pockp_friends_icon.png",
+            width: 32, height: 32)),
+    TabItem(
+        id: 'achievements',
+        label: 'Awards',
+        icon: Image.asset("images/icons/pockp_awards_icon.png",
+            width: 32, height: 32)),
   ];
 
   void _updateFishCoins(int newAmount) {
@@ -61,27 +114,44 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _renderContent() {
     switch (_activeTab) {
-      case 0:
+      case 2:
         return HomeScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
       case 1:
+        return WardrobeScreen(
+          onItemSelected: (category, itemName) {
+            switch (category) {
+              case 'Hat':
+                gameBoxKey.currentState?.changeHat(itemName);
+                break;
+              case 'Clothes':
+                gameBoxKey.currentState?.changeClothes(itemName);
+                break;
+              case 'Shoes':
+                gameBoxKey.currentState?.changeShoes(itemName);
+                break;
+              case 'Background':
+                gameBoxKey.currentState?.changeBackground(itemName);
+                break;
+            }
+          },
+        );
+      case 0:
         return HabitsScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
-      case 2:
+      case 3:
         return TodoScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
-      case 3:
-        return const JournalScreen();
       case 4:
-        return const CalendarScreen();
+        return const JournalScreen();
       case 5:
-        return const ProgressScreen();
+        return const CalendarScreen();
       case 6:
-        return const SocialScreen();
+        return const ProgressScreen();
       case 7:
-        return const AchievementsScreen();
+        return const SocialScreen();
       case 8:
-        return const NotificationScreen();
+        return const AchievementsScreen();
       default:
         return HomeScreen(
             fishCoins: _fishCoins, onFishCoinsChanged: _updateFishCoins);
@@ -90,63 +160,44 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Get responsive design parameters
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final isWeb = ResponsiveHelper.isWeb(context);
-    // final isIOS = ResponsiveHelper.isIOS(context);
-    // final deviceType = ResponsiveHelper.getDeviceType(context);
-
-    // Responsive container sizing
-    final containerWidth = isWeb ? 375.0 : screenWidth;
-    final containerHeight = isWeb ? 800.0 : screenHeight;
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Center(
         child: Container(
-          width: containerWidth,
-          height: containerHeight,
-          constraints: BoxConstraints(
-            maxWidth: 500, // Maximum width for larger screens
-            maxHeight: screenHeight,
-          ),
+          width: 375, // iPhone width
+          height: 800,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [Color(0xFFE0F2FE), Color(0xFFDBEAFE)],
             ),
-            borderRadius: isWeb ? BorderRadius.circular(40) : BorderRadius.zero,
-            border:
-                isWeb ? Border.all(color: Colors.grey[800]!, width: 8) : null,
-            boxShadow: isWeb
-                ? [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ]
-                : null,
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(color: Colors.grey[800]!, width: 8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: ClipRRect(
-            borderRadius: isWeb ? BorderRadius.circular(32) : BorderRadius.zero,
+            borderRadius: BorderRadius.circular(32),
             child: Column(
               children: [
-                // Phone Notch (only for web)
-                if (isWeb)
-                  Container(
-                    width: 128,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
-                      ),
+                // Phone Notch
+                Container(
+                  width: 128,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
                     ),
                   ),
+                ),
                 // Header
                 Container(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
@@ -160,39 +211,65 @@ class _MainScreenState extends State<MainScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Icon(Icons.pets, color: Colors.blue),
-                            ),
-                            const SizedBox(width: 12),
-                            const Flexible(
-                              child: Text(
-                                'Pocket Penguin',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1E3A8A),
+                        child: GestureDetector(
+                          onTap: () async {
+                            // Create auth service instance & if user is logged in
+                            final authService = AuthService();
+                            final isLoggedIn = await authService.isLoggedIn();
+                            if (mounted) {
+                              if (isLoggedIn) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ProfileScreen(),
+                                  ),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AuthScreen(),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              // Penguin logo and text
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[100],
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                overflow: TextOverflow.ellipsis,
+                                child: Image.asset("images/logo.png",
+                                    width: 32, height: 32),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Pocket Penguin',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue[800],
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
-                          border: Border.all(color: const Color(0xFFF59E0B)),
+                          border: Border.all(
+                              color: Color.fromARGB(255, 19, 18, 16)),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -216,113 +293,169 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 // Content
+                // GameBox is kept in the tree so its state persists across tabs
+                Offstage(
+                  offstage: !(_activeTab == 1 || _activeTab == 2),
+                  child: GameBox(
+                    key: gameBoxKey,
+                    background: Image.asset(
+                        'images/backgrounds/pockp_cloud_land_theme.png'),
+                    sky: Image.asset('images/skies/pockp_day_sky_bground.png'),
+                    child: const SizedBox(),
+                  ),
+                ),
                 Expanded(
                   child: _renderContent(),
                 ),
                 // Bottom Navigation
-                Container(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(color: Colors.blue[100]!),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // First row of tabs (0-4)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: _tabs.take(5).map((tab) {
-                          final index = _tabs.indexOf(tab);
-                          final isActive = _activeTab == index;
-                          return GestureDetector(
-                            onTap: () => setState(() => _activeTab = index),
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 16,
+                  runSpacing: 8,
+                  children: _tabs.map((tab) {
+                    final index = _tabs.indexOf(tab);
+                    final isActive = _activeTab == index;
+                    return GestureDetector(
+                      onTap: () => setState(() => _activeTab = index),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color:
+                              isActive ? Colors.blue[100] : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconTheme(
+                              data: IconThemeData(
                                 color: isActive
-                                    ? Colors.blue[100]
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
+                                    ? Colors.blue[600]
+                                    : Colors.grey[500],
+                                size: 20,
                               ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    tab.icon,
-                                    size: 20,
-                                    color: isActive
-                                        ? Colors.blue[600]
-                                        : Colors.grey[500],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    tab.label,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: isActive
-                                          ? Colors.blue[600]
-                                          : Colors.grey[500],
-                                    ),
-                                  ),
-                                ],
+                              child: tab.icon,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              tab.label,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isActive
+                                    ? Colors.blue[600]
+                                    : Colors.grey[500],
                               ),
                             ),
-                          );
-                        }).toList(),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 4),
-                      // Second row of tabs (5-7)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          const SizedBox(width: 60), // Spacer for alignment
-                          ..._tabs.skip(5).map((tab) {
-                            final index = _tabs.indexOf(tab);
-                            final isActive = _activeTab == index;
-                            return GestureDetector(
-                              onTap: () => setState(() => _activeTab = index),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: isActive
-                                      ? Colors.blue[100]
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      tab.icon,
-                                      size: 20,
-                                      color: isActive
-                                          ? Colors.blue[600]
-                                          : Colors.grey[500],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      tab.label,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: isActive
-                                            ? Colors.blue[600]
-                                            : Colors.grey[500],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          const SizedBox(width: 60), // Spacer for alignment
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                    );
+                  }).toList(),
+                )
+
+                // Container(
+                //   padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     border: Border(
+                //       top: BorderSide(color: Colors.blue[100]!),
+                //     ),
+                //   ),
+                //   child: Column(
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: [
+                //       // First row of tabs (0-4)
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //         children: _tabs.take(5).map((tab) {
+                //           final index = _tabs.indexOf(tab);
+                //           final isActive = _activeTab == index;
+                //           return GestureDetector(
+                //             onTap: () => setState(() => _activeTab = index),
+                //             child: Container(
+                //               padding: const EdgeInsets.all(8),
+                //               decoration: BoxDecoration(
+                //                 color: isActive
+                //                     ? Colors.blue[100]
+                //                     : Colors.transparent,
+                //                 borderRadius: BorderRadius.circular(8),
+                //               ),
+                //               child: Column(
+                //                 mainAxisSize: MainAxisSize.min,
+                //                 children: [
+                //                   IconTheme(
+                //                     data: IconThemeData(
+                //                       color: isActive ? Colors.blue[600] : Colors.grey[500],
+                //                       size: 20,
+                //                     ),
+                //                     child: tab.icon,
+                //                   ),
+                //                   const SizedBox(height: 4),
+                //                   Text(
+                //                     tab.label,
+                //                     style: TextStyle(
+                //                       fontSize: 12,
+                //                       color: isActive
+                //                           ? Colors.blue[600]
+                //                           : Colors.grey[500],
+                //                     ),
+                //                   ),
+                //                 ],
+                //               ),
+                //             ),
+                //           );
+                //         }).toList(),
+                //       ),
+                //       const SizedBox(height: 4),
+                //       // Second row of tabs (5-7)
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //         children: [
+                //           const SizedBox(width: 60), // Spacer for alignment
+                //           ..._tabs.skip(5).map((tab) {
+                //             final index = _tabs.indexOf(tab);
+                //             final isActive = _activeTab == index;
+                //             return GestureDetector(
+                //               onTap: () => setState(() => _activeTab = index),
+                //               child: Container(
+                //                 padding: const EdgeInsets.all(8),
+                //                 decoration: BoxDecoration(
+                //                   color: isActive
+                //                       ? Colors.blue[100]
+                //                       : Colors.transparent,
+                //                   borderRadius: BorderRadius.circular(8),
+                //                 ),
+                //                 child: Column(
+                //                   mainAxisSize: MainAxisSize.min,
+                //                   children: [
+                //                     IconTheme(
+                //                       data: IconThemeData(
+                //                         color: isActive ? Colors.blue[600] : Colors.grey[500],
+                //                         size: 20,
+                //                       ),
+                //                       child: tab.icon,
+                //                     ),
+                //                     const SizedBox(height: 4),
+                //                     Text(
+                //                       tab.label,
+                //                       style: TextStyle(
+                //                         fontSize: 12,
+                //                         color: isActive
+                //                             ? Colors.blue[600]
+                //                             : Colors.grey[500],
+                //                       ),
+                //                     ),
+                //                   ],
+                //                 ),
+                //               ),
+                //             );
+                //           }).toList(),
+                //           const SizedBox(width: 60), // Spacer for alignment
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -335,9 +468,9 @@ class _MainScreenState extends State<MainScreen> {
 class TabItem {
   final String id;
   final String label;
-  final IconData icon;
+  final Widget icon;
 
-  TabItem({
+  const TabItem({
     required this.id,
     required this.label,
     required this.icon,
