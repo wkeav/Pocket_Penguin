@@ -173,7 +173,7 @@ class NotificationUtil {
 
     // Adjust the date to the next occurrence of the specified weekday
     while (scheduledDate.weekday != (notificationCalendar.weekday ?? 1)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 0));
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
     // Store the notification in preferences
