@@ -6,4 +6,3 @@ class CalendarEventSerializer(serializers.ModelSerializer):
         model = CalendarEvent
         fields = ['id', 'title', 'description', 'start_time', 'end_time']
         read_only_fields = ['id']
-
