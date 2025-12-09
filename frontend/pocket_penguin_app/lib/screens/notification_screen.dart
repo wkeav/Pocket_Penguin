@@ -525,68 +525,68 @@ class _NotificationScreenState extends State<NotificationScreen> {
             SizedBox(
               height: 400,
               child: FutureBuilder<List<app_notification.NotificationModel>>(
-              future: notificationUtil.getNotifications(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                future: notificationUtil.getNotifications(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No notifications yet',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final notification = snapshot.data![index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: Icon(
-                          notification.isScheduled
-                              ? Icons.schedule
-                              : Icons.notifications,
-                          color: AppColor.primaryColor,
-                        ),
-                        title: Text(notification.title),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(notification.body),
-                            if (notification.scheduledDateTime != null)
-                              Text(
-                                'Scheduled for: ${_formatDateTime(notification.scheduledDateTime!)}',
-                                style: const TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 12,
-                                ),
-                              ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            notificationUtil
-                                .removeNotification(notification.id);
-                            setState(() {}); // Refresh the list
-                          },
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'No notifications yet',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
                         ),
                       ),
                     );
-                  },
-                );
-              },
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final notification = snapshot.data![index];
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: ListTile(
+                          leading: Icon(
+                            notification.isScheduled
+                                ? Icons.schedule
+                                : Icons.notifications,
+                            color: AppColor.primaryColor,
+                          ),
+                          title: Text(notification.title),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(notification.body),
+                              if (notification.scheduledDateTime != null)
+                                Text(
+                                  'Scheduled for: ${_formatDateTime(notification.scheduledDateTime!)}',
+                                  style: const TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              notificationUtil
+                                  .removeNotification(notification.id);
+                              setState(() {}); // Refresh the list
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
 
             // Cancel all button at the bottom
             Padding(
