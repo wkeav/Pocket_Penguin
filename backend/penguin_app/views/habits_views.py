@@ -93,6 +93,37 @@ class HabitCompleteView(APIView):
             )
 
     @staticmethod
+    def _calculate_completion_rate(user, week_start):
+        """
+        Calculate weekly completion rate.
+        
+        completion_rate = (habits_completed / total_active_habits) * 100
+        Returns float between 0.0 and 100.0
+        """
+        # Count total active habits user had before or during this week
+        total_habits = Habit.objects.filter(
+            user=user,
+            start_date__lte=week_start,
+            is_archived=False
+        ).count()
+        
+        if total_habits == 0:
+            return 0.0
+        
+        # Get habits completed this week from Progress
+        try:
+            from penguin_app.models.progress_models import Progress as ProgressModel
+            progress = ProgressModel.objects.get(
+                profile=user.profile,
+                week_start=week_start
+            )
+            completion_rate = (progress.habits_completed / total_habits) * 100
+            return min(100.0, completion_rate)  # Cap at 100%
+        except:
+            # If Progress not found yet, return 0
+            return 0.0
+
+    @staticmethod
     def _award_coins_and_update_progress(user, habit):
         """Award coins and update weekly progress."""
         profile, _ = UserGameProfile.objects.get_or_create(user=user)
@@ -115,4 +146,11 @@ class HabitCompleteView(APIView):
         
         progress.habits_completed += 1
         progress.fish_coins_earned += habit.reward
+        
+        # Calculate and set completion rate
+        progress.completion_rate = HabitCompleteView._calculate_completion_rate(
+            user,
+            week_start
+        )
+        
         progress.save()
