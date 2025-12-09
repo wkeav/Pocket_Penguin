@@ -17,17 +17,6 @@ class GameBox extends StatefulWidget {
 }
 
 class _GameBoxState extends State<GameBox> {
-  // penguin's outfit
-  String _hat = 'none';
-  String _clothes = 'none';
-  String _shoes = 'none';
-
-  // update functions
-  void changeHat(String newHat) => setState(() => _hat = newHat);
-  void changeClothes(String newClothes) =>
-      setState(() => _clothes = newClothes);
-  void changeShoes(String newShoes) => setState(() => _shoes = newShoes);
-
   @override
   Widget build(BuildContext context) {
     return Container(
