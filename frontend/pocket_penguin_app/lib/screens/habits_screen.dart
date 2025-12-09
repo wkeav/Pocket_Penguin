@@ -148,50 +148,6 @@ class _HabitsScreenState extends State<HabitsScreen> {
     }
   }
 
-  /// Mark habit as completed for today and award coins
-  Future<void> _completeHabitForToday(String? habitId) async {
-    if (habitId == null || useMockData) return;
-
-    final habitIndex = habits.indexWhere((h) => h.id == habitId);
-    if (habitIndex == -1) return;
-
-    final habit = habits[habitIndex];
-
-    try {
-      // Call the completion endpoint
-      final response = await HabitApi.completeHabitEndpoint(habitId);
-
-      if (mounted) {
-        // Update habit with server response
-        setState(() {
-          habits[habitIndex] = response['habit'];
-        });
-
-        // Award coins if this was a new completion
-        if (response['new_completion'] == true) {
-          final coinsEarned =
-              (response['coins_earned'] as int?) ?? habit.reward;
-          widget.onFishCoinsChanged(widget.fishCoins + coinsEarned);
-
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('🎉 Completed! Earned +$coinsEarned coins'),
-                duration: const Duration(seconds: 2),
-              ),
-            );
-          }
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to complete: $e')),
-        );
-      }
-    }
-  }
-
   Future<void> _createNewHabit() async {
     showDialog(
       context: context,
