@@ -442,166 +442,134 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColor.primaryColor,
-        title: const Wrap(
-          spacing: 8,
-          children: [
-            Icon(
-              CupertinoIcons.rocket,
-              color: Colors.white,
-            ),
-            Text(
-              'Notifications',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const StatsPage(),
-              ),
-            ),
-            icon: const Icon(
-              CupertinoIcons.chart_bar_square,
-              color: Colors.white,
-            ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Top section with image and buttons
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  if (isTimeSelected) ...[
-                    CustomRichText(
-                      title: 'Current Day: ',
-                      content: selectedNotificationDay,
-                    ),
-                    const SizedBox(height: 10),
-                    CustomRichText(
-                      title: 'Current Time: ',
-                      content: selectedTime.format(context),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                  Image.asset("images/icons/pockp_awards_icon.png",
-                      width: 128, height: 128),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomElevatedButton(
-                          function:
-                              triggerScheduleNotification, //showBasicNotificationDialog,
-                          title: 'Basic Notification',
-                          icon: Icons.notifications,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: CustomElevatedButton(
-                          function: triggerScheduleNotification,
-                          title: 'Schedule',
-                          icon: Icons.schedule,
-                        ),
-                      ),
-                    ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Top section with image and buttons
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                if (isTimeSelected) ...[
+                  CustomRichText(
+                    title: 'Current Day: ',
+                    content: selectedNotificationDay,
                   ),
+                  const SizedBox(height: 10),
+                  CustomRichText(
+                    title: 'Current Time: ',
+                    content: selectedTime.format(context),
+                  ),
+                  const SizedBox(height: 10),
                 ],
-              ),
+                Image.asset("images/icons/pockp_awards_icon.png",
+                    width: 128, height: 128),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomElevatedButton(
+                        function:
+                            triggerScheduleNotification, //showBasicNotificationDialog,
+                        title: 'Basic Notification',
+                        icon: Icons.notifications,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: CustomElevatedButton(
+                        function: triggerScheduleNotification,
+                        title: 'Schedule',
+                        icon: Icons.schedule,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
+          ),
 
-            // Notifications list
-            SizedBox(
-              height: 400,
-              child: FutureBuilder<List<app_notification.NotificationModel>>(
-                future: notificationUtil.getNotifications(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+          // Notifications list
+          SizedBox(
+            height: 400,
+            child: FutureBuilder<List<app_notification.NotificationModel>>(
+              future: notificationUtil.getNotifications(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        'No notifications yet',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No notifications yet',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    final notification = snapshot.data![index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      child: ListTile(
+                        leading: Icon(
+                          notification.isScheduled
+                              ? Icons.schedule
+                              : Icons.notifications,
+                          color: AppColor.primaryColor,
+                        ),
+                        title: Text(notification.title),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(notification.body),
+                            if (notification.scheduledDateTime != null)
+                              Text(
+                                'Scheduled for: ${_formatDateTime(notification.scheduledDateTime!)}',
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 12,
+                                ),
+                              ),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            notificationUtil
+                                .removeNotification(notification.id);
+                            setState(() {}); // Refresh the list
+                          },
                         ),
                       ),
                     );
-                  }
-
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final notification = snapshot.data![index];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: ListTile(
-                          leading: Icon(
-                            notification.isScheduled
-                                ? Icons.schedule
-                                : Icons.notifications,
-                            color: AppColor.primaryColor,
-                          ),
-                          title: Text(notification.title),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(notification.body),
-                              if (notification.scheduledDateTime != null)
-                                Text(
-                                  'Scheduled for: ${_formatDateTime(notification.scheduledDateTime!)}',
-                                  style: const TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              notificationUtil
-                                  .removeNotification(notification.id);
-                              setState(() {}); // Refresh the list
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+                  },
+                );
+              },
             ),
+          ),
 
-            // Cancel all button at the bottom
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CustomElevatedButton(
-                function: () {
-                  triggerCancelNotification();
-                  setState(() {}); // Refresh the list
-                },
-                title: 'Cancel All Notifications',
-                icon: Icons.cancel,
-              ),
+          // Cancel all button at the bottom
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CustomElevatedButton(
+              function: () {
+                triggerCancelNotification();
+                setState(() {}); // Refresh the list
+              },
+              title: 'Cancel All Notifications',
+              icon: Icons.cancel,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
