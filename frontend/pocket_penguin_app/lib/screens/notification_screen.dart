@@ -474,55 +474,57 @@ class _NotificationScreenState extends State<NotificationScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          // Top section with image and buttons
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                if (isTimeSelected) ...[
-                  CustomRichText(
-                    title: 'Current Day: ',
-                    content: selectedNotificationDay,
-                  ),
-                  const SizedBox(height: 10),
-                  CustomRichText(
-                    title: 'Current Time: ',
-                    content: selectedTime.format(context),
-                  ),
-                  const SizedBox(height: 10),
-                ],
-                Image.asset("images/icons/pockp_awards_icon.png",
-                    width: 128, height: 128),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomElevatedButton(
-                        function:
-                            triggerScheduleNotification, //showBasicNotificationDialog,
-                        title: 'Basic Notification',
-                        icon: Icons.notifications,
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Top section with image and buttons
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  if (isTimeSelected) ...[
+                    CustomRichText(
+                      title: 'Current Day: ',
+                      content: selectedNotificationDay,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: CustomElevatedButton(
-                        function: triggerScheduleNotification,
-                        title: 'Schedule',
-                        icon: Icons.schedule,
-                      ),
+                    const SizedBox(height: 10),
+                    CustomRichText(
+                      title: 'Current Time: ',
+                      content: selectedTime.format(context),
                     ),
+                    const SizedBox(height: 10),
                   ],
-                ),
-              ],
+                  Image.asset("images/icons/pockp_awards_icon.png",
+                      width: 128, height: 128),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomElevatedButton(
+                          function:
+                              triggerScheduleNotification, //showBasicNotificationDialog,
+                          title: 'Basic Notification',
+                          icon: Icons.notifications,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: CustomElevatedButton(
+                          function: triggerScheduleNotification,
+                          title: 'Schedule',
+                          icon: Icons.schedule,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Notifications list
-          Expanded(
-            child: FutureBuilder<List<app_notification.NotificationModel>>(
+            // Notifications list
+            SizedBox(
+              height: 400,
+              child: FutureBuilder<List<app_notification.NotificationModel>>(
               future: notificationUtil.getNotifications(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -586,19 +588,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
           ),
 
-          // Cancel all button at the bottom
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: CustomElevatedButton(
-              function: () {
-                triggerCancelNotification();
-                setState(() {}); // Refresh the list
-              },
-              title: 'Cancel All Notifications',
-              icon: Icons.cancel,
+            // Cancel all button at the bottom
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CustomElevatedButton(
+                function: () {
+                  triggerCancelNotification();
+                  setState(() {}); // Refresh the list
+                },
+                title: 'Cancel All Notifications',
+                icon: Icons.cancel,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

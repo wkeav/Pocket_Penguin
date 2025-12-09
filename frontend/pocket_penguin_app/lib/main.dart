@@ -107,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
             width: 32, height: 32)),
     TabItem(
         id: 'notifications',
-        label: 'Notifications',
+        label: 'Alerts',
         icon: Icon(Icons.access_alarm, size: 32)),
   ];
 
@@ -317,15 +317,15 @@ class _MainScreenState extends State<MainScreen> {
                 // Bottom Navigation
                 Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 16,
-                  runSpacing: 8,
+                  spacing: 10,
+                  runSpacing: 4,
                   children: _tabs.map((tab) {
                     final index = _tabs.indexOf(tab);
                     final isActive = _activeTab == index;
                     return GestureDetector(
                       onTap: () => setState(() => _activeTab = index),
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color:
                               isActive ? Colors.blue[100] : Colors.transparent,
@@ -339,15 +339,15 @@ class _MainScreenState extends State<MainScreen> {
                                 color: isActive
                                     ? Colors.blue[600]
                                     : Colors.grey[500],
-                                size: 20,
+                                size: 18,
                               ),
                               child: tab.icon,
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               tab.label,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: isActive
                                     ? Colors.blue[600]
                                     : Colors.grey[500],
