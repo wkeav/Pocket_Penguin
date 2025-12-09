@@ -49,7 +49,8 @@ class _MainScreenState extends State<MainScreen> {
     TabItem(id: 'progress', label: 'Progress', icon: Icons.trending_up),
     TabItem(id: 'social', label: 'Friends', icon: Icons.people),
     TabItem(id: 'achievements', label: 'Awards', icon: Icons.emoji_events),
-    TabItem(id: 'notifcations', label: 'Notifications', icon: Icons.access_alarm),
+    TabItem(
+        id: 'notifcations', label: 'Notifications', icon: Icons.access_alarm),
   ];
 
   void _updateFishCoins(int newAmount) {

@@ -28,16 +28,18 @@ class NotificationUtil {
   }
 
   // Store a notification
-  Future<void> _storeNotification(app_notification.NotificationModel notification) async {
+  Future<void> _storeNotification(
+      app_notification.NotificationModel notification) async {
     final prefs = await SharedPreferences.getInstance();
-    List<app_notification.NotificationModel> notifications = await getNotifications();
+    List<app_notification.NotificationModel> notifications =
+        await getNotifications();
     notifications.add(notification);
-    
+
     await prefs.setString(
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
     );
-    
+
     // Trigger UI update callback if set
     onNotificationListChanged?.call();
   }
@@ -45,13 +47,14 @@ class NotificationUtil {
   // Remove a notification
   Future<void> removeNotification(int id) async {
     final prefs = await SharedPreferences.getInstance();
-    List<app_notification.NotificationModel> notifications = await getNotifications();
+    List<app_notification.NotificationModel> notifications =
+        await getNotifications();
     notifications.removeWhere((n) => n.id == id);
     await prefs.setString(
       _notificationsKey,
       jsonEncode(notifications.map((n) => n.toMap()).toList()),
     );
-    
+
     // Trigger UI update callback if set
     onNotificationListChanged?.call();
   }
@@ -205,13 +208,13 @@ class NotificationUtil {
 
     // Optionally show feedback
     awesomeNotifications.cancelAllSchedules().then((value) => {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cancelled all scheduled notifications'),
-          backgroundColor: AppColor.primaryColor,
-        ),
-      )
-    });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cancelled all scheduled notifications'),
+              backgroundColor: AppColor.primaryColor,
+            ),
+          )
+        });
   }
 
   /// Requests permission from the user to send notifications. This is crucial for Android 13+ and iOS.
@@ -249,7 +252,7 @@ class NotificationUtil {
     // This is especially important for basic notifications that are shown immediately
     final prefs = await SharedPreferences.getInstance();
     final String? notificationsJson = prefs.getString(_notificationsKey);
-    
+
     List<app_notification.NotificationModel> notifications = [];
     if (notificationsJson != null) {
       List<dynamic> notificationsList = jsonDecode(notificationsJson);
@@ -257,10 +260,11 @@ class NotificationUtil {
           .map((item) => app_notification.NotificationModel.fromMap(item))
           .toList();
     }
-    
+
     // Check if this notification is already stored
-    bool alreadyStored = notifications.any((n) => n.id == receivedNotification.id);
-    
+    bool alreadyStored =
+        notifications.any((n) => n.id == receivedNotification.id);
+
     // If not already stored (shouldn't happen for properly created notifications, but ensures visibility)
     if (!alreadyStored) {
       notifications.add(
@@ -268,20 +272,21 @@ class NotificationUtil {
           id: receivedNotification.id ?? 0,
           title: receivedNotification.title ?? 'Notification',
           body: receivedNotification.body ?? '',
-          channelKey: receivedNotification.channelKey ?? AppStrings.BASIC_CHANNEL_KEY,
+          channelKey:
+              receivedNotification.channelKey ?? AppStrings.BASIC_CHANNEL_KEY,
           isScheduled: false,
         ),
       );
-      
+
       await prefs.setString(
         _notificationsKey,
         jsonEncode(notifications.map((n) => n.toMap()).toList()),
       );
-      
+
       // Trigger UI update callback if set
       onNotificationListChanged?.call();
     }
-    
+
     // Trigger popup callback for scheduled notifications hitting their deadline
     // Note: This only works if the app is in the foreground
     if (receivedNotification.channelKey == AppStrings.SCHEDULE_CHANNEL_KEY) {
@@ -310,7 +315,7 @@ class NotificationUtil {
     // Ensure the notification is stored when it's clicked
     final prefs = await SharedPreferences.getInstance();
     final String? notificationsJson = prefs.getString(_notificationsKey);
-    
+
     List<app_notification.NotificationModel> notifications = [];
     if (notificationsJson != null) {
       List<dynamic> notificationsList = jsonDecode(notificationsJson);
@@ -318,10 +323,10 @@ class NotificationUtil {
           .map((item) => app_notification.NotificationModel.fromMap(item))
           .toList();
     }
-    
+
     // Check if this notification is already stored
     bool alreadyStored = notifications.any((n) => n.id == receivedAction.id);
-    
+
     // If not already stored, add it to ensure it's visible
     if (!alreadyStored) {
       notifications.add(
@@ -333,16 +338,16 @@ class NotificationUtil {
           isScheduled: false,
         ),
       );
-      
+
       await prefs.setString(
         _notificationsKey,
         jsonEncode(notifications.map((n) => n.toMap()).toList()),
       );
-      
+
       // Trigger UI update callback if set
       onNotificationListChanged?.call();
     }
-    
+
     // Trigger popup for scheduled notifications when clicked
     if (receivedAction.channelKey == AppStrings.SCHEDULE_CHANNEL_KEY) {
       onNotificationDisplayedCallback?.call(
@@ -350,7 +355,7 @@ class NotificationUtil {
         receivedAction.body ?? '',
       );
     }
-    
+
     // Reducing icon badge count on iOS when a basic notification is tapped/acted upon.
     // This is important for maintaining accurate badge counts.
     if (receivedAction.channelKey == AppStrings.BASIC_CHANNEL_KEY &&
@@ -369,5 +374,5 @@ class NotificationUtil {
         (route) => route.isFirst);
   }
 */
-
-      } }
+  }
+}

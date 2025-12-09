@@ -32,17 +32,17 @@ class StatsPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               StatsContainer(
+              StatsContainer(
                 icon: Icons.notifications,
                 stat: '10', // Dummy data for demonstration
               ),
               const SizedBox(height: 20),
-               StatsContainer(
+              StatsContainer(
                 icon: Icons.schedule,
                 stat: '5', // Dummy data for demonstration
               ),
               const SizedBox(height: 20),
-               StatsContainer(
+              StatsContainer(
                 icon: Icons.cancel,
                 stat: '2', // Dummy data for demonstration
               ),

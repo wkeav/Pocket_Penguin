@@ -27,7 +27,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   bool isTimeSelected = false;
   late NotificationUtil notificationUtil;
   final TextEditingController _customNameController = TextEditingController();
-  final TextEditingController _customDescriptionController = TextEditingController();
+  final TextEditingController _customDescriptionController =
+      TextEditingController();
   Timer? _notificationCheckTimer;
   Set<int> _shownNotificationIds = {};
 
@@ -51,7 +52,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void showBasicNotificationDialog() {
     _customNameController.clear();
     _customDescriptionController.clear();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -100,13 +101,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   // Function to create a basic notification
   void createBasicNotification() {
-    final customName = _customNameController.text.trim().isEmpty 
-        ? null 
+    final customName = _customNameController.text.trim().isEmpty
+        ? null
         : _customNameController.text.trim();
-    final customDescription = _customDescriptionController.text.trim().isEmpty 
-        ? null 
+    final customDescription = _customDescriptionController.text.trim().isEmpty
+        ? null
         : _customDescriptionController.text.trim();
-    
+
     notificationUtil.createBasicNotification(
       id: createUniqueId(), // Get a unique ID for this notification
       channelKey: AppStrings.BASIC_CHANNEL_KEY,
@@ -128,7 +129,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void triggerScheduleNotification() {
     _customNameController.clear();
     _customDescriptionController.clear();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -195,7 +196,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     int index = day.key;
                     setState(() {
                       selectedNotificationDay = day.value;
-                      selectedDayOfTheWeek = index + 1; // Weekday is 1-indexed (Sunday is 1, Monday is 2, etc.)
+                      selectedDayOfTheWeek = index +
+                          1; // Weekday is 1-indexed (Sunday is 1, Monday is 2, etc.)
                     });
                     Navigator.of(context).pop(); // Close day selection dialog
                     pickTime(); // Then, prompt for time selection
@@ -216,19 +218,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   // Function to create the actual scheduled notification after day and time are selected
   void createScheduleNotification() {
-    final customName = _customNameController.text.trim().isEmpty 
-        ? null 
+    final customName = _customNameController.text.trim().isEmpty
+        ? null
         : _customNameController.text.trim();
-    final customDescription = _customDescriptionController.text.trim().isEmpty 
-        ? null 
+    final customDescription = _customDescriptionController.text.trim().isEmpty
+        ? null
         : _customDescriptionController.text.trim();
-    
+
     notificationUtil.createScheduledNotification(
       id: createUniqueId(),
       channelKey: AppStrings.SCHEDULE_CHANNEL_KEY,
       title: '${Emojis.time_alarm_clock} Check your habit!',
-      body:
-          'The Lords are enterining.',
+      body: 'The Lords are enterining.',
       layout: NotificationLayout.Default,
       notificationCalendar: NotificationCalendar(
         hour: selectedTime.hour,
@@ -265,26 +266,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
   // Function to check if any scheduled notifications should trigger now
   Future<void> _checkScheduledNotifications() async {
     if (!mounted) return;
-    
+
     final notifications = await notificationUtil.getNotifications();
     final now = DateTime.now();
-    
+
     for (var notification in notifications) {
-      if (notification.isScheduled && 
+      if (notification.isScheduled &&
           notification.scheduledDateTime != null &&
           !_shownNotificationIds.contains(notification.id)) {
-        
         final scheduledTime = notification.scheduledDateTime!;
-        
+
         // Check if current time matches scheduled time (within 1 minute tolerance)
         final timeDifference = now.difference(scheduledTime).abs();
-        
-        if (timeDifference.inMinutes < 1 && 
-            now.hour == scheduledTime.hour && 
+
+        if (timeDifference.inMinutes < 1 &&
+            now.hour == scheduledTime.hour &&
             now.minute == scheduledTime.minute) {
-          
           _shownNotificationIds.add(notification.id);
-          
+
           if (mounted) {
             customAlertDialog(
               title: 'Notification Time!',
@@ -335,7 +334,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
       if (!isAllowed) {
         customAlertDialog(
           title: 'Allow notifications',
-          content: 'Rocket App needs access to notifications to send you timely updates and reminders.',
+          content:
+              'Rocket App needs access to notifications to send you timely updates and reminders.',
           context: context,
           action: requestPermission,
           button1Title: 'Allow',
@@ -345,7 +345,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
     });
 
     // Start timer to check for scheduled notifications every minute
-    _notificationCheckTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    _notificationCheckTimer =
+        Timer.periodic(const Duration(seconds: 5), (timer) async {
       await _checkScheduledNotifications();
     });
 
@@ -419,7 +420,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
       onActionReceivedMethod: NotificationUtil.onActionReceivedMethod,
       onDismissActionReceivedMethod: (ReceivedAction receivedAction) =>
           NotificationUtil.onDismissActionReceivedMethod(receivedAction),
-      onNotificationDisplayedMethod: (ReceivedNotification receivedNotification) =>
+      onNotificationDisplayedMethod: (ReceivedNotification
+              receivedNotification) =>
           NotificationUtil.onNotificationDisplayedMethod(receivedNotification),
     );
   }
@@ -491,13 +493,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   const SizedBox(height: 10),
                 ],
-                Image.asset("images/icons/pockp_awards_icon.png", width: 128, height: 128),
+                Image.asset("images/icons/pockp_awards_icon.png",
+                    width: 128, height: 128),
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
                       child: CustomElevatedButton(
-                        function: triggerScheduleNotification,//showBasicNotificationDialog,
+                        function:
+                            triggerScheduleNotification, //showBasicNotificationDialog,
                         title: 'Basic Notification',
                         icon: Icons.notifications,
                       ),
@@ -515,7 +519,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ],
             ),
           ),
-          
+
           // Notifications list
           Expanded(
             child: FutureBuilder<List<app_notification.NotificationModel>>(
@@ -524,7 +528,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
+
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                     child: Text(
@@ -569,7 +573,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         trailing: IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
-                            notificationUtil.removeNotification(notification.id);
+                            notificationUtil
+                                .removeNotification(notification.id);
                             setState(() {}); // Refresh the list
                           },
                         ),
@@ -580,7 +585,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          
+
           // Cancel all button at the bottom
           Padding(
             padding: const EdgeInsets.all(16.0),
