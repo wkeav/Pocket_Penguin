@@ -58,16 +58,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (loginResult['success'] == true && mounted) {
-        // Navigate back to main screen (pop auth screen)
-        Navigator.of(context).pop();
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful! You are now logged in.'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
-        );
+        // Navigate back to main screen with success result
+        Navigator.of(context).pop(true);
       } else {
         setState(() {
           _errorMessage = 'Registration successful! Please login.';
