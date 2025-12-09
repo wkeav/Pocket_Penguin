@@ -31,8 +31,7 @@ class JournalApi {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // Handle paginated response from Django REST Framework
-      // DRF returns {"count": n, "results": [...]}, but we only need the results array
+      // Handle paginated response (DRF pagination returns {results: [...]})
       final List jsonList =
           data is Map && data.containsKey('results') ? data['results'] : data;
       return jsonList.map((e) => JournalEntry.fromJson(e)).toList();

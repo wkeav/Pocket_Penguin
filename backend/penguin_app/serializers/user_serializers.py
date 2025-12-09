@@ -170,20 +170,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
                     "Please enter a valid date of birth."
                 )
         return value 
-
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """Custom serializer that uses email instead of username for login."""
-    
-    username_field = 'email'  # Use email instead of username
-    
-    def validate(self, attrs):
-        # Convert email to lowercase for case-insensitive login
-        if 'email' in attrs:
-            attrs['email'] = attrs['email'].lower().strip()
-        
-        # This will use email to find the user
-        data = super().validate(attrs)
-        return data
         
 class UserGameProfileSerializer(serializers.ModelSerializer):
     """Serializer for reading user game profile data."""
@@ -201,7 +187,35 @@ class UserGameProfileSerializer(serializers.ModelSerializer):
             'updated_at'
         ]
         read_only_fields = ['created_at', 'updated_at']  # Timestamps are auto-generated
-        
-        
-        
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """Custom serializer that uses email instead of username for login."""
     
+    username_field = 'email'  # Use email instead of username
+    
+    def validate(self, attrs):
+        # Convert email to lowercase for case-insensitive login
+        if 'email' in attrs:
+            attrs['email'] = attrs['email'].lower().strip()
+        
+        # Check if user exists first to provide better error messages
+        try:
+            user = User.objects.get(email=attrs['email'])
+            if not user.is_active:
+                raise serializers.ValidationError({
+                    'detail': 'This account has been deactivated. Please contact support.'
+                })
+        except User.DoesNotExist:
+            raise serializers.ValidationError({
+                'detail': 'No account found with this email address. Please check your email or sign up for a new account.'
+            })
+        
+        # Try to authenticate with password
+        try:
+            data = super().validate(attrs)
+            return data
+        except Exception:
+            # If validation fails, it's likely a wrong password
+            raise serializers.ValidationError({
+                'detail': 'Incorrect password. Please try again or use "Forgot Password" to reset it.'
+            })
