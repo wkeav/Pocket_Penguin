@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from penguin_app.models.habit_models import Habit
 
@@ -15,6 +16,8 @@ class HabitSerializer(serializers.ModelSerializer):
     title = serializers.CharField(source='name')
     targetValue = serializers.IntegerField(source='daily_goal')
     currentValue = serializers.IntegerField(source='today_count')
+    icon = serializers.CharField(required=False, allow_blank=True)
+    unit = serializers.CharField(required=False, allow_blank=True)
 
     # Computed progress (today_count / daily_goal)
     progress = serializers.SerializerMethodField(read_only=True)
@@ -69,7 +72,6 @@ class HabitSerializer(serializers.ModelSerializer):
         "Return 7-day completion history (placeholder: all false for now)."
         # TODO: Implement actual week progress tracking from database
         # For now, return array based on whether completed today
-        from django.utils import timezone
         today = timezone.now().date()
         
         # Simple placeholder: mark today as completed if goal met

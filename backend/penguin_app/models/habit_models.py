@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 from django.utils import timezone
 import uuid
@@ -157,8 +158,6 @@ class Habit(models.Model):
         If completed yesterday or today, increment streak.
         If gap in completion, reset to 1.
         """
-        from datetime import timedelta
-        
         if completion_date is None:
             completion_date = timezone.now().date()
         
@@ -171,12 +170,10 @@ class Habit(models.Model):
             if days_diff == 1:
                 # Consecutive day - increment streak
                 self.streak += 1
-            elif days_diff == 0:
-                # Same day - don't change streak
-                pass
-            else:
+            elif days_diff > 1:
                 # Gap in completion - reset to 1
                 self.streak = 1
+            # If days_diff == 0, don't change streak
         
         return self.streak
 
