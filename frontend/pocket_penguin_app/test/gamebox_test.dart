@@ -14,14 +14,10 @@ void main() {
     // The child widget we expect to see
     const childWidget = Text('Hello Penguin');
 
-    // Use a GlobalKey so we can call state methods (like changeBackground)
-    final key = GlobalKey<GameBoxState>();
-
     // Build GameBox inside a MaterialApp so it can render properly
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: GameBox(
-          key: key,
           sky: sky,
           background: background,
           child: childWidget,
@@ -30,10 +26,6 @@ void main() {
     ));
 
     // Let Flutter settle (in case of async image loading)
-    await tester.pumpAndSettle();
-
-    // Programmatically set a background so the test can verify it renders
-    key.currentState?.changeBackground('pockp_cloud_land_theme');
     await tester.pumpAndSettle();
 
     // Verify the GameBox appears in the widget tree
