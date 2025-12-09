@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('penguin_app', '0005_alter_calendarevent_id'),
+        ('penguin_app', '0002_progress_model'),
     ]
 
     operations = [
