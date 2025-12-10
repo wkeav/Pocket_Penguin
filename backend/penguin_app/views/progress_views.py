@@ -37,6 +37,32 @@ class MonthlyProgressView(APIView):
 
         today = timezone.localdate()
         month_start = today.replace(day=1)
+        # Get user's fish coins
+        fish_coins = profile.fish_coins
+
+        # Get user's habits
+        from penguin_app.models.habit_models import Habit
+        habits = Habit.objects.filter(user=user)
+        habits_data = [
+            {
+                'id': str(habit.id),
+                'name': habit.name,
+                'description': habit.description,
+            }
+            for habit in habits
+        ]
+
+        # Existing progress summary (example, you may want to adjust fields)
+        progress_summary = Progress.objects.filter(profile=profile, week_start__gte=month_start).aggregate(
+            habits_completed=Sum('habits_completed'),
+            fish_coins_earned=Sum('fish_coins_earned'),
+        )
+
+        return Response({
+            'fish_coins': fish_coins,
+            'habits': habits_data,
+            'progress': progress_summary,
+        })
 
         # all weekly rows whose week_start is in the current month
         qs = Progress.objects.filter(

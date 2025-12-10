@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../services/progress_service.dart';
 
 class PixelBorder extends StatelessWidget {
   final Widget child;
@@ -95,22 +96,35 @@ class _ProgressScreenState extends State<ProgressScreen>
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  final Map<TimePeriod, Map<String, List<dynamic>>> _chartData = {
-    TimePeriod.weekly: {
-      'habits': <double>[0.8, 0.6, 1.0, 0.4, 0.9, 0.3, 0.7],
-      'todos': <double>[0.5, 1.0, 0.7, 0.8, 0.6, 0.4, 0.9],
-      'labels': <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      'habitSummary': <dynamic>['21/35', 0.6],
-      'todoSummary': <dynamic>['8/12', 0.67],
-    },
-    TimePeriod.monthly: {
-      'habits': <double>[0.9, 0.7, 0.8, 0.5],
-      'todos': <double>[0.6, 0.9, 0.5, 0.8],
-      'labels': <String>['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4'],
-      'habitSummary': <dynamic>['89/120', 0.74],
-      'todoSummary': <dynamic>['23/35', 0.66],
-    },
-  };
+  int _fishCoins = 0;
+  List<dynamic> _habits = [];
+  Map<String, dynamic> _progress = {};
+  bool _loading = true;
+  String? _error;
+
+
+  Future<void> _fetchMonthlyProgress() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      // TODO: Replace with actual token retrieval
+      const token = 'YOUR_AUTH_TOKEN';
+      final data = await ProgressApi.fetchMonthlyProgress(token);
+      setState(() {
+        _fishCoins = data['fish_coins'] ?? 0;
+        _habits = data['habits'] ?? [];
+        _progress = data['progress'] ?? {};
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _loading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -146,12 +160,6 @@ class _ProgressScreenState extends State<ProgressScreen>
 
   @override
   Widget build(BuildContext context) {
-    final data = _chartData[_selectedPeriod]!;
-    final chartLabels = data['labels'] as List<String>;
-    final habitData = data['habits'] as List<double>;
-    final todoData = data['todos'] as List<double>;
-    final habitSummary = data['habitSummary'] as List<dynamic>;
-    final todoSummary = data['todoSummary'] as List<dynamic>;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -167,23 +175,7 @@ class _ProgressScreenState extends State<ProgressScreen>
               children: [
                 _buildProgressHeaderWithToggle(),
                 const SizedBox(height: 16),
-                _buildAnimatedBarChart(chartLabels, habitData, todoData),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    _buildAnimatedStatProgressBar(
-                        'Habits',
-                        habitSummary[0] as String,
-                        habitSummary[1] as double,
-                        Colors.green),
-                    const SizedBox(width: 16),
-                    _buildAnimatedStatProgressBar(
-                        'Todos',
-                        todoSummary[0] as String,
-                        todoSummary[1] as double,
-                        Colors.blue),
-                  ],
-                ),
+                // You can add new widgets here to visualize progress data from _progress if desired
               ],
             ),
           ),
@@ -325,13 +317,11 @@ class _ProgressScreenState extends State<ProgressScreen>
   }
 
   Widget _buildAnimatedHabitCompletionChart() {
-    final habits = [
-      HabitProgress('Water', 0.8, Colors.blue),
-      HabitProgress('Exercise', 0.6, Colors.green),
-      HabitProgress('Meditation', 0.9, Colors.purple),
-      HabitProgress('Reading', 0.4, Colors.orange),
-      HabitProgress('Steps', 0.7, Colors.red),
-    ];
+    final habits = _habits.isNotEmpty
+        ? _habits.map((h) => HabitProgress(h['name'] ?? 'Habit', 1.0, Colors.green)).toList()
+        : [
+            HabitProgress('No habits found', 0.0, Colors.grey),
+          ];
 
     return ArcticCard(
       child: Column(
@@ -426,7 +416,7 @@ class _ProgressScreenState extends State<ProgressScreen>
           Row(
             children: [
               _buildStatCard(
-                '127',
+                _fishCoins.toString(),
                 'Fish Coins',
                 Colors.amber,
                 PocketPenguinIcons.fishcoin,
