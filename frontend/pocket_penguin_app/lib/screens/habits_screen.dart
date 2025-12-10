@@ -183,48 +183,22 @@ class _HabitsScreenState extends State<HabitsScreen> {
   }
 
   Future<void> _addHabit(Habit newHabit) async {
-    if (useMockData) {
-      // Add to mock data with a generated ID
-      final habitWithId = Habit(
-        id: 'mock-${DateTime.now().millisecondsSinceEpoch}',
-        title: newHabit.title,
-        description: newHabit.description,
-        icon: newHabit.icon,
-        targetValue: newHabit.targetValue,
-        unit: newHabit.unit,
-        currentValue: newHabit.currentValue,
-        reward: newHabit.reward,
-        category: newHabit.category,
-        emoji: newHabit.emoji,
-        color: newHabit.color,
-        schedule: newHabit.schedule,
-        streak: newHabit.streak,
-        weekProgress: newHabit.weekProgress,
-      );
-      setState(() {
-        habits.add(habitWithId);
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Habit "${newHabit.title}" added!')),
-      );
-    } else {
-      // Create via API
-      try {
-        final createdHabit = await HabitApi.createHabit(newHabit);
-        if (mounted) {
-          setState(() {
-            habits.add(createdHabit);
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Habit created successfully!')),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to create habit: $e')),
-          );
-        }
+    // Always try to create via API
+    try {
+      final createdHabit = await HabitApi.createHabit(newHabit);
+      if (mounted) {
+        setState(() {
+          habits.add(createdHabit);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Habit created successfully!')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create habit: $e')),
+        );
       }
     }
   }
@@ -288,44 +262,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          // Data Source Banner
-          if (useMockData)
-            Container(
-              padding: const EdgeInsets.all(12),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue[200]!),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info, color: Colors.blue[600], size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Using mock data',
-                      style: TextStyle(
-                        color: Colors.blue[800],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: _loadHabitsFromAPI,
-                    icon: const Icon(Icons.cloud_download, size: 16),
-                    label: const Text('Load API'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          else if (errorMessage != null)
+          // Error Banner
+          if (errorMessage != null)
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 16),
