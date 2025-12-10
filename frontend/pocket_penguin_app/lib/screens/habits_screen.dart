@@ -78,6 +78,15 @@ class _HabitsScreenState extends State<HabitsScreen> {
         });
       }
     }
+  }
+
+  // Call this after user logs in to refresh habits
+  void onUserLoggedIn(String token) async {
+    setState(() {
+      userToken = token;
+    });
+    await _initializeHabits();
+  }
         // Call this after user logs in to refresh habits
         void onUserLoggedIn(String token) async {
           setState(() {
