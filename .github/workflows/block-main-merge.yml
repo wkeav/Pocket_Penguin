@@ -6,6 +6,7 @@ on:
       - main
 
 jobs:
+<<<<<<< HEAD
   block-main-merge:
     runs-on: ubuntu-latest
     steps:
@@ -16,3 +17,19 @@ jobs:
             exit 1
           fi
         shell: bash
+=======
+  check-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check for merge commits from main
+        run: |
+          git fetch origin main
+          # Find merge commits from main into this branch
+          if git log --merges --pretty=format:"%P" origin/main..HEAD | grep -q "$(git rev-parse origin/main)"; then
+            echo "Merge commit from main detected. Please rebase instead of merging main."
+            exit 1
+          fi
+>>>>>>> origin/main
