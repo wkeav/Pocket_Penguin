@@ -1,0 +1,18 @@
+name: Block main merges into feature branches
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  block-main-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail PR if source is main
+        run: |
+          if [[ "${{ github.head_ref }}" == "main" ]]; then
+            echo "Merging from main into feature branches is blocked."
+            exit 1
+          fi
+        shell: bash
