@@ -13,6 +13,7 @@ from .views.user_views import RegisterView, LoginView, CurrentUserView, CurrentU
 from .views.journal_views import JournalEntryListCreateView, JournalEntryDetailView
 from penguin_app.views.progress_views import WeeklyProgressView, MonthlyProgressView, AllTimeProgressView
 from .views.calendar_views import CalendarEventListCreate, CalendarEventRetrieveUpdateDestroy
+from .views.habits_views import HabitListCreateView, HabitDetailView, HabitCompleteView
 
 app_name = 'penguin_app'
 
@@ -39,5 +40,10 @@ urlpatterns = [
     # Calendar Events
     path('calendar/events/', CalendarEventListCreate.as_view(), name='calendar-list-create'),
     path('calendar/events/<uuid:pk>/', CalendarEventRetrieveUpdateDestroy.as_view(), name='calendar-detail'),
+    
+    # Habit Tracker
+    path('habits/', HabitListCreateView.as_view(), name='habit-list-create'),
+    path('habits/<uuid:pk>/', HabitDetailView.as_view(), name='habit-detail'),
+    path('habits/<uuid:pk>/complete/', HabitCompleteView.as_view(), name='habit-complete'),
 
 ]
