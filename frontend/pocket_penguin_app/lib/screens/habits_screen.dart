@@ -42,36 +42,49 @@ class _HabitsScreenState extends State<HabitsScreen> {
       errorMessage = null;
     });
 
-    try {
-      // Try to load from API
-      final fetchedHabits = await HabitApi.fetchHabits();
-      if (mounted) {
-        setState(() {
-          habits = fetchedHabits;
-          useMockData = false;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      // Fallback to mock data
-      if (mounted) {
-        setState(() {
-          habits = SampleHabits.habits;
-          useMockData = true;
-          errorMessage = 'Using mock data. API error: $e';
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _loadHabitsFromAPI() async {
     setState(() {
       isLoading = true;
       errorMessage = null;
     });
 
     try {
+      // Try to load from API
+      if (userToken != null) {
+        final fetchedHabits = await HabitApi.fetchHabits(userToken!);
+        if (mounted) {
+          setState(() {
+            habits = fetchedHabits;
+            useMockData = false;
+            isLoading = false;
+          });
+        }
+      } else {
+        // No alert, just show empty habits
+        if (mounted) {
+          setState(() {
+            habits = [];
+            useMockData = false;
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Fallback to mock data only if needed, no alert
+      if (mounted) {
+        setState(() {
+          habits = [];
+          useMockData = false;
+          isLoading = false;
+        });
+      }
+    }
+        // Call this after user logs in to refresh habits
+        void onUserLoggedIn(String token) async {
+          setState(() {
+            userToken = token;
+          });
+          await _initializeHabits();
+        }
       final fetchedHabits = await HabitApi.fetchHabits();
       if (mounted) {
         setState(() {
