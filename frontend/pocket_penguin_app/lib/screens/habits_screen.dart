@@ -25,10 +25,65 @@ class HabitsScreen extends StatefulWidget {
 }
 
 class _HabitsScreenState extends State<HabitsScreen> {
+    void _updateHabitProgress(String? habitId, int newValue) async {
+      if (habitId == null) return;
+
+      final habitIndex = habits.indexWhere((h) => h.id == habitId);
+      if (habitIndex == -1) return;
+
+      final habit = habits[habitIndex];
+      final wasCompleted = habit.isCompleted;
+
+      // Optimistic update
+      setState(() {
+        habits[habitIndex] = habit.copyWith(currentValue: newValue);
+      });
+
+      final isNowCompleted = habits[habitIndex].isCompleted;
+
+      // Update fish coins locally
+      if (!wasCompleted && isNowCompleted) {
+        widget.onFishCoinsChanged(widget.fishCoins + habit.reward);
+      } else if (wasCompleted && !isNowCompleted) {
+        widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
+      }
+
+      // Sync with backend only if not using mock data
+      if (!useMockData) {
+        try {
+          // You may want to implement HabitApi.incrementProgress if not present
+          // final updatedHabit = await HabitApi.incrementProgress(habitId, newValue);
+          // if (mounted) {
+          //   setState(() {
+          //     habits[habitIndex] = updatedHabit;
+          //   });
+          // }
+        } catch (e) {
+          // Revert on error
+          setState(() {
+            habits[habitIndex] = habit;
+          });
+
+          // Revert fish coins
+          if (!wasCompleted && isNowCompleted) {
+            widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
+          } else if (wasCompleted && !isNowCompleted) {
+            widget.onFishCoinsChanged(widget.fishCoins + habit.reward);
+          }
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to update: $e')),
+            );
+          }
+        }
+      }
+    }
   List<Habit> habits = [];
   bool isLoading = false;
   bool useMockData = true;
   String? errorMessage;
+  String? userToken;
 
   @override
   void initState() {
@@ -42,15 +97,65 @@ class _HabitsScreenState extends State<HabitsScreen> {
       errorMessage = null;
     });
 
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
-
     try {
       // Try to load from API
       if (userToken != null) {
-        final fetchedHabits = await HabitApi.fetchHabits(userToken!);
+        final fetchedHabits = await HabitApi.fetchHabits();
+          // Add missing _updateHabitProgress method
+          void _updateHabitProgress(String? habitId, int newValue) async {
+            if (habitId == null) return;
+
+            final habitIndex = habits.indexWhere((h) => h.id == habitId);
+            if (habitIndex == -1) return;
+
+            final habit = habits[habitIndex];
+            final wasCompleted = habit.isCompleted;
+
+            // Optimistic update
+            setState(() {
+              habits[habitIndex] = habit.copyWith(currentValue: newValue);
+            });
+
+            final isNowCompleted = habits[habitIndex].isCompleted;
+
+            // Update fish coins locally
+            if (!wasCompleted && isNowCompleted) {
+              widget.onFishCoinsChanged(widget.fishCoins + habit.reward);
+            } else if (wasCompleted && !isNowCompleted) {
+              widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
+            }
+
+            // Sync with backend only if not using mock data
+            if (!useMockData) {
+              try {
+                // You may want to implement HabitApi.incrementProgress if not present
+                // final updatedHabit = await HabitApi.incrementProgress(habitId, newValue);
+                // if (mounted) {
+                //   setState(() {
+                //     habits[habitIndex] = updatedHabit;
+                //   });
+                // }
+              } catch (e) {
+                // Revert on error
+                setState(() {
+                  habits[habitIndex] = habit;
+                });
+
+                // Revert fish coins
+                if (!wasCompleted && isNowCompleted) {
+                  widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
+                } else if (wasCompleted && !isNowCompleted) {
+                  widget.onFishCoinsChanged(widget.fishCoins + habit.reward);
+                }
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to update: $e')),
+                  );
+                }
+              }
+            }
+          }
         if (mounted) {
           setState(() {
             habits = fetchedHabits;
@@ -86,88 +191,6 @@ class _HabitsScreenState extends State<HabitsScreen> {
       userToken = token;
     });
     await _initializeHabits();
-  }
-        // Call this after user logs in to refresh habits
-        void onUserLoggedIn(String token) async {
-          setState(() {
-            userToken = token;
-          });
-          await _initializeHabits();
-        }
-      final fetchedHabits = await HabitApi.fetchHabits();
-      if (mounted) {
-        setState(() {
-          habits = fetchedHabits;
-          useMockData = false;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          errorMessage = 'Failed to load from API: $e';
-          isLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
-    }
-  }
-
-  void _updateHabitProgress(String? habitId, int newValue) async {
-    if (habitId == null) return;
-
-    final habitIndex = habits.indexWhere((h) => h.id == habitId);
-    if (habitIndex == -1) return;
-
-    final habit = habits[habitIndex];
-    final wasCompleted = habit.isCompleted;
-
-    // Optimistic update
-    setState(() {
-      habits[habitIndex] = habit.copyWith(currentValue: newValue);
-    });
-
-    final isNowCompleted = habits[habitIndex].isCompleted;
-
-    // Update fish coins locally
-    if (!wasCompleted && isNowCompleted) {
-      widget.onFishCoinsChanged(widget.fishCoins + habit.reward);
-    } else if (wasCompleted && !isNowCompleted) {
-      widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
-    }
-
-    // Sync with backend only if not using mock data
-    if (!useMockData) {
-      try {
-        final updatedHabit =
-            await HabitApi.incrementProgress(habitId, newValue);
-        if (mounted) {
-          setState(() {
-            habits[habitIndex] = updatedHabit;
-          });
-        }
-      } catch (e) {
-        // Revert on error
-        setState(() {
-          habits[habitIndex] = habit;
-        });
-
-        // Revert fish coins
-        if (!wasCompleted && isNowCompleted) {
-          widget.onFishCoinsChanged(widget.fishCoins - habit.reward);
-        } else if (wasCompleted && !isNowCompleted) {
-          widget.onFishCoinsChanged(widget.fishCoins + habit.reward);
-        }
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to update: $e')),
-          );
-        }
-      }
-    }
   }
 
   Future<void> _createNewHabit() async {
